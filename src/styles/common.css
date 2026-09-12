@@ -1,0 +1,6 @@
+:host { --novel-font-size: 14px; --novel-radius: 12px; --novel-spacing: 8px; color: #202124; font: var(--novel-font-size)/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }
+*,*::before,*::after { box-sizing: border-box; }
+.novel-ui { margin: 16px 0; overflow: hidden; }
+.fallback { padding: 12px; border: 1px dashed #d97706; border-radius: var(--novel-radius); color: #92400e; background: #fffbeb; }
+.source-toggle { margin: 8px 0 0; border: 0; background: transparent; color: #64748b; cursor: pointer; font: inherit; font-size: 12px; }
+.source { white-space: pre-wrap; overflow-wrap: anywhere; padding: 10px; background: #111827; color: #e5e7eb; border-radius: 8px; font: 12px/1.45 ui-monospace,monospace; }

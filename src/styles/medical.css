@@ -1,0 +1,9 @@
+.medical { max-width: 680px; padding: 28px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; box-shadow: 0 8px 24px #0f172a14; }
+.medical__hospital { color: #0f4c81; font-size: 20px; font-weight: 800; }
+.medical__department { padding-bottom: 12px; border-bottom: 2px solid #0f4c81; color: #64748b; }
+.medical__title { margin: 22px 0; text-align: center; font-size: 19px; }
+.medical__fields { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 8px 24px; margin-bottom: 20px; }
+.medical__field { display: grid; grid-template-columns: auto 1fr; gap: 8px; }
+.medical__label { color: #64748b; }
+.medical__findings-title { margin: 16px 0 6px; font-weight: 700; }
+.medical__findings { white-space: pre-wrap; overflow-wrap: anywhere; }
