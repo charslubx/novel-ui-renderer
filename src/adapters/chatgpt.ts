@@ -5,7 +5,9 @@ export class ChatGPTAdapter implements SiteAdapter {
   readonly name = "ChatGPT";
   match() { return location.hostname === "chatgpt.com"; }
   getAssistantMessages(root: ParentNode = document) {
-    return Array.from(root.querySelectorAll<HTMLElement>('[data-message-author-role="assistant"]'));
+    const selector = '[data-message-author-role="assistant"]';
+    return Array.from(root.querySelectorAll<HTMLElement>(selector))
+      .filter((message) => !message.querySelector(selector));
   }
   observe(onMessagesChanged: (messages: HTMLElement[]) => void) {
     const pending = new Set<HTMLElement>();

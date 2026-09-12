@@ -1,6 +1,6 @@
 # Novel UI Renderer
 
-Tampermonkey / Userscript runtime that finds `:::novel-ui ... :::` data in AI responses and renders isolated story UI in place. Version 0.1 supports ChatGPT, includes a preliminary Gemini adapter, and ships `chat:kakao` plus `document:medical` renderers. It does not call any model API.
+Tampermonkey / Userscript runtime that finds `:::novel-ui ... :::` data in AI responses and renders isolated story UI in place. Version 0.1 supports ChatGPT, includes a preliminary Gemini adapter, and ships five renderers. It does not call any model API.
 
 ## Install and build
 
@@ -32,6 +32,14 @@ Ask the model to output the following exactly (without wrapping it in a Markdown
 - `core`: debounced runtime, logging, and renderer registry.
 - `renderers`: component validation and safe DOM creation with `textContent`.
 - `styles`: CSS bundled into each renderer's Shadow DOM.
+
+Built-in renderer keys:
+
+- `chat:kakao`
+- `document:medical`
+- `social:x-post`
+- `article:theqoo`
+- `social:weibo-post`
 
 Incomplete streaming blocks are ignored until the closing marker arrives. Invalid JSON and invalid schemas remain visible. Successfully rendered source data stays in the DOM but is hidden. A `WeakSet` and `data-novel-ui-rendered` protect against repeat rendering.
 

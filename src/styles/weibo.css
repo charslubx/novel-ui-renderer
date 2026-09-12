@@ -1,0 +1,7 @@
+.weibo { max-width: 620px; padding: 16px; border: 1px solid #e6e6e6; border-radius: 10px; background: #fff; color: #222; box-shadow: 0 4px 16px #0000000d; }
+.weibo__author { display: flex; align-items: baseline; gap: 7px; }
+.weibo__name { font-weight: 700; }
+.weibo__verified { color: #ff8200; }
+.weibo__handle,.weibo__meta { color: #939393; font-size: 11px; }
+.weibo__text { margin: 12px 0 16px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 15px; line-height: 1.65; }
+.weibo__stats { display: grid; grid-template-columns: repeat(3,1fr); padding-top: 11px; border-top: 1px solid #f2f2f2; color: #666; text-align: center; font-size: 12px; }
