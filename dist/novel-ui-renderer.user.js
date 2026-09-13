@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.3.6
+// @version      0.4.0
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -254,12 +254,12 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     return node;
   }
   const common = ':host { --novel-font-size: 14px; --novel-radius: 12px; --novel-spacing: 8px; color: #202124; font: var(--novel-font-size)/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }\n*,*::before,*::after { box-sizing: border-box; }\n.novel-ui { margin: 16px 0; overflow: hidden; }\n.fallback { padding: 12px; border: 1px dashed #d97706; border-radius: var(--novel-radius); color: #92400e; background: #fffbeb; }\n.source-toggle { margin: 8px 0 0; border: 0; background: transparent; color: #64748b; cursor: pointer; font: inherit; font-size: 12px; }\n.source { white-space: pre-wrap; overflow-wrap: anywhere; padding: 10px; background: #111827; color: #e5e7eb; border-radius: 8px; font: 12px/1.45 ui-monospace,monospace; }\n';
-  const styles$7 = ".kakao { max-width: 430px; border-radius: 18px; background: #b9ced9; box-shadow: 0 10px 30px #0f172a20; }\n.kakao__header { padding: 14px 18px; background: #ffffffde; font-weight: 700; text-align: center; }\n.kakao__date { width: max-content; margin: 12px auto; padding: 4px 10px; border-radius: 999px; color: #fff; background: #607d8b99; font-size: 11px; }\n.kakao__messages { display: grid; gap: 10px; padding: 4px 14px 18px; }\n.message { display: flex; flex-direction: column; max-width: 78%; }\n.message--right { justify-self: end; align-items: end; }\n.message--left { justify-self: start; align-items: start; }\n.message__name { margin: 0 4px 3px; font-size: 11px; color: #475569; }\n.message__line { display: flex; align-items: end; gap: 5px; }\n.message--right .message__line { flex-direction: row-reverse; }\n.message__bubble { padding: 9px 12px; border-radius: 13px; background: #fff; white-space: pre-wrap; overflow-wrap: anywhere; }\n.message--right .message__bubble { background: #fee500; }\n.message__meta { display: grid; justify-items: end; color: #475569; font-size: 10px; white-space: nowrap; }\n.message__read { color: #8a6d00; }\n";
+  const styles$a = ".kakao { max-width: 430px; border-radius: 18px; background: #b9ced9; box-shadow: 0 10px 30px #0f172a20; }\n.kakao__header { padding: 14px 18px; background: #ffffffde; font-weight: 700; text-align: center; }\n.kakao__date { width: max-content; margin: 12px auto; padding: 4px 10px; border-radius: 999px; color: #fff; background: #607d8b99; font-size: 11px; }\n.kakao__messages { display: grid; gap: 10px; padding: 4px 14px 18px; }\n.message { display: flex; flex-direction: column; max-width: 78%; }\n.message--right { justify-self: end; align-items: end; }\n.message--left { justify-self: start; align-items: start; }\n.message__name { margin: 0 4px 3px; font-size: 11px; color: #475569; }\n.message__line { display: flex; align-items: end; gap: 5px; }\n.message--right .message__line { flex-direction: row-reverse; }\n.message__bubble { padding: 9px 12px; border-radius: 13px; background: #fff; white-space: pre-wrap; overflow-wrap: anywhere; }\n.message--right .message__bubble { background: #fee500; }\n.message__meta { display: grid; justify-items: end; color: #475569; font-size: 10px; white-space: nowrap; }\n.message__read { color: #8a6d00; }\n";
   const isMessage = (x) => !!x && typeof x === "object" && typeof x.id === "string" && typeof x.sender === "string" && ["left", "right"].includes(x.side) && typeof x.text === "string";
   const KakaoRenderer = {
     component: "chat",
     variant: "kakao",
-    styles: common + styles$7,
+    styles: common + styles$a,
     validate(value) {
       const p = value;
       return !!p && typeof p.title === "string" && Array.isArray(p.messages) && p.messages.every(isMessage);
@@ -285,12 +285,12 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles$6 = ".medical { max-width: 680px; padding: 28px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; box-shadow: 0 8px 24px #0f172a14; }\n.medical__hospital { color: #0f4c81; font-size: 20px; font-weight: 800; }\n.medical__department { padding-bottom: 12px; border-bottom: 2px solid #0f4c81; color: #64748b; }\n.medical__title { margin: 22px 0; text-align: center; font-size: 19px; }\n.medical__fields { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,.9fr) minmax(240px,1.35fr); gap: 14px 24px; margin-bottom: 20px; }\n.medical__field { display: flex; min-width: 0; align-items: baseline; gap: 8px; }\n.medical__field--wide { grid-column: 1 / -1; }\n.medical__label { color: #64748b; }\n.medical__value { min-width: 0; overflow-wrap: anywhere; }\n.medical__findings-title { margin: 16px 0 6px; font-weight: 700; }\n.medical__findings { white-space: pre-wrap; overflow-wrap: anywhere; }\n@media (max-width: 640px) {\n  .medical { padding: 22px; }\n  .medical__fields { grid-template-columns: repeat(2,minmax(0,1fr)); }\n  .medical__field--examination,.medical__field--wide { grid-column: 1 / -1; }\n}\n@media (max-width: 430px) {\n  .medical__fields { grid-template-columns: 1fr; }\n  .medical__field { display: grid; gap: 2px; }\n}\n";
+  const styles$9 = ".medical { max-width: 680px; padding: 28px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; box-shadow: 0 8px 24px #0f172a14; }\n.medical__hospital { color: #0f4c81; font-size: 20px; font-weight: 800; }\n.medical__department { padding-bottom: 12px; border-bottom: 2px solid #0f4c81; color: #64748b; }\n.medical__title { margin: 22px 0; text-align: center; font-size: 19px; }\n.medical__fields { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,.9fr) minmax(240px,1.35fr); gap: 14px 24px; margin-bottom: 20px; }\n.medical__field { display: flex; min-width: 0; align-items: baseline; gap: 8px; }\n.medical__field--wide { grid-column: 1 / -1; }\n.medical__label { color: #64748b; }\n.medical__value { min-width: 0; overflow-wrap: anywhere; }\n.medical__findings-title { margin: 16px 0 6px; font-weight: 700; }\n.medical__findings { white-space: pre-wrap; overflow-wrap: anywhere; }\n@media (max-width: 640px) {\n  .medical { padding: 22px; }\n  .medical__fields { grid-template-columns: repeat(2,minmax(0,1fr)); }\n  .medical__field--examination,.medical__field--wide { grid-column: 1 / -1; }\n}\n@media (max-width: 430px) {\n  .medical__fields { grid-template-columns: 1fr; }\n  .medical__field { display: grid; gap: 2px; }\n}\n";
   const wideLabels = /* @__PURE__ */ new Set(["clinical history", "history", "clinical indication", "indication", "reason for examination"]);
   const MedicalRenderer = {
     component: "document",
     variant: "medical",
-    styles: common + styles$6,
+    styles: common + styles$9,
     validate(value) {
       const p = value;
       return !!p && [p.hospital, p.department, p.patient, p.reportTitle, p.findings].every((x) => typeof x === "string") && Array.isArray(p.fields) && p.fields.every((f) => f && typeof f.label === "string" && typeof f.value === "string" && (f.wide === void 0 || typeof f.wide === "boolean"));
@@ -311,7 +311,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles$5 = ".theqoo { max-width: 720px; border: 1px solid #dedede; background: #fff; color: #333; }\n.theqoo__bar { padding: 9px 14px; background: #375486; color: #fff; font-weight: 700; }\n.theqoo__header { padding: 16px; border-bottom: 1px solid #e5e5e5; }\n.theqoo__category { color: #e34b61; font-size: 12px; font-weight: 700; }\n.theqoo__title { margin: 5px 0 8px; font-size: 19px; }\n.theqoo__meta { color: #888; font-size: 11px; }\n.theqoo__content { padding: 22px 16px; white-space: pre-wrap; overflow-wrap: anywhere; }\n.theqoo__comments { border-top: 8px solid #f3f3f3; }\n.theqoo__comment { padding: 11px 16px; border-top: 1px solid #eee; }\n.theqoo__comment-meta { margin-bottom: 4px; color: #667; font-size: 11px; }\n.theqoo__likes { float: right; color: #e34b61; }\n";
+  const styles$8 = ".theqoo { max-width: 720px; border: 1px solid #dedede; background: #fff; color: #333; }\n.theqoo__bar { padding: 9px 14px; background: #375486; color: #fff; font-weight: 700; }\n.theqoo__header { padding: 16px; border-bottom: 1px solid #e5e5e5; }\n.theqoo__category { color: #e34b61; font-size: 12px; font-weight: 700; }\n.theqoo__title { margin: 5px 0 8px; font-size: 19px; }\n.theqoo__meta { color: #888; font-size: 11px; }\n.theqoo__content { padding: 22px 16px; white-space: pre-wrap; overflow-wrap: anywhere; }\n.theqoo__comments { border-top: 8px solid #f3f3f3; }\n.theqoo__comment { padding: 11px 16px; border-top: 1px solid #eee; }\n.theqoo__comment-meta { margin-bottom: 4px; color: #667; font-size: 11px; }\n.theqoo__likes { float: right; color: #e34b61; }\n";
   const isComment = (value) => {
     const c = value;
     return !!c && typeof c.id === "string" && typeof c.author === "string" && typeof c.text === "string" && (c.likes === void 0 || typeof c.likes === "number");
@@ -319,7 +319,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   const TheqooRenderer = {
     component: "article",
     variant: "theqoo",
-    styles: common + styles$5,
+    styles: common + styles$8,
     validate(value) {
       const p = value;
       return !!p && typeof p.title === "string" && typeof p.date === "string" && typeof p.content === "string" && (p.comments === void 0 || Array.isArray(p.comments) && p.comments.every(isComment));
@@ -345,7 +345,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles$4 = '.fivech{width:min(100%,720px);overflow:hidden;border:1px solid #b9b6aa;background:#efefef;color:#111;font-family:"MS PGothic","Yu Gothic",sans-serif;box-shadow:0 6px 18px #00000012}.fivech__header{padding:10px 14px;border-bottom:1px solid #c5c1b5;background:#ddd9ca}.fivech__board{color:#555;font-size:11px}.fivech__title{margin:3px 0;color:#800000;font-size:17px;font-weight:700}.fivech__thread-id{color:#777;font-size:10px}.fivech__thread{padding:8px 12px 14px}.fivech__post{padding:6px 0}.fivech__meta{display:flex;flex-wrap:wrap;gap:5px;font-size:12px;line-height:1.45}.fivech__number{color:#333}.fivech__name{color:#008000;font-weight:700}.fivech__time,.fivech__id{color:#555}.fivech__text{padding:3px 0 3px 20px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.55}.fivech__footer{padding:6px 12px;border-top:1px solid #d2cec2;color:#888;font-size:9px;letter-spacing:.08em;text-align:right}@media(max-width:480px){.fivech__thread{padding-right:8px;padding-left:8px}.fivech__text{padding-left:12px;font-size:13px}}\n';
+  const styles$7 = '.fivech{width:min(100%,720px);overflow:hidden;border:1px solid #b9b6aa;background:#efefef;color:#111;font-family:"MS PGothic","Yu Gothic",sans-serif;box-shadow:0 6px 18px #00000012}.fivech__header{padding:10px 14px;border-bottom:1px solid #c5c1b5;background:#ddd9ca}.fivech__board{color:#555;font-size:11px}.fivech__title{margin:3px 0;color:#800000;font-size:17px;font-weight:700}.fivech__thread-id{color:#777;font-size:10px}.fivech__thread{padding:8px 12px 14px}.fivech__post{padding:6px 0}.fivech__meta{display:flex;flex-wrap:wrap;gap:5px;font-size:12px;line-height:1.45}.fivech__number{color:#333}.fivech__name{color:#008000;font-weight:700}.fivech__time,.fivech__id{color:#555}.fivech__text{padding:3px 0 3px 20px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.55}.fivech__footer{padding:6px 12px;border-top:1px solid #d2cec2;color:#888;font-size:9px;letter-spacing:.08em;text-align:right}@media(max-width:480px){.fivech__thread{padding-right:8px;padding-left:8px}.fivech__text{padding-left:12px;font-size:13px}}\n';
   const isPost = (value) => {
     const post = value;
     return !!post && Number.isInteger(post.number) && post.number > 0 && [post.name, post.timestamp, post.text].every((item) => typeof item === "string") && (post.id === void 0 || typeof post.id === "string");
@@ -353,7 +353,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   const FiveChRenderer = {
     component: "article",
     variant: "5ch",
-    styles: common + styles$4,
+    styles: common + styles$7,
     validate(value) {
       const props = value;
       return !!props && typeof props.title === "string" && Array.isArray(props.posts) && props.posts.every(isPost) && (props.board === void 0 || typeof props.board === "string") && (props.threadId === void 0 || typeof props.threadId === "string");
@@ -384,15 +384,15 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles$3 = ".weibo { max-width: 620px; padding: 16px; border: 1px solid #e6e6e6; border-radius: 10px; background: #fff; color: #222; box-shadow: 0 4px 16px #0000000d; }\n.weibo__author { display: flex; align-items: baseline; gap: 7px; }\n.weibo__name { font-weight: 700; }\n.weibo__verified { color: #ff8200; }\n.weibo__handle,.weibo__meta { color: #939393; font-size: 11px; }\n.weibo__text { margin: 12px 0 16px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 15px; line-height: 1.65; }\n.weibo__stats { display: grid; grid-template-columns: repeat(3,1fr); padding-top: 11px; border-top: 1px solid #f2f2f2; color: #666; text-align: center; font-size: 12px; }\n";
-  const optionalNumber$1 = (value) => value === void 0 || typeof value === "number" && value >= 0;
+  const styles$6 = ".weibo { max-width: 620px; padding: 16px; border: 1px solid #e6e6e6; border-radius: 10px; background: #fff; color: #222; box-shadow: 0 4px 16px #0000000d; }\n.weibo__author { display: flex; align-items: baseline; gap: 7px; }\n.weibo__name { font-weight: 700; }\n.weibo__verified { color: #ff8200; }\n.weibo__handle,.weibo__meta { color: #939393; font-size: 11px; }\n.weibo__text { margin: 12px 0 16px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 15px; line-height: 1.65; }\n.weibo__stats { display: grid; grid-template-columns: repeat(3,1fr); padding-top: 11px; border-top: 1px solid #f2f2f2; color: #666; text-align: center; font-size: 12px; }\n";
+  const optionalNumber$3 = (value) => value === void 0 || typeof value === "number" && value >= 0;
   const WeiboRenderer = {
     component: "social",
     variant: "weibo-post",
-    styles: common + styles$3,
+    styles: common + styles$6,
     validate(value) {
       const p = value;
-      return !!p && [p.displayName, p.timestamp, p.text].every((x) => typeof x === "string") && [p.reposts, p.comments, p.likes].every(optionalNumber$1);
+      return !!p && [p.displayName, p.timestamp, p.text].every((x) => typeof x === "string") && [p.reposts, p.comments, p.likes].every(optionalNumber$3);
     },
     render(props) {
       const root = element("article", "novel-ui weibo"), author = element("div", "weibo__author");
@@ -406,6 +406,130 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
+  const styles$5 = ".instagram{width:min(100%,470px);border:1px solid #dbdbdb;border-radius:10px;background:#fff;color:#161616;font-family:Arial,sans-serif}.instagram__header{display:flex;align-items:center;gap:10px;padding:10px 12px}.instagram__avatar{display:grid;width:34px;height:34px;place-items:center;overflow:hidden;border:2px solid #dc3d79;border-radius:50%;background:#eee;font-weight:700}.instagram__avatar img,.instagram__media img{width:100%;height:100%;object-fit:cover}.instagram__author{min-width:0;flex:1}.instagram__username{font-size:13px;font-weight:700}.instagram__location{font-size:10px}.instagram__more{font-weight:700}.instagram__media{display:grid;min-height:300px;place-items:center;overflow:hidden;background:#ececec}.instagram__placeholder{color:#888}.instagram__actions{padding:11px 12px 7px;font-size:22px;white-space:pre}.instagram__likes,.instagram__caption,.instagram__comments,.instagram__time{padding:0 12px 7px;font-size:13px}.instagram__likes{font-weight:700}.instagram__caption{white-space:pre-wrap;overflow-wrap:anywhere}.instagram__comments,.instagram__time{color:#737373}.instagram__time{padding-bottom:12px;font-size:10px;text-transform:uppercase}@media(max-width:480px){.instagram__media{min-height:240px}}\n";
+  const optionalNumber$2 = (value) => value === void 0 || typeof value === "number" && value >= 0;
+  function safeUrl$3(value) {
+    if (!value) return;
+    try {
+      const url = new URL(value, location.href);
+      if (["http:", "https:"].includes(url.protocol)) return url.href;
+    } catch {
+      return;
+    }
+  }
+  const InstagramRenderer = { component: "social", variant: "instagram-post", styles: common + styles$5, validate(value) {
+    const p = value;
+    return !!p && [p.username, p.text, p.timestamp].every((x) => typeof x === "string") && [p.likes, p.comments].every(optionalNumber$2);
+  }, render(props) {
+    const root = element("article", "novel-ui instagram"), header = element("header", "instagram__header"), avatar2 = element("div", "instagram__avatar"), avatarUrl = safeUrl$3(props.avatar);
+    if (avatarUrl) {
+      const img = element("img");
+      img.src = avatarUrl;
+      img.alt = "";
+      img.loading = "lazy";
+      avatar2.append(img);
+    } else avatar2.append(element("span", "", props.username.slice(0, 1).toUpperCase()));
+    const author = element("div", "instagram__author");
+    author.append(element("div", "instagram__username", props.username + (props.verified ? "  ✓" : "")));
+    if (props.location) author.append(element("div", "instagram__location", props.location));
+    header.append(avatar2, author, element("span", "instagram__more", "•••"));
+    const media = element("div", "instagram__media"), imageUrl = safeUrl$3(props.image);
+    if (imageUrl) {
+      const img = element("img");
+      img.src = imageUrl;
+      img.alt = props.imageAlt ?? "帖子图片";
+      img.loading = "lazy";
+      img.referrerPolicy = "no-referrer";
+      media.append(img);
+    } else media.append(element("span", "instagram__placeholder", props.imageAlt ?? "图片"));
+    const actions = element("div", "instagram__actions", "♡　⌁　➤　　　　　　　　　▢");
+    const caption = element("div", "instagram__caption");
+    caption.append(element("strong", "", props.username + " "), document.createTextNode(props.text));
+    root.append(header, media, actions, element("div", "instagram__likes", `${props.likes ?? 0} 次赞`), caption, element("div", "instagram__comments", `查看全部 ${props.comments ?? 0} 条评论`), element("time", "instagram__time", props.timestamp));
+    return root;
+  } };
+  const styles$4 = ".onlyfans{width:min(100%,540px);border:1px solid #d8e2e8;border-radius:10px;background:#fff;color:#242529;font-family:Arial,sans-serif}.onlyfans__header{display:flex;align-items:center;gap:11px;padding:13px 15px}.onlyfans__avatar{display:grid;width:42px;height:42px;place-items:center;overflow:hidden;border-radius:50%;background:#00aff0;color:#fff;font-weight:800}.onlyfans__avatar img,.onlyfans__media img{width:100%;height:100%;object-fit:cover}.onlyfans__identity{min-width:0;flex:1}.onlyfans__creator{font-size:14px;font-weight:700}.onlyfans__handle{color:#8a96a3;font-size:11px}.onlyfans__more{color:#8a96a3}.onlyfans__text{padding:2px 15px 14px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.55}.onlyfans__media{display:grid;min-height:270px;place-items:center;overflow:hidden;background:#edf1f4;color:#84909a}.onlyfans__footer{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;color:#596773;font-size:13px}.onlyfans__status{border-radius:16px;background:#00aff0;color:#fff;padding:6px 12px;font-weight:700}\n";
+  const optionalNumber$1 = (value) => value === void 0 || typeof value === "number" && value >= 0;
+  function safeUrl$2(value) {
+    if (!value) return;
+    try {
+      const url = new URL(value, location.href);
+      if (["http:", "https:"].includes(url.protocol)) return url.href;
+    } catch {
+      return;
+    }
+  }
+  const OnlyFansRenderer = { component: "social", variant: "onlyfans-post", styles: common + styles$4, validate(value) {
+    const p = value;
+    return !!p && [p.creator, p.handle, p.timestamp, p.text].every((x) => typeof x === "string") && [p.likes, p.comments].every(optionalNumber$1);
+  }, render(props) {
+    const root = element("article", "novel-ui onlyfans"), header = element("header", "onlyfans__header"), avatar2 = element("div", "onlyfans__avatar"), avatarUrl = safeUrl$2(props.avatar);
+    if (avatarUrl) {
+      const img = element("img");
+      img.src = avatarUrl;
+      img.alt = "";
+      img.loading = "lazy";
+      avatar2.append(img);
+    } else avatar2.append(element("span", "", props.creator.slice(0, 1).toUpperCase()));
+    const identity = element("div", "onlyfans__identity");
+    identity.append(element("div", "onlyfans__creator", props.creator + (props.verified ? "  ✓" : "")), element("div", "onlyfans__handle", `${props.handle} · ${props.timestamp}`));
+    header.append(avatar2, identity, element("span", "onlyfans__more", "•••"));
+    root.append(header, element("div", "onlyfans__text", props.text));
+    if (props.media || props.mediaAlt) {
+      const media = element("div", "onlyfans__media"), url = safeUrl$2(props.media);
+      if (url) {
+        const img = element("img");
+        img.src = url;
+        img.alt = props.mediaAlt ?? "创作者帖子图片";
+        img.loading = "lazy";
+        img.referrerPolicy = "no-referrer";
+        media.append(img);
+      } else media.append(element("span", "", props.mediaAlt ?? "媒体内容"));
+      root.append(media);
+    }
+    const stats = element("footer", "onlyfans__footer");
+    stats.append(element("span", "", `♡ ${props.likes ?? 0}　💬 ${props.comments ?? 0}`), element("span", "onlyfans__status", props.subscribed ? "已订阅" : props.subscriptionPrice ? `订阅 ${props.subscriptionPrice}` : "订阅"));
+    root.append(stats);
+    return root;
+  } };
+  const styles$3 = ".video-page{width:min(100%,720px);overflow:hidden;border:1px solid #ddd;border-radius:10px;background:#fff;color:#0f0f0f;font-family:Arial,sans-serif}.video-page__brand{padding:10px 14px;font-size:17px;font-weight:800}.video-page--youtube .video-page__brand{color:#f00}.video-page--pornhub{background:#171717;color:#f5f5f5;border-color:#333}.video-page--pornhub .video-page__brand{color:#ff9b19}.video-page__player{position:relative;display:grid;aspect-ratio:16/9;place-items:center;overflow:hidden;background:#202020;color:#aaa}.video-page__player img{width:100%;height:100%;object-fit:cover}.video-page__play{position:absolute;display:grid;width:54px;height:40px;place-items:center;border-radius:10px;background:#000b;color:#fff;font-size:20px}.video-page--youtube .video-page__play{background:#f00}.video-page--pornhub .video-page__play{background:#ff9b19;color:#111}.video-page__duration{position:absolute;right:8px;bottom:7px;border-radius:3px;background:#000c;color:#fff;padding:2px 5px;font-size:11px}.video-page__title{margin:12px 14px 5px;font-size:18px}.video-page__meta,.video-page__subscribers{color:#777;font-size:12px}.video-page__meta{margin:0 14px 10px}.video-page--pornhub .video-page__meta,.video-page--pornhub .video-page__subscribers{color:#aaa}.video-page__channel{display:flex;align-items:center;gap:9px;padding:10px 14px;border-top:1px solid #ddd}.video-page--pornhub .video-page__channel{border-color:#333}.video-page__avatar{display:grid;width:34px;height:34px;place-items:center;border-radius:50%;background:#777;color:#fff}.video-page__subscribers{flex:1}.video-page__subscribe{margin-left:auto;border-radius:18px;background:#111;color:#fff;padding:7px 13px;font-size:12px;font-weight:700}.video-page--pornhub .video-page__subscribe{background:#ff9b19;color:#111}.video-page__description{margin:0 14px 10px;border-radius:7px;background:#eee;padding:10px;white-space:pre-wrap;font-size:12px}.video-page--pornhub .video-page__description{background:#292929}.video-page__stats{padding:9px 14px;border-top:1px solid #ddd;font-size:13px}.video-page--pornhub .video-page__stats{border-color:#333}\n";
+  function safeUrl$1(value) {
+    if (!value) return;
+    try {
+      const url = new URL(value, location.href);
+      if (["http:", "https:"].includes(url.protocol)) return url.href;
+    } catch {
+      return;
+    }
+  }
+  function createVideoRenderer(variant) {
+    return { component: "video", variant, styles: common + styles$3, validate(value) {
+      const p = value;
+      return !!p && [p.title, p.channel, p.duration, p.views, p.uploaded].every((x) => typeof x === "string") && (p.likes === void 0 || typeof p.likes === "number" && p.likes >= 0);
+    }, render(props) {
+      const root = element("article", `novel-ui video-page video-page--${variant}`), player = element("div", "video-page__player"), url = safeUrl$1(props.thumbnail);
+      if (url) {
+        const img = element("img");
+        img.src = url;
+        img.alt = props.thumbnailAlt ?? "视频缩略图";
+        img.loading = "lazy";
+        img.referrerPolicy = "no-referrer";
+        player.append(img);
+      } else player.append(element("span", "video-page__placeholder", props.thumbnailAlt ?? "视频缩略图"));
+      player.append(element("span", "video-page__play", "▶"), element("span", "video-page__duration", props.duration));
+      const brand = variant === "youtube" ? "YouTube" : "Pornhub";
+      const header = element("header", "video-page__brand", brand), title = element("h2", "video-page__title", props.title), meta = element("div", "video-page__meta", `${props.views} 次观看 · ${props.uploaded}`), channel = element("div", "video-page__channel");
+      channel.append(element("span", "video-page__avatar", props.channel.slice(0, 1).toUpperCase()), element("strong", "", props.channel + (props.verified ? " ✓" : "")));
+      if (props.subscribers) channel.append(element("span", "video-page__subscribers", props.subscribers));
+      channel.append(element("span", "video-page__subscribe", variant === "youtube" ? "订阅" : "关注"));
+      root.append(header, player, title, meta, channel);
+      if (props.category || props.description) root.append(element("div", "video-page__description", [props.category, props.description].filter(Boolean).join(" · ")));
+      root.append(element("footer", "video-page__stats", `👍 ${props.likes ?? 0}　↗ 分享　⋯`));
+      return root;
+    } };
+  }
+  const YouTubeRenderer = createVideoRenderer("youtube");
+  const PornhubRenderer = createVideoRenderer("pornhub");
   const styles$2 = ':host{--x-bg:#000;--x-text:#e7e9ea;--x-muted:#71767b;--x-line:#2f3336;--x-blue:#1d9bf0}.x-shell{width:min(100%,680px);overflow:hidden;border:1px solid var(--x-line);border-radius:18px;background:var(--x-bg);color:var(--x-text);font-family:Arial,"Microsoft YaHei","PingFang SC",sans-serif}.x-shell--single{border-radius:14px}.x-app-header{position:relative;display:flex;min-height:58px;align-items:center;justify-content:center;padding:8px 52px;border-bottom:1px solid var(--x-line);font-size:19px;font-weight:800}.x-app-header__avatar{position:absolute;left:16px;width:34px;height:34px;border-radius:50%;background:#30353a}.x-app-header__action{position:absolute;right:16px;color:var(--x-text);font-size:24px}.x-tabs{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;min-height:48px;border-bottom:1px solid var(--x-line);color:var(--x-muted)}.x-tab{display:flex;position:relative;align-items:center;justify-content:center;padding:12px 8px;font-weight:700;white-space:nowrap}.x-tab--active{color:var(--x-text)}.x-tab--active::after{content:"";position:absolute;right:20%;bottom:0;left:20%;height:3px;border-radius:3px;background:var(--x-blue)}.x-post{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;padding:14px 16px 7px;border-bottom:1px solid var(--x-line)}.x-avatar{width:48px;height:48px;overflow:hidden;border-radius:50%;background:#272b2f}.x-avatar__image{width:100%;height:100%;object-fit:cover}.x-avatar__fallback{display:grid;width:100%;height:100%;place-items:center;color:#fff;font-size:20px;font-weight:800}.x-post__body{min-width:0}.x-post__author{display:flex;min-width:0;align-items:center;gap:4px;font-size:15px;line-height:20px}.x-post__name{overflow:hidden;font-weight:800;text-overflow:ellipsis;white-space:nowrap}.x-post__verified{display:grid;width:15px;height:15px;flex:0 0 15px;place-items:center;border-radius:50%;background:var(--x-blue);color:#fff;font-size:10px}.x-post__handle,.x-post__time{overflow:hidden;color:var(--x-muted);text-overflow:ellipsis;white-space:nowrap}.x-post__more{margin-left:auto;color:var(--x-muted);font-size:20px}.x-post__translation{margin:5px 0 2px;color:var(--x-muted);font-size:13px}.x-post__text{margin:4px 0 10px;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--x-text);font-size:16px;line-height:1.45}.x-media{display:grid;max-height:520px;overflow:hidden;margin:8px 0;border:1px solid var(--x-line);border-radius:16px;gap:2px;background:var(--x-line)}.x-media--2,.x-media--3,.x-media--4{grid-template-columns:repeat(2,1fr)}.x-media__image-frame{display:grid;min-height:180px;place-items:center;overflow:hidden;background:#16181c}.x-media--1 .x-media__image-frame{min-height:280px}.x-media__image{width:100%;height:100%;min-height:inherit;object-fit:cover}.x-media__placeholder{padding:30px;color:var(--x-muted);text-align:center}.x-media__link{grid-column:1/-1;overflow:hidden;background:#000}.x-media__link-image{width:100%;max-height:290px;object-fit:cover}.x-media__link-copy{padding:10px 12px;border-top:1px solid var(--x-line)}.x-media__domain,.x-media__description{color:var(--x-muted);font-size:13px}.x-media__title{margin:2px 0;color:var(--x-text)}.x-post__stats{display:grid;grid-template-columns:repeat(6,1fr);align-items:center;margin:4px 0 1px;color:var(--x-muted);font-size:12px}.x-post__stat{min-width:0;white-space:nowrap}.x-feed-empty{padding:46px 20px;color:var(--x-muted);text-align:center}.x-search{display:flex;align-items:center;gap:10px;padding:10px 16px}.x-search__avatar{width:34px;height:34px;flex:0 0 34px;border-radius:50%;background:#30353a}.x-search__box{flex:1;padding:11px 18px;border-radius:999px;background:#202327;color:var(--x-muted);font-size:16px}.x-search__gear{color:var(--x-text);font-size:23px}.x-trend{position:relative;padding:13px 20px}.x-trend__category,.x-trend__posts{color:var(--x-muted);font-size:13px}.x-trend__title{margin:3px 0;color:var(--x-text);font-size:16px;font-weight:800}.x-trend__more{position:absolute;top:9px;right:18px;color:var(--x-muted);font-size:20px}.x-notification{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--x-line)}.x-notification__type{color:#7856ff;font-size:29px;text-align:center}.x-notification__top{display:flex;align-items:center;gap:7px}.x-notification__avatar{width:38px;height:38px;overflow:hidden;border-radius:50%;background:#272b2f}.x-notification__avatar img{width:100%;height:100%;object-fit:cover}.x-notification__name{margin-top:7px;font-weight:800}.x-notification__meta{color:var(--x-muted);font-weight:400}.x-notification__translation{margin:7px 0;color:var(--x-muted);font-size:13px}.x-notification__text{color:var(--x-muted);font-size:16px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}@media(max-width:520px){.x-shell{border-radius:12px}.x-post{grid-template-columns:40px minmax(0,1fr);padding-inline:12px}.x-avatar{width:40px;height:40px}.x-post__stats{font-size:11px}.x-post__handle{max-width:90px}.x-tabs{overflow-x:auto}.x-tab{padding-inline:14px}}\n';
   const optionalNumber = (value) => value === void 0 || typeof value === "number" && value >= 0;
   const isText = (value) => value === void 0 || typeof value === "string";
@@ -823,6 +947,10 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     registry.register(TheqooRenderer);
     registry.register(FiveChRenderer);
     registry.register(WeiboRenderer);
+    registry.register(InstagramRenderer);
+    registry.register(OnlyFansRenderer);
+    registry.register(PornhubRenderer);
+    registry.register(YouTubeRenderer);
     new NovelUIRuntime(adapter, registry, localStorage.getItem("novel-ui-debug") === "true").start();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bootstrap, { once: true });

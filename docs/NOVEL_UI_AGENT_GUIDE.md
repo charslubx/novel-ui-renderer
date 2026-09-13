@@ -12,7 +12,7 @@
 6. JSON 必须严格合法：使用双引号、不得有注释、不得有尾随逗号、不得输出 `undefined`。
 7. 一个回答可以包含多个 Novel UI 区块，区块之间可以穿插小说正文。
 8. 必须等 JSON 完整后再输出结束标记。不要输出半截区块。
-9. 不要编造未支持的 `component:variant`。可选键只能使用本文列出的 15 种。
+9. 不要编造未支持的 `component:variant`。可选键只能使用本文列出的 19 种。
 10. 所有内容仅作为虚构小说道具。票号、证件号、机构和运营方优先使用虚构信息，避免复制真实品牌标识。
 11. 不要在字段中输出 HTML、CSS、JavaScript、事件属性或脚本。正文只填纯文本。
 12. 图片 URL 仅在 X 帖子/通知的 `avatar` 或媒体 `url` 字段中可用，且只能使用 `http`/`https`。没有可靠 URL 时省略，Renderer 会显示占位内容。
@@ -44,6 +44,10 @@
 | theqoo 韩国论坛 | `article:theqoo` |
 | 日本匿名论坛 5ch | `article:5ch` |
 | 微博帖子 | `social:weibo-post` |
+| Instagram 帖子 | `social:instagram-post` |
+| OnlyFans 创作者帖子 | `social:onlyfans-post` |
+| YouTube 视频页 | `video:youtube` |
+| Pornhub 视频页 | `video:pornhub` |
 | 飞机票 | `ticket:flight` |
 | 船票 | `ticket:ferry` |
 | 高铁/火车票 | `ticket:rail` |
@@ -125,7 +129,35 @@
     {"schema":"novel-ui","version":"1.0","component":"social","variant":"weibo-post","props":{"displayName":"首尔夜航","handle":"@seoul_night","verified":true,"timestamp":"2026-09-13 23:48","source":"iPhone客户端","text":"医院走廊的灯直到深夜仍然亮着。","reposts":126,"comments":308,"likes":2401}}
     [[/novel-ui]]
 
-### 10–13. 交通票 `ticket:flight|ferry|rail|bus`
+### 10. Instagram 帖子 `social:instagram-post`
+
+必填：`username`、`text`、`timestamp`。可选：`displayName`、`avatar`、`verified`、`location`、`image`、`imageAlt`、`likes`、`comments`。
+
+    [[novel-ui]]
+    {"schema":"novel-ui","version":"1.0","component":"social","variant":"instagram-post","props":{"username":"seoul_night","verified":true,"location":"Seoul","imageAlt":"深夜医院走廊","text":"凌晨以后，走廊终于安静下来。","timestamp":"2小时前","likes":2401,"comments":86}}
+    [[/novel-ui]]
+
+### 11. OnlyFans 创作者帖子 `social:onlyfans-post`
+
+必填：`creator`、`handle`、`timestamp`、`text`。可选：`verified`、`avatar`、`media`、`mediaAlt`、`likes`、`comments`、`subscribed`、`subscriptionPrice`。
+
+    [[novel-ui]]
+    {"schema":"novel-ui","version":"1.0","component":"social","variant":"onlyfans-post","props":{"creator":"Sasha M.","handle":"@sasha_m","verified":true,"timestamp":"15分钟前","text":"新的一组后台花絮已经上传。","mediaAlt":"后台拍摄花絮","likes":1820,"comments":94,"subscribed":true}}
+    [[/novel-ui]]
+
+### 12–13. 视频页 `video:youtube|pornhub`
+
+两者共用字段。必填：`title`、`channel`、`duration`、`views`、`uploaded`。可选：`verified`、`thumbnail`、`thumbnailAlt`、`description`、`likes`、`subscribers`、`category`。
+
+    [[novel-ui]]
+    {"schema":"novel-ui","version":"1.0","component":"video","variant":"youtube","props":{"title":"雨夜首尔：凌晨医院外的街道","channel":"Seoul Night Archive","verified":true,"thumbnailAlt":"雨夜中的医院入口","duration":"12:48","views":"128万","uploaded":"3小时前","likes":42000,"subscribers":"86.4万位订阅者","description":"记录首尔雨夜的城市声音。"}}
+    [[/novel-ui]]
+
+    [[novel-ui]]
+    {"schema":"novel-ui","version":"1.0","component":"video","variant":"pornhub","props":{"title":"Private studio behind-the-scenes interview","channel":"Studio Archive","verified":true,"thumbnailAlt":"摄影棚采访画面","duration":"18:32","views":"2.4M","uploaded":"2 days ago","likes":18400,"category":"Behind the Scenes","description":"Fictional video page used as a story prop."}}
+    [[/novel-ui]]
+
+### 14–17. 交通票 `ticket:flight|ferry|rail|bus`
 
 四类交通票共用字段。必填：`operator`、`ticketNumber`、`passenger`、`origin`、`destination`、`date`、`departure`、`serviceNumber`。`origin`/`destination` 必须有 `name`，可选 `code`。通用可选：`operatorCode`、`theme`、`arrival`、`seat`、`travelClass`、`boardingTime`、`terminal`、`duration`。`theme` 只能为 `blue`、`red`、`green`、`gold`。
 
@@ -153,7 +185,7 @@
     {"schema":"novel-ui","version":"1.0","component":"ticket","variant":"bus","props":{"operator":"Seoul–Sokcho Express","operatorCode":"SSE","theme":"green","ticketNumber":"SSE-130944","passenger":"凑崎纱夏","origin":{"code":"SEL","name":"Seoul Express Bus Terminal"},"destination":{"code":"SCH","name":"Sokcho Express Bus Terminal"},"date":"2026-09-13","departure":"09:40","arrival":"12:10","serviceNumber":"BUS 118","travelClass":"Premium","seat":"07","platform":"14","duration":"2h 30m"}}
     [[/novel-ui]]
 
-### 14. 虚构身份证 `document:identity-card`
+### 18. 虚构身份证 `document:identity-card`
 
 必填：`country`、`fullName`、`idNumber`、`birthDate`、`validUntil`。可选：`documentName`、`sex`、`nationality`、`validFrom`、`authority`。头像由 Renderer 自动生成，不需要提供头像 URL。
 
@@ -161,7 +193,7 @@
     {"schema":"novel-ui","version":"1.0","component":"document","variant":"identity-card","props":{"country":"Republic of Haneul","documentName":"NATIONAL IDENTITY CARD","fullName":"徐以炫","idNumber":"HY-990413-7•••••","birthDate":"1999-04-13","sex":"F","nationality":"HANEUL","validFrom":"2024-04-13","validUntil":"2034-04-12","authority":"Haneul Civil Registry"}}
     [[/novel-ui]]
 
-### 15. 工作牌 `document:work-card`
+### 19. 工作牌 `document:work-card`
 
 必填：`organization`、`fullName`、`title`、`employeeId`。可选：`department`、`validUntil`、`accessLevel`。头像由 Renderer 自动生成，不需要提供头像 URL。
 
@@ -191,7 +223,7 @@
 - 是否没有 Markdown 代码围栏？
 - JSON 是否可以被 `JSON.parse`？
 - `schema`、`version`、`component`、`variant`、`props` 是否齐全？
-- `component:variant` 是否属于当前 15 种？
+- `component:variant` 是否属于当前 19 种？
 - 每个必填字段是否存在且类型正确？
 - 数字统计是否使用数字而非带逗号的字符串？
 - `side`、`type`、`theme`、`activeTab` 是否使用允许值？

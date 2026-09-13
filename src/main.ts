@@ -8,6 +8,9 @@ import { MedicalRenderer } from "./renderers/document/medical";
 import { TheqooRenderer } from "./renderers/article/theqoo";
 import { FiveChRenderer } from "./renderers/article/fivech";
 import { WeiboRenderer } from "./renderers/social/weibo-post";
+import { InstagramRenderer } from "./renderers/social/instagram-post";
+import { OnlyFansRenderer } from "./renderers/social/onlyfans-post";
+import { PornhubRenderer, YouTubeRenderer } from "./renderers/video/video-page";
 import { XPostRenderer } from "./renderers/social/x-post";
 import { XFeedRenderer } from "./renderers/social/x-feed";
 import { XNotificationsRenderer } from "./renderers/social/x-notifications";
@@ -39,6 +42,10 @@ function bootstrap() {
   registry.register(TheqooRenderer);
   registry.register(FiveChRenderer);
   registry.register(WeiboRenderer);
+  registry.register(InstagramRenderer);
+  registry.register(OnlyFansRenderer);
+  registry.register(PornhubRenderer);
+  registry.register(YouTubeRenderer);
   new NovelUIRuntime(adapter, registry, localStorage.getItem("novel-ui-debug") === "true").start();
 }
 

@@ -14,7 +14,7 @@ Open Tampermonkey, create a userscript, and replace its contents with `dist/nove
 
 For development, run `npm run dev`. Set `localStorage["novel-ui-debug"] = "true"` in the target page console and refresh to enable debug logging and source disclosure controls.
 
-完整的 AI 输出规则、当前 15 种组件字段说明及可复制示例见 [Novel UI Agent 须知](docs/NOVEL_UI_AGENT_GUIDE.md)。可将该文档直接提供给负责小说创作的 AI Agent。
+完整的 AI 输出规则、当前 19 种组件字段说明及可复制示例见 [Novel UI Agent 须知](docs/NOVEL_UI_AGENT_GUIDE.md)。可将该文档直接提供给负责小说创作的 AI Agent。
 
 ## Test prompt
 
@@ -25,10 +25,6 @@ Ask the model to output the following exactly (without wrapping it in a Markdown
 [[novel-ui]]
 {"schema":"novel-ui","version":"1.0","component":"chat","variant":"kakao","props":{"title":"凑崎纱夏","date":"2026-09-13","messages":[{"id":"1","sender":"sana","name":"凑崎纱夏","side":"left","text":"你在哪里？","time":"23:41","read":null},{"id":"2","sender":"yihyun","name":"徐以炫","side":"right","text":"医院。","time":"23:43","read":1}]}}
 [[/novel-ui]]
-或
-:::novel-ui
-{"schema":"novel-ui","version":"1.0","component":"chat","variant":"kakao","props":{"title":"凑崎纱夏","date":"2026-09-13","messages":[{"id":"1","sender":"sana","name":"凑崎纱夏","side":"left","text":"你在哪里？","time":"23:41","read":null},{"id":"2","sender":"yihyun","name":"徐以炫","side":"right","text":"医院。","time":"23:43","read":1}]}}
-:::
 ```
 
 ## Architecture
@@ -50,6 +46,10 @@ Built-in renderer keys:
 - `article:theqoo`
 - `article:5ch`
 - `social:weibo-post`
+- `social:instagram-post`
+- `social:onlyfans-post`
+- `video:youtube`
+- `video:pornhub`
 - `ticket:flight`
 - `ticket:ferry`
 - `ticket:rail`
