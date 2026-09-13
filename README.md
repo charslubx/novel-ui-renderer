@@ -14,6 +14,8 @@ Open Tampermonkey, create a userscript, and replace its contents with `dist/nove
 
 For development, run `npm run dev`. Set `localStorage["novel-ui-debug"] = "true"` in the target page console and refresh to enable debug logging and source disclosure controls.
 
+完整的 AI 输出规则、当前 14 种组件字段说明及可复制示例见 [Novel UI Agent 须知](docs/NOVEL_UI_AGENT_GUIDE.md)。可将该文档直接提供给负责小说创作的 AI Agent。
+
 ## Test prompt
 
 Ask the model to output the following exactly (without wrapping it in a Markdown code fence):
