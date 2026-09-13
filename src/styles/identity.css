@@ -28,6 +28,10 @@
   letter-spacing: 0.08em;
   pointer-events: none;
 }
+.identity-card {
+  width: min(100%, 480px);
+  border-radius: 12px;
+}
 .identity-card__header,
 .work-card__header {
   display: flex;
@@ -50,13 +54,28 @@
 }
 .identity-card__body {
   display: grid;
-  grid-template-columns: 82px 1fr;
-  gap: 20px;
-  padding: 22px;
+  grid-template-columns: 1fr 96px;
+  align-items: start;
+  gap: 18px;
+  padding: 18px;
 }
 .identity-card .person-avatar {
-  width: 82px;
-  height: 106px;
+  width: 96px;
+  height: 120px;
+  border: 1px solid #c4cbd1;
+  background: #dbe0e4;
+}
+.identity-card .person-avatar__head {
+  top: 16px;
+  width: 32px;
+  height: 32px;
+  background: #66727d;
+}
+.identity-card .person-avatar__body {
+  bottom: -12px;
+  width: 72px;
+  height: 68px;
+  background: #66727d;
 }
 .identity-card__fields {
   display: grid;
@@ -151,9 +170,9 @@
     11px ui-monospace,
     monospace;
 }
-@media (max-width: 480px) {
+@media (max-width: 380px) {
   .identity-card__body {
-    grid-template-columns: 64px 1fr;
+    grid-template-columns: 1fr 64px;
     gap: 13px;
     padding: 16px;
   }

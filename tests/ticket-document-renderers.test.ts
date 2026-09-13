@@ -45,12 +45,16 @@ describe("ticket and document renderers", () => {
       validUntil: "2030-01-01",
     };
     expect(IdentityCardRenderer.validate(props)).toBe(true);
+    const result = IdentityCardRenderer.render(props, {
+      raw: "",
+      debug: false,
+    });
+    expect(result.querySelector(".person-avatar")).not.toBeNull();
     expect(
-      IdentityCardRenderer.render(props, {
-        raw: "",
-        debug: false,
-      }).querySelector(".person-avatar"),
-    ).not.toBeNull();
+      result
+        .querySelector(".identity-card__body")
+        ?.lastElementChild?.classList.contains("person-avatar"),
+    ).toBe(true);
   });
   it("uses a default silhouette on work cards", () => {
     const props = {

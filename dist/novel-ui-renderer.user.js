@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.3.3
+// @version      0.3.4
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -695,25 +695,56 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     avatar2.append(element("span", `${className}__head`), element("span", `${className}__body`));
     return avatar2;
   }
-  const styles = ':host {\n  --id-blue: #244f78;\n  --id-red: #9d303b;\n  --id-paper: #f5f0e6;\n  --id-ink: #19232d;\n  --id-muted: #68737d;\n}\n.identity-card,\n.work-card {\n  position: relative;\n  width: min(100%, 660px);\n  overflow: hidden;\n  border: 1px solid #c9c4b9;\n  border-radius: 16px;\n  background: linear-gradient(135deg, #faf7ef, #e8edf0);\n  color: var(--id-ink);\n  box-shadow: 0 8px 24px #1f29371a;\n}\n.identity-card::after {\n  content: "FICTIONAL · NOVEL UI";\n  position: absolute;\n  top: 48%;\n  left: 18%;\n  transform: rotate(-16deg);\n  color: #8b949e1f;\n  font-size: 38px;\n  font-weight: 800;\n  letter-spacing: 0.08em;\n  pointer-events: none;\n}\n.identity-card__header,\n.work-card__header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 14px 18px;\n  background: var(--id-blue);\n  color: #fff;\n}\n.identity-card__country,\n.work-card__organization {\n  font-size: 18px;\n  font-weight: 800;\n}\n.identity-card__kind,\n.work-card__kind {\n  font-size: 11px;\n  letter-spacing: 0.1em;\n  opacity: 0.8;\n}\n.identity-card__body {\n  display: grid;\n  grid-template-columns: 82px 1fr;\n  gap: 20px;\n  padding: 22px;\n}\n.identity-card .person-avatar {\n  width: 82px;\n  height: 106px;\n}\n.identity-card__fields {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 12px 20px;\n}\n.identity-card__field--wide {\n  grid-column: 1/-1;\n}\n.identity-card__label,\n.work-card__label {\n  color: var(--id-muted);\n  font-size: 9px;\n  letter-spacing: 0.08em;\n}\n.identity-card__value,\n.work-card__value {\n  margin-top: 2px;\n  font-weight: 700;\n  overflow-wrap: anywhere;\n}\n.identity-card__footer {\n  display: flex;\n  justify-content: space-between;\n  padding: 12px 18px;\n  border-top: 1px solid #cfd4d7;\n  color: var(--id-muted);\n  font-size: 10px;\n}\n.work-card {\n  display: flex;\n  min-height: 485px;\n  width: min(100%, 340px);\n  flex-direction: column;\n  text-align: center;\n}\n.work-card__header {\n  display: block;\n  padding: 16px 18px;\n}\n.work-card__body {\n  display: grid;\n  flex: 1;\n  align-content: start;\n  justify-items: center;\n  padding: 20px 24px 24px;\n}\n.work-card .person-avatar {\n  width: 114px;\n  height: 124px;\n  border: 1px solid #c4cbd1;\n  border-radius: 8px;\n  background: #dbe0e4;\n}\n.work-card .person-avatar__head {\n  top: 18px;\n  width: 34px;\n  height: 34px;\n  background: #66727d;\n}\n.work-card .person-avatar__body {\n  bottom: -13px;\n  width: 82px;\n  height: 76px;\n  background: #66727d;\n}\n.work-card__name {\n  margin-top: 14px;\n  font-size: 22px;\n  font-weight: 800;\n}\n.work-card__title {\n  color: var(--id-blue);\n  font-size: 14px;\n  font-weight: 700;\n}\n.work-card__details {\n  display: grid;\n  width: 100%;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 16px 18px;\n  margin-top: 26px;\n  padding-top: 20px;\n  border-top: 1px solid #ccd2d7;\n  text-align: left;\n}\n.work-card__footer {\n  padding: 12px;\n  background: #e2e7ea;\n  color: var(--id-muted);\n  font:\n    11px ui-monospace,\n    monospace;\n}\n@media (max-width: 480px) {\n  .identity-card__body {\n    grid-template-columns: 64px 1fr;\n    gap: 13px;\n    padding: 16px;\n  }\n  .identity-card .person-avatar {\n    width: 64px;\n    height: 86px;\n  }\n  .identity-card__fields {\n    grid-template-columns: 1fr;\n  }\n  .identity-card__field--wide {\n    grid-column: auto;\n  }\n  .identity-card::after {\n    font-size: 26px;\n  }\n}\n';
-  const IdentityCardRenderer = { component: "document", variant: "identity-card", styles: common + styles, validate(value) {
-    const p = value;
-    return !!p && [p.country, p.fullName, p.idNumber, p.birthDate, p.validUntil].every((x) => typeof x === "string");
-  }, render(props) {
-    const root = element("article", "novel-ui identity-card"), header = element("header", "identity-card__header");
-    header.append(element("div", "identity-card__country", props.country), element("div", "identity-card__kind", props.documentName ?? "IDENTITY CARD"));
-    const body = element("section", "identity-card__body"), fields = element("div", "identity-card__fields");
-    [["NAME", props.fullName, true], ["ID NUMBER", props.idNumber, true], ["DATE OF BIRTH", props.birthDate], ["SEX", props.sex], ["NATIONALITY", props.nationality], ["VALID FROM", props.validFrom]].filter(([, value]) => value).forEach(([label, value, wide]) => {
-      const field = element("div", `identity-card__field${wide ? " identity-card__field--wide" : ""}`);
-      field.append(element("div", "identity-card__label", String(label)), element("div", "identity-card__value", String(value)));
-      fields.append(field);
-    });
-    body.append(renderDefaultPersonAvatar(), fields);
-    const footer = element("footer", "identity-card__footer");
-    footer.append(element("span", "", props.authority ?? "Fictional Authority"), element("span", "", `VALID UNTIL ${props.validUntil}`));
-    root.append(header, body, footer);
-    return root;
-  } };
+  const styles = ':host {\n  --id-blue: #244f78;\n  --id-red: #9d303b;\n  --id-paper: #f5f0e6;\n  --id-ink: #19232d;\n  --id-muted: #68737d;\n}\n.identity-card,\n.work-card {\n  position: relative;\n  width: min(100%, 660px);\n  overflow: hidden;\n  border: 1px solid #c9c4b9;\n  border-radius: 16px;\n  background: linear-gradient(135deg, #faf7ef, #e8edf0);\n  color: var(--id-ink);\n  box-shadow: 0 8px 24px #1f29371a;\n}\n.identity-card::after {\n  content: "FICTIONAL · NOVEL UI";\n  position: absolute;\n  top: 48%;\n  left: 18%;\n  transform: rotate(-16deg);\n  color: #8b949e1f;\n  font-size: 38px;\n  font-weight: 800;\n  letter-spacing: 0.08em;\n  pointer-events: none;\n}\n.identity-card {\n  width: min(100%, 480px);\n  border-radius: 12px;\n}\n.identity-card__header,\n.work-card__header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 14px 18px;\n  background: var(--id-blue);\n  color: #fff;\n}\n.identity-card__country,\n.work-card__organization {\n  font-size: 18px;\n  font-weight: 800;\n}\n.identity-card__kind,\n.work-card__kind {\n  font-size: 11px;\n  letter-spacing: 0.1em;\n  opacity: 0.8;\n}\n.identity-card__body {\n  display: grid;\n  grid-template-columns: 1fr 96px;\n  align-items: start;\n  gap: 18px;\n  padding: 18px;\n}\n.identity-card .person-avatar {\n  width: 96px;\n  height: 120px;\n  border: 1px solid #c4cbd1;\n  background: #dbe0e4;\n}\n.identity-card .person-avatar__head {\n  top: 16px;\n  width: 32px;\n  height: 32px;\n  background: #66727d;\n}\n.identity-card .person-avatar__body {\n  bottom: -12px;\n  width: 72px;\n  height: 68px;\n  background: #66727d;\n}\n.identity-card__fields {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 12px 20px;\n}\n.identity-card__field--wide {\n  grid-column: 1/-1;\n}\n.identity-card__label,\n.work-card__label {\n  color: var(--id-muted);\n  font-size: 9px;\n  letter-spacing: 0.08em;\n}\n.identity-card__value,\n.work-card__value {\n  margin-top: 2px;\n  font-weight: 700;\n  overflow-wrap: anywhere;\n}\n.identity-card__footer {\n  display: flex;\n  justify-content: space-between;\n  padding: 12px 18px;\n  border-top: 1px solid #cfd4d7;\n  color: var(--id-muted);\n  font-size: 10px;\n}\n.work-card {\n  display: flex;\n  min-height: 485px;\n  width: min(100%, 340px);\n  flex-direction: column;\n  text-align: center;\n}\n.work-card__header {\n  display: block;\n  padding: 16px 18px;\n}\n.work-card__body {\n  display: grid;\n  flex: 1;\n  align-content: start;\n  justify-items: center;\n  padding: 20px 24px 24px;\n}\n.work-card .person-avatar {\n  width: 114px;\n  height: 124px;\n  border: 1px solid #c4cbd1;\n  border-radius: 8px;\n  background: #dbe0e4;\n}\n.work-card .person-avatar__head {\n  top: 18px;\n  width: 34px;\n  height: 34px;\n  background: #66727d;\n}\n.work-card .person-avatar__body {\n  bottom: -13px;\n  width: 82px;\n  height: 76px;\n  background: #66727d;\n}\n.work-card__name {\n  margin-top: 14px;\n  font-size: 22px;\n  font-weight: 800;\n}\n.work-card__title {\n  color: var(--id-blue);\n  font-size: 14px;\n  font-weight: 700;\n}\n.work-card__details {\n  display: grid;\n  width: 100%;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 16px 18px;\n  margin-top: 26px;\n  padding-top: 20px;\n  border-top: 1px solid #ccd2d7;\n  text-align: left;\n}\n.work-card__footer {\n  padding: 12px;\n  background: #e2e7ea;\n  color: var(--id-muted);\n  font:\n    11px ui-monospace,\n    monospace;\n}\n@media (max-width: 380px) {\n  .identity-card__body {\n    grid-template-columns: 1fr 64px;\n    gap: 13px;\n    padding: 16px;\n  }\n  .identity-card .person-avatar {\n    width: 64px;\n    height: 86px;\n  }\n  .identity-card__fields {\n    grid-template-columns: 1fr;\n  }\n  .identity-card__field--wide {\n    grid-column: auto;\n  }\n  .identity-card::after {\n    font-size: 26px;\n  }\n}\n';
+  const IdentityCardRenderer = {
+    component: "document",
+    variant: "identity-card",
+    styles: common + styles,
+    validate(value) {
+      const p = value;
+      return !!p && [p.country, p.fullName, p.idNumber, p.birthDate, p.validUntil].every(
+        (x) => typeof x === "string"
+      );
+    },
+    render(props) {
+      const root = element("article", "novel-ui identity-card"), header = element("header", "identity-card__header");
+      header.append(
+        element("div", "identity-card__country", props.country),
+        element(
+          "div",
+          "identity-card__kind",
+          props.documentName ?? "IDENTITY CARD"
+        )
+      );
+      const body = element("section", "identity-card__body"), fields = element("div", "identity-card__fields");
+      [
+        ["NAME", props.fullName, true],
+        ["ID NUMBER", props.idNumber, true],
+        ["DATE OF BIRTH", props.birthDate],
+        ["SEX", props.sex],
+        ["NATIONALITY", props.nationality],
+        ["VALID FROM", props.validFrom]
+      ].filter(([, value]) => value).forEach(([label, value, wide]) => {
+        const field = element(
+          "div",
+          `identity-card__field${wide ? " identity-card__field--wide" : ""}`
+        );
+        field.append(
+          element("div", "identity-card__label", String(label)),
+          element("div", "identity-card__value", String(value))
+        );
+        fields.append(field);
+      });
+      body.append(fields, renderDefaultPersonAvatar());
+      const footer = element("footer", "identity-card__footer");
+      footer.append(
+        element("span", "", props.authority ?? "Fictional Authority"),
+        element("span", "", `VALID UNTIL ${props.validUntil}`)
+      );
+      root.append(header, body, footer);
+      return root;
+    }
+  };
   const WorkCardRenderer = { component: "document", variant: "work-card", styles: common + styles, validate(value) {
     const p = value;
     return !!p && [p.organization, p.fullName, p.title, p.employeeId].every((x) => typeof x === "string");
