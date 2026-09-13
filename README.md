@@ -38,6 +38,9 @@ Built-in renderer keys:
 - `chat:kakao`
 - `document:medical`
 - `social:x-post`
+- `social:x-feed`
+- `social:x-notifications`
+- `social:x-trends`
 - `article:theqoo`
 - `social:weibo-post`
 

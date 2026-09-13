@@ -8,6 +8,9 @@ import { MedicalRenderer } from "./renderers/document/medical";
 import { TheqooRenderer } from "./renderers/article/theqoo";
 import { WeiboRenderer } from "./renderers/social/weibo-post";
 import { XPostRenderer } from "./renderers/social/x-post";
+import { XFeedRenderer } from "./renderers/social/x-feed";
+import { XNotificationsRenderer } from "./renderers/social/x-notifications";
+import { XTrendsRenderer } from "./renderers/social/x-trends";
 
 declare global { interface Window { __novelUIRuntimeStarted?: boolean; } }
 
@@ -20,6 +23,9 @@ function bootstrap() {
   registry.register(KakaoRenderer);
   registry.register(MedicalRenderer);
   registry.register(XPostRenderer);
+  registry.register(XFeedRenderer);
+  registry.register(XNotificationsRenderer);
+  registry.register(XTrendsRenderer);
   registry.register(TheqooRenderer);
   registry.register(WeiboRenderer);
   new NovelUIRuntime(adapter, registry, localStorage.getItem("novel-ui-debug") === "true").start();

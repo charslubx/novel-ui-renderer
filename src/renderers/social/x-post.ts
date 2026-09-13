@@ -3,18 +3,15 @@ import { element } from "../../utils/dom";
 import common from "../../styles/common.css?inline";
 import styles from "../../styles/x-post.css?inline";
 
-interface XPostProps { displayName:string; handle:string; verified?:boolean; text:string; timestamp:string; replies?:number; reposts?:number; likes?:number; views?:number; }
-const optionalNumber=(value:unknown)=>value===undefined || (typeof value==="number" && value>=0);
-export const XPostRenderer: NovelUIRenderer<XPostProps> = {
-  component:"social", variant:"x-post", styles:common+styles,
-  validate(value):value is XPostProps { const p=value as XPostProps; return !!p && [p.displayName,p.handle,p.text,p.timestamp].every((x)=>typeof x==="string") && [p.replies,p.reposts,p.likes,p.views].every(optionalNumber); },
-  render(props) {
-    const root=element("article","novel-ui x-post"), author=element("div","x-post__author");
-    author.append(element("span","x-post__name",props.displayName));
-    if(props.verified) author.append(element("span","x-post__verified","●"));
-    author.append(element("span","x-post__handle",`@${props.handle.replace(/^@/,"")}`),element("span","x-post__time",`· ${props.timestamp}`));
-    const stats=element("footer","x-post__stats");
-    [["回复",props.replies],["转发",props.reposts],["喜欢",props.likes],["浏览",props.views]].forEach(([label,value])=>stats.append(element("span","",`${label} ${value ?? 0}`)));
-    root.append(author,element("div","x-post__text",props.text),stats); return root;
-  }
-};
+export interface XMedia { type:"image"|"link"; url?:string; alt?:string; title?:string; description?:string; domain?:string; }
+export interface XPostProps { id?:string; displayName:string; handle:string; avatar?:string; verified?:boolean; text:string; timestamp:string; translatedFrom?:string; translationLabel?:string; media?:XMedia[]; replies?:number; reposts?:number; likes?:number; views?:number; }
+const optionalNumber=(value:unknown)=>value===undefined||(typeof value==="number"&&value>=0);
+const isText=(value:unknown)=>value===undefined||typeof value==="string";
+const isMedia=(value:unknown):value is XMedia=>{const media=value as XMedia;return !!media&&(media.type==="image"||media.type==="link")&&[media.url,media.alt,media.title,media.description,media.domain].every(isText);};
+export function isXPostProps(value:unknown):value is XPostProps {const post=value as XPostProps;return !!post&&[post.displayName,post.handle,post.text,post.timestamp].every((item)=>typeof item==="string")&&[post.replies,post.reposts,post.likes,post.views].every(optionalNumber)&&(post.media===undefined||(Array.isArray(post.media)&&post.media.every(isMedia)));}
+function safeImageUrl(value?:string){if(!value)return;try{const url=new URL(value,location.href);if(["http:","https:"].includes(url.protocol))return url.href;}catch{return;}}
+function avatar(props:XPostProps){const box=element("div","x-avatar"),url=safeImageUrl(props.avatar);if(url){const image=element("img","x-avatar__image");image.src=url;image.alt=`${props.displayName}的头像`;image.loading="lazy";image.referrerPolicy="no-referrer";box.append(image);}else box.append(element("span","x-avatar__fallback",props.displayName.trim().slice(0,1).toUpperCase()||"?"));return box;}
+function renderMedia(items:XMedia[]){const grid=element("div",`x-media x-media--${Math.min(items.length,4)}`);items.slice(0,4).forEach((item)=>{const url=safeImageUrl(item.url);if(item.type==="image"){const frame=element("div","x-media__image-frame");if(url){const image=element("img","x-media__image");image.src=url;image.alt=item.alt??"帖子图片";image.loading="lazy";image.referrerPolicy="no-referrer";frame.append(image);}else frame.append(element("span","x-media__placeholder",item.alt??"图片"));grid.append(frame);}else{const card=element("div","x-media__link");if(url){const image=element("img","x-media__link-image");image.src=url;image.alt=item.alt??"链接预览";image.loading="lazy";image.referrerPolicy="no-referrer";card.append(image);}const copy=element("div","x-media__link-copy");copy.append(element("div","x-media__domain",item.domain??"链接"),element("div","x-media__title",item.title??"链接内容"));if(item.description)copy.append(element("div","x-media__description",item.description));card.append(copy);grid.append(card);}});return grid;}
+const compact=(value=0)=>value>=10000?`${(value/1000).toFixed(value>=100000?0:1)}K`:String(value||"");
+export function renderXPost(props:XPostProps){const root=element("article","x-post");root.append(avatar(props));const body=element("div","x-post__body"),header=element("header","x-post__author");header.append(element("span","x-post__name",props.displayName));if(props.verified)header.append(element("span","x-post__verified","✓"));header.append(element("span","x-post__handle",`@${props.handle.replace(/^@/,"")}`),element("span","x-post__time",`· ${props.timestamp}`),element("span","x-post__more","⋮"));body.append(header);if(props.translatedFrom)body.append(element("div","x-post__translation",`◉ 翻译自${props.translatedFrom}　${props.translationLabel??"显示原文"}`));body.append(element("div","x-post__text",props.text));if(props.media?.length)body.append(renderMedia(props.media));const stats=element("footer","x-post__stats");[["◯",props.replies,"回复"],["⇄",props.reposts,"转发"],["♡",props.likes,"喜欢"],["▥",props.views,"浏览"],["⌑",undefined,"收藏"],["⌯",undefined,"分享"]].forEach(([icon,value,label])=>{const stat=element("span","x-post__stat",`${icon}${typeof value==="number"?` ${compact(value)}`:""}`);stat.setAttribute("aria-label",String(label));stats.append(stat);});body.append(stats);root.append(body);return root;}
+export const XPostRenderer:NovelUIRenderer<XPostProps>={component:"social",variant:"x-post",styles:common+styles,validate:isXPostProps,render(props){const shell=element("section","novel-ui x-shell x-shell--single");shell.append(renderXPost(props));return shell;}};

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.1.0
+// @version      0.2.0
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -360,27 +360,180 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles = ".x-post { max-width: 600px; padding: 16px; border: 1px solid #cfd9de; border-radius: 16px; background: #fff; color: #0f1419; }\n.x-post__author { display: flex; align-items: center; gap: 7px; }\n.x-post__name { font-weight: 700; }\n.x-post__verified { color: #1d9bf0; }\n.x-post__handle,.x-post__time { color: #536471; }\n.x-post__text { margin: 12px 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 16px; }\n.x-post__stats { display: flex; justify-content: space-between; padding-top: 12px; border-top: 1px solid #eff3f4; color: #536471; font-size: 12px; }\n";
+  const styles = ':host{--x-bg:#000;--x-text:#e7e9ea;--x-muted:#71767b;--x-line:#2f3336;--x-blue:#1d9bf0}.x-shell{width:min(100%,680px);overflow:hidden;border:1px solid var(--x-line);border-radius:18px;background:var(--x-bg);color:var(--x-text);font-family:Arial,"Microsoft YaHei","PingFang SC",sans-serif}.x-shell--single{border-radius:14px}.x-app-header{position:relative;display:flex;min-height:58px;align-items:center;justify-content:center;padding:8px 52px;border-bottom:1px solid var(--x-line);font-size:19px;font-weight:800}.x-app-header__avatar{position:absolute;left:16px;width:34px;height:34px;border-radius:50%;background:#30353a}.x-app-header__action{position:absolute;right:16px;color:var(--x-text);font-size:24px}.x-tabs{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;min-height:48px;border-bottom:1px solid var(--x-line);color:var(--x-muted)}.x-tab{display:flex;position:relative;align-items:center;justify-content:center;padding:12px 8px;font-weight:700;white-space:nowrap}.x-tab--active{color:var(--x-text)}.x-tab--active::after{content:"";position:absolute;right:20%;bottom:0;left:20%;height:3px;border-radius:3px;background:var(--x-blue)}.x-post{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;padding:14px 16px 7px;border-bottom:1px solid var(--x-line)}.x-avatar{width:48px;height:48px;overflow:hidden;border-radius:50%;background:#272b2f}.x-avatar__image{width:100%;height:100%;object-fit:cover}.x-avatar__fallback{display:grid;width:100%;height:100%;place-items:center;color:#fff;font-size:20px;font-weight:800}.x-post__body{min-width:0}.x-post__author{display:flex;min-width:0;align-items:center;gap:4px;font-size:15px;line-height:20px}.x-post__name{overflow:hidden;font-weight:800;text-overflow:ellipsis;white-space:nowrap}.x-post__verified{display:grid;width:15px;height:15px;flex:0 0 15px;place-items:center;border-radius:50%;background:var(--x-blue);color:#fff;font-size:10px}.x-post__handle,.x-post__time{overflow:hidden;color:var(--x-muted);text-overflow:ellipsis;white-space:nowrap}.x-post__more{margin-left:auto;color:var(--x-muted);font-size:20px}.x-post__translation{margin:5px 0 2px;color:var(--x-muted);font-size:13px}.x-post__text{margin:4px 0 10px;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--x-text);font-size:16px;line-height:1.45}.x-media{display:grid;max-height:520px;overflow:hidden;margin:8px 0;border:1px solid var(--x-line);border-radius:16px;gap:2px;background:var(--x-line)}.x-media--2,.x-media--3,.x-media--4{grid-template-columns:repeat(2,1fr)}.x-media__image-frame{display:grid;min-height:180px;place-items:center;overflow:hidden;background:#16181c}.x-media--1 .x-media__image-frame{min-height:280px}.x-media__image{width:100%;height:100%;min-height:inherit;object-fit:cover}.x-media__placeholder{padding:30px;color:var(--x-muted);text-align:center}.x-media__link{grid-column:1/-1;overflow:hidden;background:#000}.x-media__link-image{width:100%;max-height:290px;object-fit:cover}.x-media__link-copy{padding:10px 12px;border-top:1px solid var(--x-line)}.x-media__domain,.x-media__description{color:var(--x-muted);font-size:13px}.x-media__title{margin:2px 0;color:var(--x-text)}.x-post__stats{display:grid;grid-template-columns:repeat(6,1fr);align-items:center;margin:4px 0 1px;color:var(--x-muted);font-size:12px}.x-post__stat{min-width:0;white-space:nowrap}.x-feed-empty{padding:46px 20px;color:var(--x-muted);text-align:center}.x-search{display:flex;align-items:center;gap:10px;padding:10px 16px}.x-search__avatar{width:34px;height:34px;flex:0 0 34px;border-radius:50%;background:#30353a}.x-search__box{flex:1;padding:11px 18px;border-radius:999px;background:#202327;color:var(--x-muted);font-size:16px}.x-search__gear{color:var(--x-text);font-size:23px}.x-trend{position:relative;padding:13px 20px}.x-trend__category,.x-trend__posts{color:var(--x-muted);font-size:13px}.x-trend__title{margin:3px 0;color:var(--x-text);font-size:16px;font-weight:800}.x-trend__more{position:absolute;top:9px;right:18px;color:var(--x-muted);font-size:20px}.x-notification{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--x-line)}.x-notification__type{color:#7856ff;font-size:29px;text-align:center}.x-notification__top{display:flex;align-items:center;gap:7px}.x-notification__avatar{width:38px;height:38px;overflow:hidden;border-radius:50%;background:#272b2f}.x-notification__avatar img{width:100%;height:100%;object-fit:cover}.x-notification__name{margin-top:7px;font-weight:800}.x-notification__meta{color:var(--x-muted);font-weight:400}.x-notification__translation{margin:7px 0;color:var(--x-muted);font-size:13px}.x-notification__text{color:var(--x-muted);font-size:16px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}@media(max-width:520px){.x-shell{border-radius:12px}.x-post{grid-template-columns:40px minmax(0,1fr);padding-inline:12px}.x-avatar{width:40px;height:40px}.x-post__stats{font-size:11px}.x-post__handle{max-width:90px}.x-tabs{overflow-x:auto}.x-tab{padding-inline:14px}}\n';
   const optionalNumber = (value) => value === void 0 || typeof value === "number" && value >= 0;
-  const XPostRenderer = {
-    component: "social",
-    variant: "x-post",
-    styles: common + styles,
-    validate(value) {
-      const p = value;
-      return !!p && [p.displayName, p.handle, p.text, p.timestamp].every((x) => typeof x === "string") && [p.replies, p.reposts, p.likes, p.views].every(optionalNumber);
-    },
-    render(props) {
-      const root = element("article", "novel-ui x-post"), author = element("div", "x-post__author");
-      author.append(element("span", "x-post__name", props.displayName));
-      if (props.verified) author.append(element("span", "x-post__verified", "●"));
-      author.append(element("span", "x-post__handle", `@${props.handle.replace(/^@/, "")}`), element("span", "x-post__time", `· ${props.timestamp}`));
-      const stats = element("footer", "x-post__stats");
-      [["回复", props.replies], ["转发", props.reposts], ["喜欢", props.likes], ["浏览", props.views]].forEach(([label, value]) => stats.append(element("span", "", `${label} ${value ?? 0}`)));
-      root.append(author, element("div", "x-post__text", props.text), stats);
-      return root;
-    }
+  const isText = (value) => value === void 0 || typeof value === "string";
+  const isMedia = (value) => {
+    const media = value;
+    return !!media && (media.type === "image" || media.type === "link") && [media.url, media.alt, media.title, media.description, media.domain].every(isText);
   };
+  function isXPostProps(value) {
+    const post = value;
+    return !!post && [post.displayName, post.handle, post.text, post.timestamp].every((item) => typeof item === "string") && [post.replies, post.reposts, post.likes, post.views].every(optionalNumber) && (post.media === void 0 || Array.isArray(post.media) && post.media.every(isMedia));
+  }
+  function safeImageUrl(value) {
+    if (!value) return;
+    try {
+      const url = new URL(value, location.href);
+      if (["http:", "https:"].includes(url.protocol)) return url.href;
+    } catch {
+      return;
+    }
+  }
+  function avatar(props) {
+    const box = element("div", "x-avatar"), url = safeImageUrl(props.avatar);
+    if (url) {
+      const image = element("img", "x-avatar__image");
+      image.src = url;
+      image.alt = `${props.displayName}的头像`;
+      image.loading = "lazy";
+      image.referrerPolicy = "no-referrer";
+      box.append(image);
+    } else box.append(element("span", "x-avatar__fallback", props.displayName.trim().slice(0, 1).toUpperCase() || "?"));
+    return box;
+  }
+  function renderMedia(items) {
+    const grid = element("div", `x-media x-media--${Math.min(items.length, 4)}`);
+    items.slice(0, 4).forEach((item) => {
+      const url = safeImageUrl(item.url);
+      if (item.type === "image") {
+        const frame = element("div", "x-media__image-frame");
+        if (url) {
+          const image = element("img", "x-media__image");
+          image.src = url;
+          image.alt = item.alt ?? "帖子图片";
+          image.loading = "lazy";
+          image.referrerPolicy = "no-referrer";
+          frame.append(image);
+        } else frame.append(element("span", "x-media__placeholder", item.alt ?? "图片"));
+        grid.append(frame);
+      } else {
+        const card = element("div", "x-media__link");
+        if (url) {
+          const image = element("img", "x-media__link-image");
+          image.src = url;
+          image.alt = item.alt ?? "链接预览";
+          image.loading = "lazy";
+          image.referrerPolicy = "no-referrer";
+          card.append(image);
+        }
+        const copy = element("div", "x-media__link-copy");
+        copy.append(element("div", "x-media__domain", item.domain ?? "链接"), element("div", "x-media__title", item.title ?? "链接内容"));
+        if (item.description) copy.append(element("div", "x-media__description", item.description));
+        card.append(copy);
+        grid.append(card);
+      }
+    });
+    return grid;
+  }
+  const compact = (value = 0) => value >= 1e4 ? `${(value / 1e3).toFixed(value >= 1e5 ? 0 : 1)}K` : String(value || "");
+  function renderXPost(props) {
+    var _a;
+    const root = element("article", "x-post");
+    root.append(avatar(props));
+    const body = element("div", "x-post__body"), header = element("header", "x-post__author");
+    header.append(element("span", "x-post__name", props.displayName));
+    if (props.verified) header.append(element("span", "x-post__verified", "✓"));
+    header.append(element("span", "x-post__handle", `@${props.handle.replace(/^@/, "")}`), element("span", "x-post__time", `· ${props.timestamp}`), element("span", "x-post__more", "⋮"));
+    body.append(header);
+    if (props.translatedFrom) body.append(element("div", "x-post__translation", `◉ 翻译自${props.translatedFrom}　${props.translationLabel ?? "显示原文"}`));
+    body.append(element("div", "x-post__text", props.text));
+    if ((_a = props.media) == null ? void 0 : _a.length) body.append(renderMedia(props.media));
+    const stats = element("footer", "x-post__stats");
+    [["◯", props.replies, "回复"], ["⇄", props.reposts, "转发"], ["♡", props.likes, "喜欢"], ["▥", props.views, "浏览"], ["⌑", void 0, "收藏"], ["⌯", void 0, "分享"]].forEach(([icon, value, label]) => {
+      const stat = element("span", "x-post__stat", `${icon}${typeof value === "number" ? ` ${compact(value)}` : ""}`);
+      stat.setAttribute("aria-label", String(label));
+      stats.append(stat);
+    });
+    body.append(stats);
+    root.append(body);
+    return root;
+  }
+  const XPostRenderer = { component: "social", variant: "x-post", styles: common + styles, validate: isXPostProps, render(props) {
+    const shell = element("section", "novel-ui x-shell x-shell--single");
+    shell.append(renderXPost(props));
+    return shell;
+  } };
+  const XFeedRenderer = { component: "social", variant: "x-feed", styles: common + styles, validate(value) {
+    const p = value;
+    return !!p && Array.isArray(p.posts) && p.posts.every(isXPostProps) && (p.title === void 0 || typeof p.title === "string");
+  }, render(props) {
+    const shell = element("section", "novel-ui x-shell"), header = element("header", "x-app-header", props.title ?? "首页");
+    header.append(element("span", "x-app-header__avatar"), element("span", "x-app-header__action", "⚙"));
+    const tabs = element("nav", "x-tabs");
+    tabs.append(element("span", `x-tab ${props.activeTab !== "following" ? "x-tab--active" : ""}`, "为你推荐"), element("span", `x-tab ${props.activeTab === "following" ? "x-tab--active" : ""}`, "正在关注"));
+    shell.append(header, tabs);
+    if (props.posts.length) props.posts.forEach((post) => shell.append(renderXPost(post)));
+    else shell.append(element("div", "x-feed-empty", "暂无帖子"));
+    return shell;
+  } };
+  const isNotification = (value) => {
+    const n = value;
+    return !!n && typeof n.id === "string" && typeof n.displayName === "string" && typeof n.timestamp === "string" && typeof n.text === "string";
+  };
+  function safeUrl(value) {
+    if (!value) return;
+    try {
+      const url = new URL(value, location.href);
+      if (["http:", "https:"].includes(url.protocol)) return url.href;
+    } catch {
+      return;
+    }
+  }
+  const XNotificationsRenderer = { component: "social", variant: "x-notifications", styles: common + styles, validate(value) {
+    const p = value;
+    return !!p && Array.isArray(p.notifications) && p.notifications.every(isNotification);
+  }, render(props) {
+    const shell = element("section", "novel-ui x-shell"), header = element("header", "x-app-header", "通知");
+    header.append(element("span", "x-app-header__avatar"), element("span", "x-app-header__action", "⚙"));
+    const tabs = element("nav", "x-tabs"), active = props.activeTab ?? "all";
+    [["all", "全部"], ["mentions", "提及"], ["verified", "已认证"]].forEach(([key, label]) => tabs.append(element("span", `x-tab ${active === key ? "x-tab--active" : ""}`, label)));
+    shell.append(header, tabs);
+    props.notifications.forEach((notice) => {
+      const row = element("article", "x-notification");
+      row.append(element("div", "x-notification__type", notice.type === "mention" ? "@" : "✦"));
+      const body = element("div", "x-notification__body"), top = element("div", "x-notification__top"), avatar2 = element("div", "x-notification__avatar"), url = safeUrl(notice.avatar);
+      if (url) {
+        const image = element("img");
+        image.src = url;
+        image.alt = "";
+        image.loading = "lazy";
+        avatar2.append(image);
+      } else avatar2.append(element("span", "x-avatar__fallback", notice.displayName.slice(0, 1)));
+      top.append(avatar2, element("span", "x-post__more", "⋮"));
+      body.append(top);
+      const name = element("div", "x-notification__name", `${notice.displayName} `);
+      name.append(element("span", "x-notification__meta", `· ${notice.timestamp}`));
+      body.append(name);
+      if (notice.translatedFrom) body.append(element("div", "x-notification__translation", `◉ 翻译自${notice.translatedFrom}　显示原文`));
+      body.append(element("div", "x-notification__text", notice.text));
+      row.append(body);
+      shell.append(row);
+    });
+    return shell;
+  } };
+  const isTrend = (value) => {
+    const t = value;
+    return !!t && typeof t.id === "string" && typeof t.category === "string" && typeof t.title === "string" && (t.posts === void 0 || typeof t.posts === "number" && t.posts >= 0);
+  };
+  const XTrendsRenderer = { component: "social", variant: "x-trends", styles: common + styles, validate(value) {
+    const p = value;
+    return !!p && Array.isArray(p.trends) && p.trends.every(isTrend);
+  }, render(props) {
+    const shell = element("section", "novel-ui x-shell"), search = element("header", "x-search");
+    search.append(element("span", "x-search__avatar"), element("div", "x-search__box", `⌕　${props.searchPlaceholder ?? "搜索"}`), element("span", "x-search__gear", "⚙"));
+    const tabs = element("nav", "x-tabs"), active = props.activeTab ?? "explore";
+    [["explore", "探索"], ["trending", "当前趋势"], ["news", "新闻"], ["sports", "体育"], ["entertainment", "娱乐"]].forEach(([key, label]) => tabs.append(element("span", `x-tab ${active === key ? "x-tab--active" : ""}`, label)));
+    shell.append(search, tabs);
+    props.trends.forEach((trend) => {
+      const item = element("div", "x-trend");
+      item.append(element("div", "x-trend__category", trend.category), element("div", "x-trend__title", trend.title));
+      if (trend.posts !== void 0) item.append(element("div", "x-trend__posts", `${trend.posts.toLocaleString()} 帖子`));
+      item.append(element("span", "x-trend__more", "⋮"));
+      shell.append(item);
+    });
+    return shell;
+  } };
   function resolveAdapter() {
     return [new ChatGPTAdapter(), new GeminiAdapter()].find((adapter) => adapter.match());
   }
@@ -393,6 +546,9 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     registry.register(KakaoRenderer);
     registry.register(MedicalRenderer);
     registry.register(XPostRenderer);
+    registry.register(XFeedRenderer);
+    registry.register(XNotificationsRenderer);
+    registry.register(XTrendsRenderer);
     registry.register(TheqooRenderer);
     registry.register(WeiboRenderer);
     new NovelUIRuntime(adapter, registry, localStorage.getItem("novel-ui-debug") === "true").start();
