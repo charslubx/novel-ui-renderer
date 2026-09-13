@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.4.3
+// @version      0.4.4
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -123,7 +123,8 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
         if (isNovelUIBlock(candidate)) result.push({ block: candidate, raw, start, end });
         else logger.warn("Invalid Novel UI schema", candidate);
       } catch (error) {
-        logger.error("Invalid Novel UI JSON", error);
+        const missingVariant = /"component"\s*:\s*"[^"]+"\s*,\s*"[^"]+"\s*,\s*"props"\s*:/.test(json);
+        logger.error(missingVariant ? 'Invalid Novel UI JSON: possible missing "variant" key before renderer name' : "Invalid Novel UI JSON", error);
       }
       cursor = end;
     }

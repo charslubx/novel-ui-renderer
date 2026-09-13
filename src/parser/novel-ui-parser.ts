@@ -33,7 +33,8 @@ export function parseNovelUIBlocksDetailed(text: string): ParsedNovelUIBlock[] {
       if (isNovelUIBlock(candidate)) result.push({ block: candidate, raw, start, end });
       else logger.warn("Invalid Novel UI schema", candidate);
     } catch (error) {
-      logger.error("Invalid Novel UI JSON", error);
+      const missingVariant=/"component"\s*:\s*"[^"]+"\s*,\s*"[^"]+"\s*,\s*"props"\s*:/.test(json);
+      logger.error(missingVariant?'Invalid Novel UI JSON: possible missing "variant" key before renderer name':"Invalid Novel UI JSON",error);
     }
     cursor = end;
   }

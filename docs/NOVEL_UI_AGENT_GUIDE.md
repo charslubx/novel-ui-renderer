@@ -9,6 +9,7 @@
 3. 标记和 JSON **不得放进 Markdown 代码块**，不要添加 `json`、反引号或解释文字到标记内部。
 4. 每个区块必须包含：`schema`、`version`、`component`、`variant`、`props`。
 5. 固定使用 `"schema":"novel-ui"` 和 `"version":"1.0"`。
+   `component` 后必须显式输出 `"variant":"样式名"`，不能只写一个裸的样式字符串。
 6. JSON 必须严格合法：使用双引号、不得有注释、不得有尾随逗号、不得输出 `undefined`。
 7. 一个回答可以包含多个 Novel UI 区块，区块之间可以穿插小说正文。
 8. 必须等 JSON 完整后再输出结束标记。不要输出半截区块。
