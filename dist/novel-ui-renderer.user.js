@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.3.4
+// @version      0.3.5
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -257,12 +257,12 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     return node;
   }
   const common = ':host { --novel-font-size: 14px; --novel-radius: 12px; --novel-spacing: 8px; color: #202124; font: var(--novel-font-size)/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }\n*,*::before,*::after { box-sizing: border-box; }\n.novel-ui { margin: 16px 0; overflow: hidden; }\n.fallback { padding: 12px; border: 1px dashed #d97706; border-radius: var(--novel-radius); color: #92400e; background: #fffbeb; }\n.source-toggle { margin: 8px 0 0; border: 0; background: transparent; color: #64748b; cursor: pointer; font: inherit; font-size: 12px; }\n.source { white-space: pre-wrap; overflow-wrap: anywhere; padding: 10px; background: #111827; color: #e5e7eb; border-radius: 8px; font: 12px/1.45 ui-monospace,monospace; }\n';
-  const styles$6 = ".kakao { max-width: 430px; border-radius: 18px; background: #b9ced9; box-shadow: 0 10px 30px #0f172a20; }\n.kakao__header { padding: 14px 18px; background: #ffffffde; font-weight: 700; text-align: center; }\n.kakao__date { width: max-content; margin: 12px auto; padding: 4px 10px; border-radius: 999px; color: #fff; background: #607d8b99; font-size: 11px; }\n.kakao__messages { display: grid; gap: 10px; padding: 4px 14px 18px; }\n.message { display: flex; flex-direction: column; max-width: 78%; }\n.message--right { justify-self: end; align-items: end; }\n.message--left { justify-self: start; align-items: start; }\n.message__name { margin: 0 4px 3px; font-size: 11px; color: #475569; }\n.message__line { display: flex; align-items: end; gap: 5px; }\n.message--right .message__line { flex-direction: row-reverse; }\n.message__bubble { padding: 9px 12px; border-radius: 13px; background: #fff; white-space: pre-wrap; overflow-wrap: anywhere; }\n.message--right .message__bubble { background: #fee500; }\n.message__meta { display: grid; justify-items: end; color: #475569; font-size: 10px; white-space: nowrap; }\n.message__read { color: #8a6d00; }\n";
+  const styles$7 = ".kakao { max-width: 430px; border-radius: 18px; background: #b9ced9; box-shadow: 0 10px 30px #0f172a20; }\n.kakao__header { padding: 14px 18px; background: #ffffffde; font-weight: 700; text-align: center; }\n.kakao__date { width: max-content; margin: 12px auto; padding: 4px 10px; border-radius: 999px; color: #fff; background: #607d8b99; font-size: 11px; }\n.kakao__messages { display: grid; gap: 10px; padding: 4px 14px 18px; }\n.message { display: flex; flex-direction: column; max-width: 78%; }\n.message--right { justify-self: end; align-items: end; }\n.message--left { justify-self: start; align-items: start; }\n.message__name { margin: 0 4px 3px; font-size: 11px; color: #475569; }\n.message__line { display: flex; align-items: end; gap: 5px; }\n.message--right .message__line { flex-direction: row-reverse; }\n.message__bubble { padding: 9px 12px; border-radius: 13px; background: #fff; white-space: pre-wrap; overflow-wrap: anywhere; }\n.message--right .message__bubble { background: #fee500; }\n.message__meta { display: grid; justify-items: end; color: #475569; font-size: 10px; white-space: nowrap; }\n.message__read { color: #8a6d00; }\n";
   const isMessage = (x) => !!x && typeof x === "object" && typeof x.id === "string" && typeof x.sender === "string" && ["left", "right"].includes(x.side) && typeof x.text === "string";
   const KakaoRenderer = {
     component: "chat",
     variant: "kakao",
-    styles: common + styles$6,
+    styles: common + styles$7,
     validate(value) {
       const p = value;
       return !!p && typeof p.title === "string" && Array.isArray(p.messages) && p.messages.every(isMessage);
@@ -288,12 +288,12 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles$5 = ".medical { max-width: 680px; padding: 28px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; box-shadow: 0 8px 24px #0f172a14; }\n.medical__hospital { color: #0f4c81; font-size: 20px; font-weight: 800; }\n.medical__department { padding-bottom: 12px; border-bottom: 2px solid #0f4c81; color: #64748b; }\n.medical__title { margin: 22px 0; text-align: center; font-size: 19px; }\n.medical__fields { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,.9fr) minmax(240px,1.35fr); gap: 14px 24px; margin-bottom: 20px; }\n.medical__field { display: flex; min-width: 0; align-items: baseline; gap: 8px; }\n.medical__field--wide { grid-column: 1 / -1; }\n.medical__label { color: #64748b; }\n.medical__value { min-width: 0; overflow-wrap: anywhere; }\n.medical__findings-title { margin: 16px 0 6px; font-weight: 700; }\n.medical__findings { white-space: pre-wrap; overflow-wrap: anywhere; }\n@media (max-width: 640px) {\n  .medical { padding: 22px; }\n  .medical__fields { grid-template-columns: repeat(2,minmax(0,1fr)); }\n  .medical__field--examination,.medical__field--wide { grid-column: 1 / -1; }\n}\n@media (max-width: 430px) {\n  .medical__fields { grid-template-columns: 1fr; }\n  .medical__field { display: grid; gap: 2px; }\n}\n";
+  const styles$6 = ".medical { max-width: 680px; padding: 28px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; box-shadow: 0 8px 24px #0f172a14; }\n.medical__hospital { color: #0f4c81; font-size: 20px; font-weight: 800; }\n.medical__department { padding-bottom: 12px; border-bottom: 2px solid #0f4c81; color: #64748b; }\n.medical__title { margin: 22px 0; text-align: center; font-size: 19px; }\n.medical__fields { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,.9fr) minmax(240px,1.35fr); gap: 14px 24px; margin-bottom: 20px; }\n.medical__field { display: flex; min-width: 0; align-items: baseline; gap: 8px; }\n.medical__field--wide { grid-column: 1 / -1; }\n.medical__label { color: #64748b; }\n.medical__value { min-width: 0; overflow-wrap: anywhere; }\n.medical__findings-title { margin: 16px 0 6px; font-weight: 700; }\n.medical__findings { white-space: pre-wrap; overflow-wrap: anywhere; }\n@media (max-width: 640px) {\n  .medical { padding: 22px; }\n  .medical__fields { grid-template-columns: repeat(2,minmax(0,1fr)); }\n  .medical__field--examination,.medical__field--wide { grid-column: 1 / -1; }\n}\n@media (max-width: 430px) {\n  .medical__fields { grid-template-columns: 1fr; }\n  .medical__field { display: grid; gap: 2px; }\n}\n";
   const wideLabels = /* @__PURE__ */ new Set(["clinical history", "history", "clinical indication", "indication", "reason for examination"]);
   const MedicalRenderer = {
     component: "document",
     variant: "medical",
-    styles: common + styles$5,
+    styles: common + styles$6,
     validate(value) {
       const p = value;
       return !!p && [p.hospital, p.department, p.patient, p.reportTitle, p.findings].every((x) => typeof x === "string") && Array.isArray(p.fields) && p.fields.every((f) => f && typeof f.label === "string" && typeof f.value === "string" && (f.wide === void 0 || typeof f.wide === "boolean"));
@@ -314,7 +314,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles$4 = ".theqoo { max-width: 720px; border: 1px solid #dedede; background: #fff; color: #333; }\n.theqoo__bar { padding: 9px 14px; background: #375486; color: #fff; font-weight: 700; }\n.theqoo__header { padding: 16px; border-bottom: 1px solid #e5e5e5; }\n.theqoo__category { color: #e34b61; font-size: 12px; font-weight: 700; }\n.theqoo__title { margin: 5px 0 8px; font-size: 19px; }\n.theqoo__meta { color: #888; font-size: 11px; }\n.theqoo__content { padding: 22px 16px; white-space: pre-wrap; overflow-wrap: anywhere; }\n.theqoo__comments { border-top: 8px solid #f3f3f3; }\n.theqoo__comment { padding: 11px 16px; border-top: 1px solid #eee; }\n.theqoo__comment-meta { margin-bottom: 4px; color: #667; font-size: 11px; }\n.theqoo__likes { float: right; color: #e34b61; }\n";
+  const styles$5 = ".theqoo { max-width: 720px; border: 1px solid #dedede; background: #fff; color: #333; }\n.theqoo__bar { padding: 9px 14px; background: #375486; color: #fff; font-weight: 700; }\n.theqoo__header { padding: 16px; border-bottom: 1px solid #e5e5e5; }\n.theqoo__category { color: #e34b61; font-size: 12px; font-weight: 700; }\n.theqoo__title { margin: 5px 0 8px; font-size: 19px; }\n.theqoo__meta { color: #888; font-size: 11px; }\n.theqoo__content { padding: 22px 16px; white-space: pre-wrap; overflow-wrap: anywhere; }\n.theqoo__comments { border-top: 8px solid #f3f3f3; }\n.theqoo__comment { padding: 11px 16px; border-top: 1px solid #eee; }\n.theqoo__comment-meta { margin-bottom: 4px; color: #667; font-size: 11px; }\n.theqoo__likes { float: right; color: #e34b61; }\n";
   const isComment = (value) => {
     const c = value;
     return !!c && typeof c.id === "string" && typeof c.author === "string" && typeof c.text === "string" && (c.likes === void 0 || typeof c.likes === "number");
@@ -322,7 +322,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   const TheqooRenderer = {
     component: "article",
     variant: "theqoo",
-    styles: common + styles$4,
+    styles: common + styles$5,
     validate(value) {
       const p = value;
       return !!p && typeof p.title === "string" && typeof p.date === "string" && typeof p.content === "string" && (p.comments === void 0 || Array.isArray(p.comments) && p.comments.every(isComment));
@@ -345,6 +345,45 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
         });
         root.append(comments);
       }
+      return root;
+    }
+  };
+  const styles$4 = '.fivech{width:min(100%,720px);overflow:hidden;border:1px solid #b9b6aa;background:#efefef;color:#111;font-family:"MS PGothic","Yu Gothic",sans-serif;box-shadow:0 6px 18px #00000012}.fivech__header{padding:10px 14px;border-bottom:1px solid #c5c1b5;background:#ddd9ca}.fivech__board{color:#555;font-size:11px}.fivech__title{margin:3px 0;color:#800000;font-size:17px;font-weight:700}.fivech__thread-id{color:#777;font-size:10px}.fivech__thread{padding:8px 12px 14px}.fivech__post{padding:6px 0}.fivech__meta{display:flex;flex-wrap:wrap;gap:5px;font-size:12px;line-height:1.45}.fivech__number{color:#333}.fivech__name{color:#008000;font-weight:700}.fivech__time,.fivech__id{color:#555}.fivech__text{padding:3px 0 3px 20px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.55}.fivech__footer{padding:6px 12px;border-top:1px solid #d2cec2;color:#888;font-size:9px;letter-spacing:.08em;text-align:right}@media(max-width:480px){.fivech__thread{padding-right:8px;padding-left:8px}.fivech__text{padding-left:12px;font-size:13px}}\n';
+  const isPost = (value) => {
+    const post = value;
+    return !!post && Number.isInteger(post.number) && post.number > 0 && [post.name, post.timestamp, post.text].every((item) => typeof item === "string") && (post.id === void 0 || typeof post.id === "string");
+  };
+  const FiveChRenderer = {
+    component: "article",
+    variant: "5ch",
+    styles: common + styles$4,
+    validate(value) {
+      const props = value;
+      return !!props && typeof props.title === "string" && Array.isArray(props.posts) && props.posts.every(isPost) && (props.board === void 0 || typeof props.board === "string") && (props.threadId === void 0 || typeof props.threadId === "string");
+    },
+    render(props) {
+      const root = element("article", "novel-ui fivech");
+      const header = element("header", "fivech__header");
+      header.append(
+        element("div", "fivech__board", props.board ?? "5ちゃんねる"),
+        element("h2", "fivech__title", props.title)
+      );
+      if (props.threadId) header.append(element("div", "fivech__thread-id", `スレッド ${props.threadId}`));
+      root.append(header);
+      const thread = element("section", "fivech__thread");
+      for (const post of props.posts) {
+        const item = element("div", "fivech__post");
+        const meta = element("div", "fivech__meta");
+        meta.append(
+          element("span", "fivech__number", String(post.number)),
+          element("span", "fivech__name", post.name),
+          element("span", "fivech__time", post.timestamp)
+        );
+        if (post.id) meta.append(element("span", "fivech__id", `ID:${post.id}`));
+        item.append(meta, element("div", "fivech__text", post.text));
+        thread.append(item);
+      }
+      root.append(thread, element("footer", "fivech__footer", "5ch STYLE · FICTIONAL THREAD"));
       return root;
     }
   };
@@ -785,6 +824,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     registry.register(IdentityCardRenderer);
     registry.register(WorkCardRenderer);
     registry.register(TheqooRenderer);
+    registry.register(FiveChRenderer);
     registry.register(WeiboRenderer);
     new NovelUIRuntime(adapter, registry, localStorage.getItem("novel-ui-debug") === "true").start();
   }

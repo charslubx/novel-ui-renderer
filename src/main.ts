@@ -6,6 +6,7 @@ import { RendererRegistry } from "./core/renderer-registry";
 import { KakaoRenderer } from "./renderers/chat/kakao";
 import { MedicalRenderer } from "./renderers/document/medical";
 import { TheqooRenderer } from "./renderers/article/theqoo";
+import { FiveChRenderer } from "./renderers/article/fivech";
 import { WeiboRenderer } from "./renderers/social/weibo-post";
 import { XPostRenderer } from "./renderers/social/x-post";
 import { XFeedRenderer } from "./renderers/social/x-feed";
@@ -36,6 +37,7 @@ function bootstrap() {
   registry.register(IdentityCardRenderer);
   registry.register(WorkCardRenderer);
   registry.register(TheqooRenderer);
+  registry.register(FiveChRenderer);
   registry.register(WeiboRenderer);
   new NovelUIRuntime(adapter, registry, localStorage.getItem("novel-ui-debug") === "true").start();
 }
