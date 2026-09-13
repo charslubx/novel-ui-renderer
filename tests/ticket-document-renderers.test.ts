@@ -51,6 +51,7 @@ describe("ticket and document renderers", () => {
     });
     expect(result.querySelector(".person-avatar")).not.toBeNull();
     expect(result.querySelector(".person-avatar svg")).not.toBeNull();
+    expect(result.querySelectorAll(".person-avatar svg circle")).toHaveLength(1);
     expect(
       result
         .querySelector(".identity-card__body")

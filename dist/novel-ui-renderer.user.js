@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.4.2
+// @version      0.4.3
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -253,7 +253,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     if (text !== void 0) node.textContent = text;
     return node;
   }
-  const common = ':host {\n  --novel-font-size: 14px;\n  --novel-radius: 12px;\n  --novel-spacing: 8px;\n  color: #202124;\n  font:\n    var(--novel-font-size)/1.45 system-ui,\n    -apple-system,\n    "Segoe UI",\n    sans-serif;\n}\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n.novel-ui {\n  margin: 16px 0;\n  overflow: hidden;\n}\n.novel-default-avatar{display:grid;place-items:center;overflow:hidden;color:#737373}.novel-default-avatar svg{width:72%;height:72%;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}\n.fallback {\n  padding: 12px;\n  border: 1px dashed #d97706;\n  border-radius: var(--novel-radius);\n  color: #92400e;\n  background: #fffbeb;\n}\n.source-toggle {\n  margin: 8px 0 0;\n  border: 0;\n  background: transparent;\n  color: #64748b;\n  cursor: pointer;\n  font: inherit;\n  font-size: 12px;\n}\n.source {\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  padding: 10px;\n  background: #111827;\n  color: #e5e7eb;\n  border-radius: 8px;\n  font:\n    12px/1.45 ui-monospace,\n    monospace;\n}\n';
+  const common = ':host {\n  --novel-font-size: 14px;\n  --novel-radius: 12px;\n  --novel-spacing: 8px;\n  color: #202124;\n  font:\n    var(--novel-font-size)/1.45 system-ui,\n    -apple-system,\n    "Segoe UI",\n    sans-serif;\n}\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n.novel-ui {\n  margin: 16px 0;\n  overflow: hidden;\n}\n.novel-default-avatar{display:grid;place-items:center;overflow:hidden;color:#737373}.novel-default-avatar svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}\n.fallback {\n  padding: 12px;\n  border: 1px dashed #d97706;\n  border-radius: var(--novel-radius);\n  color: #92400e;\n  background: #fffbeb;\n}\n.source-toggle {\n  margin: 8px 0 0;\n  border: 0;\n  background: transparent;\n  color: #64748b;\n  cursor: pointer;\n  font: inherit;\n  font-size: 12px;\n}\n.source {\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  padding: 10px;\n  background: #111827;\n  color: #e5e7eb;\n  border-radius: 8px;\n  font:\n    12px/1.45 ui-monospace,\n    monospace;\n}\n';
   const styles$a = ".kakao { max-width: 430px; border-radius: 18px; background: #b9ced9; box-shadow: 0 10px 30px #0f172a20; }\n.kakao__header { padding: 14px 18px; background: #ffffffde; font-weight: 700; text-align: center; }\n.kakao__date { width: max-content; margin: 12px auto; padding: 4px 10px; border-radius: 999px; color: #fff; background: #607d8b99; font-size: 11px; }\n.kakao__messages { display: grid; gap: 10px; padding: 4px 14px 18px; }\n.message { display: flex; flex-direction: column; max-width: 78%; }\n.message--right { justify-self: end; align-items: end; }\n.message--left { justify-self: start; align-items: start; }\n.message__name { margin: 0 4px 3px; font-size: 11px; color: #475569; }\n.message__line { display: flex; align-items: end; gap: 5px; }\n.message--right .message__line { flex-direction: row-reverse; }\n.message__bubble { padding: 9px 12px; border-radius: 13px; background: #fff; white-space: pre-wrap; overflow-wrap: anywhere; }\n.message--right .message__bubble { background: #fee500; }\n.message__meta { display: grid; justify-items: end; color: #475569; font-size: 10px; white-space: nowrap; }\n.message__read { color: #8a6d00; }\n";
   const isMessage = (x) => !!x && typeof x === "object" && typeof x.id === "string" && typeof x.sender === "string" && ["left", "right"].includes(x.side) && typeof x.text === "string";
   const KakaoRenderer = {
@@ -413,17 +413,13 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 64 64");
     svg.setAttribute("aria-hidden", "true");
-    const outer = document.createElementNS(svg.namespaceURI, "circle");
-    outer.setAttribute("cx", "32");
-    outer.setAttribute("cy", "32");
-    outer.setAttribute("r", "27");
     const head = document.createElementNS(svg.namespaceURI, "circle");
     head.setAttribute("cx", "32");
     head.setAttribute("cy", "23");
     head.setAttribute("r", "10");
     const shoulders = document.createElementNS(svg.namespaceURI, "path");
     shoulders.setAttribute("d", "M14 51c2-11 9-17 18-17s16 6 18 17");
-    svg.append(outer, head, shoulders);
+    svg.append(head, shoulders);
     avatar2.append(svg);
     return avatar2;
   }

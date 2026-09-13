@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.4.2
+// @version      0.4.3
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
