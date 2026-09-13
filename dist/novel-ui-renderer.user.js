@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.4.4
+// @version      0.4.5
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -385,28 +385,6 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles$6 = ".weibo { max-width: 620px; padding: 16px; border: 1px solid #e6e6e6; border-radius: 10px; background: #fff; color: #222; box-shadow: 0 4px 16px #0000000d; }\n.weibo__author { display: flex; align-items: baseline; gap: 7px; }\n.weibo__name { font-weight: 700; }\n.weibo__verified { color: #ff8200; }\n.weibo__handle,.weibo__meta { color: #939393; font-size: 11px; }\n.weibo__text { margin: 12px 0 16px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 15px; line-height: 1.65; }\n.weibo__stats { display: grid; grid-template-columns: repeat(3,1fr); padding-top: 11px; border-top: 1px solid #f2f2f2; color: #666; text-align: center; font-size: 12px; }\n";
-  const optionalNumber$3 = (value) => value === void 0 || typeof value === "number" && value >= 0;
-  const WeiboRenderer = {
-    component: "social",
-    variant: "weibo-post",
-    styles: common + styles$6,
-    validate(value) {
-      const p = value;
-      return !!p && [p.displayName, p.timestamp, p.text].every((x) => typeof x === "string") && [p.reposts, p.comments, p.likes].every(optionalNumber$3);
-    },
-    render(props) {
-      const root = element("article", "novel-ui weibo"), author = element("div", "weibo__author");
-      author.append(element("span", "weibo__name", props.displayName));
-      if (props.verified) author.append(element("span", "weibo__verified", "V"));
-      if (props.handle) author.append(element("span", "weibo__handle", props.handle));
-      const meta = [props.timestamp, props.source ? `来自 ${props.source}` : ""].filter(Boolean).join(" · ");
-      const stats = element("footer", "weibo__stats");
-      [["转发", props.reposts], ["评论", props.comments], ["赞", props.likes]].forEach(([label, value]) => stats.append(element("span", "", `${label} ${value ?? 0}`)));
-      root.append(author, element("div", "weibo__meta", meta), element("div", "weibo__text", props.text), stats);
-      return root;
-    }
-  };
   function renderDefaultAvatar(className = "default-avatar", label = "默认头像") {
     const avatar2 = element("div", `${className} novel-default-avatar`);
     avatar2.setAttribute("role", "img");
@@ -427,6 +405,72 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   function renderDefaultPersonAvatar(className = "person-avatar") {
     return renderDefaultAvatar(className, "默认人物头像");
   }
+  function isPlatformComment(value) {
+    const c = value;
+    return !!c && typeof c.id === "string" && typeof c.displayName === "string" && typeof c.text === "string" && (c.handle === void 0 || typeof c.handle === "string") && (c.timestamp === void 0 || typeof c.timestamp === "string") && (c.likes === void 0 || typeof c.likes === "number" && c.likes >= 0);
+  }
+  function renderPlatformComments(comments) {
+    const root = element("section", "platform-comments");
+    root.append(
+      element("h3", "platform-comments__title", `评论 ${comments.length}`)
+    );
+    for (const c of comments) {
+      const row = element("article", "platform-comment"), body = element("div", "platform-comment__body");
+      row.append(renderDefaultAvatar("platform-comment__avatar", `${c.displayName}的默认头像`));
+      body.append(
+        element(
+          "div",
+          "platform-comment__meta",
+          [c.displayName, c.handle, c.timestamp].filter(Boolean).join(" · ")
+        ),
+        element("div", "platform-comment__text", c.text)
+      );
+      if (c.likes !== void 0)
+        body.append(element("div", "platform-comment__likes", `♡ ${c.likes}`));
+      row.append(body);
+      root.append(row);
+    }
+    return root;
+  }
+  const styles$6 = ".weibo {\n  max-width: 620px;\n  padding: 16px;\n  border: 1px solid #e6e6e6;\n  border-radius: 10px;\n  background: #fff;\n  color: #222;\n  box-shadow: 0 4px 16px #0000000d;\n}\n.weibo__author {\n  display: flex;\n  align-items: baseline;\n  gap: 7px;\n}\n.weibo__header{display:flex;align-items:center;gap:10px}.weibo__avatar{width:38px;height:38px;flex:0 0 38px;border-radius:50%;background:#f0f0f0}.weibo__author{flex-wrap:wrap}.platform-comments{margin-top:10px;border-top:1px solid #f0f0f0;padding-top:10px}.platform-comments__title{margin:0 0 8px;font-size:13px}.platform-comment{display:grid;grid-template-columns:30px 1fr;gap:9px;padding:8px 0}.platform-comment__avatar{width:30px;height:30px;border-radius:50%;background:#f0f0f0}.platform-comment__meta{color:#507daf;font-size:11px}.platform-comment__text{margin-top:2px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.5}.platform-comment__likes{margin-top:3px;color:#999;font-size:10px}\n.weibo__name {\n  font-weight: 700;\n}\n.weibo__verified {\n  color: #ff8200;\n}\n.weibo__handle,\n.weibo__meta {\n  color: #939393;\n  font-size: 11px;\n}\n.weibo__text {\n  margin: 12px 0 16px;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  font-size: 15px;\n  line-height: 1.65;\n}\n.weibo__stats {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  padding-top: 11px;\n  border-top: 1px solid #f2f2f2;\n  color: #666;\n  text-align: center;\n  font-size: 12px;\n}\n";
+  const optionalNumber$3 = (value) => value === void 0 || typeof value === "number" && value >= 0;
+  const WeiboRenderer = {
+    component: "social",
+    variant: "weibo-post",
+    styles: common + styles$6,
+    validate(value) {
+      const p = value;
+      return !!p && [p.displayName, p.timestamp, p.text].every(
+        (x) => typeof x === "string"
+      ) && [p.reposts, p.likes].every(optionalNumber$3) && (p.comments === void 0 || optionalNumber$3(p.comments) || Array.isArray(p.comments) && p.comments.every(isPlatformComment));
+    },
+    render(props) {
+      const root = element("article", "novel-ui weibo"), header = element("header", "weibo__header"), author = element("div", "weibo__author");
+      author.append(element("span", "weibo__name", props.displayName));
+      if (props.verified) author.append(element("span", "weibo__verified", "V"));
+      if (props.handle)
+        author.append(element("span", "weibo__handle", props.handle));
+      const meta = [props.timestamp, props.source ? `来自 ${props.source}` : ""].filter(Boolean).join(" · ");
+      const stats = element("footer", "weibo__stats");
+      const commentCount = Array.isArray(props.comments) ? props.comments.length : props.comments;
+      [
+        ["转发", props.reposts],
+        ["评论", commentCount],
+        ["赞", props.likes]
+      ].forEach(
+        ([label, value]) => stats.append(element("span", "", `${label} ${value ?? 0}`))
+      );
+      root.append(
+        header,
+        element("div", "weibo__meta", meta),
+        element("div", "weibo__text", props.text),
+        stats
+      );
+      header.append(renderDefaultAvatar("weibo__avatar", `${props.displayName}的默认头像`), author);
+      if (Array.isArray(props.comments) && props.comments.length) root.append(renderPlatformComments(props.comments));
+      return root;
+    }
+  };
   const styles$5 = ".instagram{width:min(100%,470px);border:1px solid #dbdbdb;border-radius:10px;background:#fff;color:#161616;font-family:Arial,sans-serif}.instagram__header{display:flex;align-items:center;gap:10px;padding:10px 12px}.instagram__avatar{display:grid;width:34px;height:34px;place-items:center;overflow:hidden;border:2px solid #dc3d79;border-radius:50%;background:#eee;font-weight:700}.instagram__avatar img,.instagram__media img{width:100%;height:100%;object-fit:cover}.instagram__author{min-width:0;flex:1}.instagram__username{font-size:13px;font-weight:700}.instagram__location{font-size:10px}.instagram__more{font-weight:700}.instagram__media{display:grid;min-height:300px;place-items:center;overflow:hidden;background:#ececec}.instagram__placeholder{color:#888}.instagram__actions{padding:11px 12px 7px;font-size:22px;white-space:pre}.instagram__likes,.instagram__caption,.instagram__comments,.instagram__time{padding:0 12px 7px;font-size:13px}.instagram__likes{font-weight:700}.instagram__caption{white-space:pre-wrap;overflow-wrap:anywhere}.instagram__comments,.instagram__time{color:#737373}.instagram__time{padding-bottom:12px;font-size:10px;text-transform:uppercase}@media(max-width:480px){.instagram__media{min-height:240px}}\n";
   const optionalNumber$2 = (value) => value === void 0 || typeof value === "number" && value >= 0;
   function safeUrl$2(value) {
@@ -497,33 +541,6 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  function isPlatformComment(value) {
-    const c = value;
-    return !!c && typeof c.id === "string" && typeof c.displayName === "string" && typeof c.text === "string" && (c.handle === void 0 || typeof c.handle === "string") && (c.timestamp === void 0 || typeof c.timestamp === "string") && (c.likes === void 0 || typeof c.likes === "number" && c.likes >= 0);
-  }
-  function renderPlatformComments(comments) {
-    const root = element("section", "platform-comments");
-    root.append(
-      element("h3", "platform-comments__title", `评论 ${comments.length}`)
-    );
-    for (const c of comments) {
-      const row = element("article", "platform-comment"), body = element("div", "platform-comment__body");
-      row.append(renderDefaultAvatar("platform-comment__avatar", `${c.displayName}的默认头像`));
-      body.append(
-        element(
-          "div",
-          "platform-comment__meta",
-          [c.displayName, c.handle, c.timestamp].filter(Boolean).join(" · ")
-        ),
-        element("div", "platform-comment__text", c.text)
-      );
-      if (c.likes !== void 0)
-        body.append(element("div", "platform-comment__likes", `♡ ${c.likes}`));
-      row.append(body);
-      root.append(row);
-    }
-    return root;
-  }
   const styles$4 = ".onlyfans {\n  width: min(100%, 540px);\n  border: 1px solid #d8e2e8;\n  border-radius: 10px;\n  background: #fff;\n  color: #242529;\n  font-family: Arial, sans-serif;\n}\n.onlyfans__header {\n  display: flex;\n  align-items: center;\n  gap: 11px;\n  padding: 13px 15px;\n}\n.onlyfans__avatar {\n  display: grid;\n  width: 42px;\n  height: 42px;\n  place-items: center;\n  overflow: hidden;\n  border-radius: 50%;\n  background: #00aff0;\n  color: #fff;\n  font-weight: 800;\n}\n.onlyfans__avatar img,\n.onlyfans__media img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.onlyfans__identity {\n  min-width: 0;\n  flex: 1;\n}\n.onlyfans__creator {\n  font-size: 14px;\n  font-weight: 700;\n}\n.onlyfans__handle {\n  color: #8a96a3;\n  font-size: 11px;\n}\n.onlyfans__more {\n  color: #8a96a3;\n}\n.onlyfans__text {\n  padding: 2px 15px 14px;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  font-size: 14px;\n  line-height: 1.55;\n}\n.onlyfans__media {\n  display: grid;\n  min-height: 270px;\n  place-items: center;\n  overflow: hidden;\n  background: #edf1f4;\n  color: #84909a;\n}\n.onlyfans__footer {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 11px 15px;\n  color: #596773;\n  font-size: 13px;\n}\n.onlyfans__status {\n  border-radius: 16px;\n  background: #00aff0;\n  color: #fff;\n  padding: 6px 12px;\n  font-weight: 700;\n}\n.platform-comments{border-top:1px solid #e5edf2;padding:10px 15px}.platform-comments__title{margin:0 0 10px;font-size:13px}.platform-comment{display:grid;grid-template-columns:30px 1fr;gap:9px;padding:8px 0}.platform-comment__avatar{display:grid;width:30px;height:30px;place-items:center;border-radius:50%;background:#dce4e9;color:#52606b;font-size:11px;font-weight:700}.platform-comment__meta{font-size:11px;font-weight:700}.platform-comment__text{margin-top:2px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.45}.platform-comment__likes{margin-top:4px;color:#8a96a3;font-size:10px}\n";
   const optionalNumber$1 = (value) => value === void 0 || typeof value === "number" && value >= 0;
   function safeUrl$1(value) {

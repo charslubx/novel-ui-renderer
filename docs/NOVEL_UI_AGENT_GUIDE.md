@@ -124,7 +124,7 @@
 
 ### 9. 微博帖子 `social:weibo-post`
 
-必填：`displayName`、`timestamp`、`text`。可选：`handle`、`verified`、`source`、`reposts`、`comments`、`likes`；统计数字必须为非负数。
+必填：`displayName`、`timestamp`、`text`。可选：`handle`、`verified`、`source`、`reposts`、`comments`、`likes`。`comments` 可为旧版非负评论总数，也可为评论数组；评论项必填 `id`、`displayName`、`text`，可选 `handle`、`timestamp`、`likes`。未提供或数组为空时不显示评论区。
 
     [[novel-ui]]
     {"schema":"novel-ui","version":"1.0","component":"social","variant":"weibo-post","props":{"displayName":"首尔夜航","handle":"@seoul_night","verified":true,"timestamp":"2026-09-13 23:48","source":"iPhone客户端","text":"医院走廊的灯直到深夜仍然亮着。","reposts":126,"comments":308,"likes":2401}}
