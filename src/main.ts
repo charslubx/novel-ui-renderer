@@ -11,6 +11,9 @@ import { XPostRenderer } from "./renderers/social/x-post";
 import { XFeedRenderer } from "./renderers/social/x-feed";
 import { XNotificationsRenderer } from "./renderers/social/x-notifications";
 import { XTrendsRenderer } from "./renderers/social/x-trends";
+import { BusTicketRenderer, FerryTicketRenderer, FlightTicketRenderer, RailTicketRenderer } from "./renderers/ticket/transport";
+import { IdentityCardRenderer } from "./renderers/document/identity-card";
+import { WorkCardRenderer } from "./renderers/document/work-card";
 
 declare global { interface Window { __novelUIRuntimeStarted?: boolean; } }
 
@@ -26,6 +29,12 @@ function bootstrap() {
   registry.register(XFeedRenderer);
   registry.register(XNotificationsRenderer);
   registry.register(XTrendsRenderer);
+  registry.register(FlightTicketRenderer);
+  registry.register(FerryTicketRenderer);
+  registry.register(RailTicketRenderer);
+  registry.register(BusTicketRenderer);
+  registry.register(IdentityCardRenderer);
+  registry.register(WorkCardRenderer);
   registry.register(TheqooRenderer);
   registry.register(WeiboRenderer);
   new NovelUIRuntime(adapter, registry, localStorage.getItem("novel-ui-debug") === "true").start();

@@ -43,6 +43,14 @@ Built-in renderer keys:
 - `social:x-trends`
 - `article:theqoo`
 - `social:weibo-post`
+- `ticket:flight`
+- `ticket:ferry`
+- `ticket:rail`
+- `ticket:bus`
+- `document:identity-card`
+- `document:work-card`
+
+Transport tickets share one validated schema and vary labels by transport type. Use `operator`, `operatorCode`, and the predefined `theme` values (`blue`, `red`, `green`, or `gold`) to represent fictional operators without copying a real company's protected visual identity. Identity and work cards intentionally use a default silhouette and visible fictional-document markings.
 
 Incomplete streaming blocks are ignored until the closing marker arrives. Invalid JSON and invalid schemas remain visible. Successfully rendered source data stays in the DOM but is hidden. A `WeakSet` and `data-novel-ui-rendered` protect against repeat rendering.
 
