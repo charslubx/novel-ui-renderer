@@ -20,6 +20,7 @@ describe("media renderers", () => {
         ".instagram__media",
       ),
     ).not.toBeNull();
+    expect(InstagramRenderer.render(props,{raw:"",debug:false}).querySelector(".instagram__avatar svg")).not.toBeNull();
   });
   it("renders an OnlyFans creator post", () => {
     const props = {
@@ -35,6 +36,7 @@ describe("media renderers", () => {
       OnlyFansRenderer.render(props, { raw: "", debug: false }).textContent,
     ).toContain("已订阅");
     expect(OnlyFansRenderer.render(props,{raw:"",debug:false}).querySelectorAll(".platform-comment")).toHaveLength(1);
+    expect(OnlyFansRenderer.render(props,{raw:"",debug:false}).querySelectorAll(".novel-default-avatar svg").length).toBeGreaterThanOrEqual(2);
   });
   for (const renderer of [YouTubeRenderer, PornhubRenderer])
     it(`renders ${renderer.variant}`, () => {
@@ -53,5 +55,6 @@ describe("media renderers", () => {
           .querySelector(".video-page__player"),
       ).not.toBeNull();
       expect(renderer.render(props,{raw:"",debug:false}).querySelectorAll(".platform-comment")).toHaveLength(1);
+      expect(renderer.render(props,{raw:"",debug:false}).querySelectorAll(".novel-default-avatar svg").length).toBeGreaterThanOrEqual(2);
     });
 });

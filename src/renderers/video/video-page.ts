@@ -1,6 +1,11 @@
 import type { NovelUIRenderer } from "../../core/renderer-registry";
 import { element } from "../../utils/dom";
-import { isPlatformComment,renderPlatformComments,type PlatformComment } from "../shared/platform-comments";
+import { renderDefaultAvatar } from "../shared/person-avatar";
+import {
+  isPlatformComment,
+  renderPlatformComments,
+  type PlatformComment,
+} from "../shared/platform-comments";
 import common from "../../styles/common.css?inline";
 import styles from "../../styles/video-page.css?inline";
 
@@ -42,8 +47,10 @@ function createVideoRenderer(
         [p.title, p.channel, p.duration, p.views, p.uploaded].every(
           (x) => typeof x === "string",
         ) &&
-        (p.likes === undefined || (typeof p.likes === "number" && p.likes >= 0)) &&
-        (p.comments === undefined || (Array.isArray(p.comments) && p.comments.every(isPlatformComment)))
+        (p.likes === undefined ||
+          (typeof p.likes === "number" && p.likes >= 0)) &&
+        (p.comments === undefined ||
+          (Array.isArray(p.comments) && p.comments.every(isPlatformComment)))
       );
     },
     render(props) {
@@ -82,11 +89,7 @@ function createVideoRenderer(
         ),
         channel = element("div", "video-page__channel");
       channel.append(
-        element(
-          "span",
-          "video-page__avatar",
-          props.channel.slice(0, 1).toUpperCase(),
-        ),
+        renderDefaultAvatar("video-page__avatar",`${props.channel}的默认头像`),
         element("strong", "", props.channel + (props.verified ? " ✓" : "")),
       );
       if (props.subscribers)
@@ -116,7 +119,8 @@ function createVideoRenderer(
           `👍 ${props.likes ?? 0}　↗ 分享　⋯`,
         ),
       );
-      if(props.comments?.length)root.append(renderPlatformComments(props.comments));
+      if (props.comments?.length)
+        root.append(renderPlatformComments(props.comments));
       return root;
     },
   };

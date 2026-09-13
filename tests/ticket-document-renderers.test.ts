@@ -50,6 +50,7 @@ describe("ticket and document renderers", () => {
       debug: false,
     });
     expect(result.querySelector(".person-avatar")).not.toBeNull();
+    expect(result.querySelector(".person-avatar svg")).not.toBeNull();
     expect(
       result
         .querySelector(".identity-card__body")
@@ -64,10 +65,6 @@ describe("ticket and document renderers", () => {
       employeeId: "E-1",
     };
     expect(WorkCardRenderer.validate(props)).toBe(true);
-    expect(
-      WorkCardRenderer.render(props, { raw: "", debug: false }).querySelector(
-        ".person-avatar",
-      ),
-    ).not.toBeNull();
+    expect(WorkCardRenderer.render(props,{raw:"",debug:false}).querySelector(".person-avatar svg")).not.toBeNull();
   });
 });

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.4.1
+// @version      0.4.2
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -253,7 +253,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     if (text !== void 0) node.textContent = text;
     return node;
   }
-  const common = ':host { --novel-font-size: 14px; --novel-radius: 12px; --novel-spacing: 8px; color: #202124; font: var(--novel-font-size)/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }\n*,*::before,*::after { box-sizing: border-box; }\n.novel-ui { margin: 16px 0; overflow: hidden; }\n.fallback { padding: 12px; border: 1px dashed #d97706; border-radius: var(--novel-radius); color: #92400e; background: #fffbeb; }\n.source-toggle { margin: 8px 0 0; border: 0; background: transparent; color: #64748b; cursor: pointer; font: inherit; font-size: 12px; }\n.source { white-space: pre-wrap; overflow-wrap: anywhere; padding: 10px; background: #111827; color: #e5e7eb; border-radius: 8px; font: 12px/1.45 ui-monospace,monospace; }\n';
+  const common = ':host {\n  --novel-font-size: 14px;\n  --novel-radius: 12px;\n  --novel-spacing: 8px;\n  color: #202124;\n  font:\n    var(--novel-font-size)/1.45 system-ui,\n    -apple-system,\n    "Segoe UI",\n    sans-serif;\n}\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n.novel-ui {\n  margin: 16px 0;\n  overflow: hidden;\n}\n.novel-default-avatar{display:grid;place-items:center;overflow:hidden;color:#737373}.novel-default-avatar svg{width:72%;height:72%;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}\n.fallback {\n  padding: 12px;\n  border: 1px dashed #d97706;\n  border-radius: var(--novel-radius);\n  color: #92400e;\n  background: #fffbeb;\n}\n.source-toggle {\n  margin: 8px 0 0;\n  border: 0;\n  background: transparent;\n  color: #64748b;\n  cursor: pointer;\n  font: inherit;\n  font-size: 12px;\n}\n.source {\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  padding: 10px;\n  background: #111827;\n  color: #e5e7eb;\n  border-radius: 8px;\n  font:\n    12px/1.45 ui-monospace,\n    monospace;\n}\n';
   const styles$a = ".kakao { max-width: 430px; border-radius: 18px; background: #b9ced9; box-shadow: 0 10px 30px #0f172a20; }\n.kakao__header { padding: 14px 18px; background: #ffffffde; font-weight: 700; text-align: center; }\n.kakao__date { width: max-content; margin: 12px auto; padding: 4px 10px; border-radius: 999px; color: #fff; background: #607d8b99; font-size: 11px; }\n.kakao__messages { display: grid; gap: 10px; padding: 4px 14px 18px; }\n.message { display: flex; flex-direction: column; max-width: 78%; }\n.message--right { justify-self: end; align-items: end; }\n.message--left { justify-self: start; align-items: start; }\n.message__name { margin: 0 4px 3px; font-size: 11px; color: #475569; }\n.message__line { display: flex; align-items: end; gap: 5px; }\n.message--right .message__line { flex-direction: row-reverse; }\n.message__bubble { padding: 9px 12px; border-radius: 13px; background: #fff; white-space: pre-wrap; overflow-wrap: anywhere; }\n.message--right .message__bubble { background: #fee500; }\n.message__meta { display: grid; justify-items: end; color: #475569; font-size: 10px; white-space: nowrap; }\n.message__read { color: #8a6d00; }\n";
   const isMessage = (x) => !!x && typeof x === "object" && typeof x.id === "string" && typeof x.sender === "string" && ["left", "right"].includes(x.side) && typeof x.text === "string";
   const KakaoRenderer = {
@@ -406,9 +406,33 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
+  function renderDefaultAvatar(className = "default-avatar", label = "默认头像") {
+    const avatar2 = element("div", `${className} novel-default-avatar`);
+    avatar2.setAttribute("role", "img");
+    avatar2.setAttribute("aria-label", label);
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 64 64");
+    svg.setAttribute("aria-hidden", "true");
+    const outer = document.createElementNS(svg.namespaceURI, "circle");
+    outer.setAttribute("cx", "32");
+    outer.setAttribute("cy", "32");
+    outer.setAttribute("r", "27");
+    const head = document.createElementNS(svg.namespaceURI, "circle");
+    head.setAttribute("cx", "32");
+    head.setAttribute("cy", "23");
+    head.setAttribute("r", "10");
+    const shoulders = document.createElementNS(svg.namespaceURI, "path");
+    shoulders.setAttribute("d", "M14 51c2-11 9-17 18-17s16 6 18 17");
+    svg.append(outer, head, shoulders);
+    avatar2.append(svg);
+    return avatar2;
+  }
+  function renderDefaultPersonAvatar(className = "person-avatar") {
+    return renderDefaultAvatar(className, "默认人物头像");
+  }
   const styles$5 = ".instagram{width:min(100%,470px);border:1px solid #dbdbdb;border-radius:10px;background:#fff;color:#161616;font-family:Arial,sans-serif}.instagram__header{display:flex;align-items:center;gap:10px;padding:10px 12px}.instagram__avatar{display:grid;width:34px;height:34px;place-items:center;overflow:hidden;border:2px solid #dc3d79;border-radius:50%;background:#eee;font-weight:700}.instagram__avatar img,.instagram__media img{width:100%;height:100%;object-fit:cover}.instagram__author{min-width:0;flex:1}.instagram__username{font-size:13px;font-weight:700}.instagram__location{font-size:10px}.instagram__more{font-weight:700}.instagram__media{display:grid;min-height:300px;place-items:center;overflow:hidden;background:#ececec}.instagram__placeholder{color:#888}.instagram__actions{padding:11px 12px 7px;font-size:22px;white-space:pre}.instagram__likes,.instagram__caption,.instagram__comments,.instagram__time{padding:0 12px 7px;font-size:13px}.instagram__likes{font-weight:700}.instagram__caption{white-space:pre-wrap;overflow-wrap:anywhere}.instagram__comments,.instagram__time{color:#737373}.instagram__time{padding-bottom:12px;font-size:10px;text-transform:uppercase}@media(max-width:480px){.instagram__media{min-height:240px}}\n";
   const optionalNumber$2 = (value) => value === void 0 || typeof value === "number" && value >= 0;
-  function safeUrl$3(value) {
+  function safeUrl$2(value) {
     if (!value) return;
     try {
       const url = new URL(value, location.href);
@@ -417,49 +441,87 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return;
     }
   }
-  const InstagramRenderer = { component: "social", variant: "instagram-post", styles: common + styles$5, validate(value) {
-    const p = value;
-    return !!p && [p.username, p.text, p.timestamp].every((x) => typeof x === "string") && [p.likes, p.comments].every(optionalNumber$2);
-  }, render(props) {
-    const root = element("article", "novel-ui instagram"), header = element("header", "instagram__header"), avatar2 = element("div", "instagram__avatar"), avatarUrl = safeUrl$3(props.avatar);
-    if (avatarUrl) {
-      const img = element("img");
-      img.src = avatarUrl;
-      img.alt = "";
-      img.loading = "lazy";
-      avatar2.append(img);
-    } else avatar2.append(element("span", "", props.username.slice(0, 1).toUpperCase()));
-    const author = element("div", "instagram__author");
-    author.append(element("div", "instagram__username", props.username + (props.verified ? "  ✓" : "")));
-    if (props.location) author.append(element("div", "instagram__location", props.location));
-    header.append(avatar2, author, element("span", "instagram__more", "•••"));
-    const media = element("div", "instagram__media"), imageUrl = safeUrl$3(props.image);
-    if (imageUrl) {
-      const img = element("img");
-      img.src = imageUrl;
-      img.alt = props.imageAlt ?? "帖子图片";
-      img.loading = "lazy";
-      img.referrerPolicy = "no-referrer";
-      media.append(img);
-    } else media.append(element("span", "instagram__placeholder", props.imageAlt ?? "图片"));
-    const actions = element("div", "instagram__actions", "♡　⌁　➤　　　　　　　　　▢");
-    const caption = element("div", "instagram__caption");
-    caption.append(element("strong", "", props.username + " "), document.createTextNode(props.text));
-    root.append(header, media, actions, element("div", "instagram__likes", `${props.likes ?? 0} 次赞`), caption, element("div", "instagram__comments", `查看全部 ${props.comments ?? 0} 条评论`), element("time", "instagram__time", props.timestamp));
-    return root;
-  } };
+  const InstagramRenderer = {
+    component: "social",
+    variant: "instagram-post",
+    styles: common + styles$5,
+    validate(value) {
+      const p = value;
+      return !!p && [p.username, p.text, p.timestamp].every((x) => typeof x === "string") && [p.likes, p.comments].every(optionalNumber$2);
+    },
+    render(props) {
+      const root = element("article", "novel-ui instagram"), header = element("header", "instagram__header"), avatar2 = renderDefaultAvatar("instagram__avatar", `${props.username}的默认头像`);
+      const author = element("div", "instagram__author");
+      author.append(
+        element(
+          "div",
+          "instagram__username",
+          props.username + (props.verified ? "  ✓" : "")
+        )
+      );
+      if (props.location)
+        author.append(element("div", "instagram__location", props.location));
+      header.append(avatar2, author, element("span", "instagram__more", "•••"));
+      const media = element("div", "instagram__media"), imageUrl = safeUrl$2(props.image);
+      if (imageUrl) {
+        const img = element("img");
+        img.src = imageUrl;
+        img.alt = props.imageAlt ?? "帖子图片";
+        img.loading = "lazy";
+        img.referrerPolicy = "no-referrer";
+        media.append(img);
+      } else
+        media.append(
+          element("span", "instagram__placeholder", props.imageAlt ?? "图片")
+        );
+      const actions = element(
+        "div",
+        "instagram__actions",
+        "♡　⌁　➤　　　　　　　　　▢"
+      );
+      const caption = element("div", "instagram__caption");
+      caption.append(
+        element("strong", "", props.username + " "),
+        document.createTextNode(props.text)
+      );
+      root.append(
+        header,
+        media,
+        actions,
+        element("div", "instagram__likes", `${props.likes ?? 0} 次赞`),
+        caption,
+        element(
+          "div",
+          "instagram__comments",
+          `查看全部 ${props.comments ?? 0} 条评论`
+        ),
+        element("time", "instagram__time", props.timestamp)
+      );
+      return root;
+    }
+  };
   function isPlatformComment(value) {
     const c = value;
     return !!c && typeof c.id === "string" && typeof c.displayName === "string" && typeof c.text === "string" && (c.handle === void 0 || typeof c.handle === "string") && (c.timestamp === void 0 || typeof c.timestamp === "string") && (c.likes === void 0 || typeof c.likes === "number" && c.likes >= 0);
   }
   function renderPlatformComments(comments) {
     const root = element("section", "platform-comments");
-    root.append(element("h3", "platform-comments__title", `评论 ${comments.length}`));
+    root.append(
+      element("h3", "platform-comments__title", `评论 ${comments.length}`)
+    );
     for (const c of comments) {
       const row = element("article", "platform-comment"), body = element("div", "platform-comment__body");
-      row.append(element("span", "platform-comment__avatar", c.displayName.trim().slice(0, 1).toUpperCase() || "?"));
-      body.append(element("div", "platform-comment__meta", [c.displayName, c.handle, c.timestamp].filter(Boolean).join(" · ")), element("div", "platform-comment__text", c.text));
-      if (c.likes !== void 0) body.append(element("div", "platform-comment__likes", `♡ ${c.likes}`));
+      row.append(renderDefaultAvatar("platform-comment__avatar", `${c.displayName}的默认头像`));
+      body.append(
+        element(
+          "div",
+          "platform-comment__meta",
+          [c.displayName, c.handle, c.timestamp].filter(Boolean).join(" · ")
+        ),
+        element("div", "platform-comment__text", c.text)
+      );
+      if (c.likes !== void 0)
+        body.append(element("div", "platform-comment__likes", `♡ ${c.likes}`));
       row.append(body);
       root.append(row);
     }
@@ -467,7 +529,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   }
   const styles$4 = ".onlyfans {\n  width: min(100%, 540px);\n  border: 1px solid #d8e2e8;\n  border-radius: 10px;\n  background: #fff;\n  color: #242529;\n  font-family: Arial, sans-serif;\n}\n.onlyfans__header {\n  display: flex;\n  align-items: center;\n  gap: 11px;\n  padding: 13px 15px;\n}\n.onlyfans__avatar {\n  display: grid;\n  width: 42px;\n  height: 42px;\n  place-items: center;\n  overflow: hidden;\n  border-radius: 50%;\n  background: #00aff0;\n  color: #fff;\n  font-weight: 800;\n}\n.onlyfans__avatar img,\n.onlyfans__media img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.onlyfans__identity {\n  min-width: 0;\n  flex: 1;\n}\n.onlyfans__creator {\n  font-size: 14px;\n  font-weight: 700;\n}\n.onlyfans__handle {\n  color: #8a96a3;\n  font-size: 11px;\n}\n.onlyfans__more {\n  color: #8a96a3;\n}\n.onlyfans__text {\n  padding: 2px 15px 14px;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  font-size: 14px;\n  line-height: 1.55;\n}\n.onlyfans__media {\n  display: grid;\n  min-height: 270px;\n  place-items: center;\n  overflow: hidden;\n  background: #edf1f4;\n  color: #84909a;\n}\n.onlyfans__footer {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 11px 15px;\n  color: #596773;\n  font-size: 13px;\n}\n.onlyfans__status {\n  border-radius: 16px;\n  background: #00aff0;\n  color: #fff;\n  padding: 6px 12px;\n  font-weight: 700;\n}\n.platform-comments{border-top:1px solid #e5edf2;padding:10px 15px}.platform-comments__title{margin:0 0 10px;font-size:13px}.platform-comment{display:grid;grid-template-columns:30px 1fr;gap:9px;padding:8px 0}.platform-comment__avatar{display:grid;width:30px;height:30px;place-items:center;border-radius:50%;background:#dce4e9;color:#52606b;font-size:11px;font-weight:700}.platform-comment__meta{font-size:11px;font-weight:700}.platform-comment__text{margin-top:2px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.45}.platform-comment__likes{margin-top:4px;color:#8a96a3;font-size:10px}\n";
   const optionalNumber$1 = (value) => value === void 0 || typeof value === "number" && value >= 0;
-  function safeUrl$2(value) {
+  function safeUrl$1(value) {
     if (!value) return;
     try {
       const url = new URL(value, location.href);
@@ -487,17 +549,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       ) && optionalNumber$1(p.likes) && (p.comments === void 0 || optionalNumber$1(p.comments) || Array.isArray(p.comments) && p.comments.every(isPlatformComment));
     },
     render(props) {
-      const root = element("article", "novel-ui onlyfans"), header = element("header", "onlyfans__header"), avatar2 = element("div", "onlyfans__avatar"), avatarUrl = safeUrl$2(props.avatar);
-      if (avatarUrl) {
-        const img = element("img");
-        img.src = avatarUrl;
-        img.alt = "";
-        img.loading = "lazy";
-        avatar2.append(img);
-      } else
-        avatar2.append(
-          element("span", "", props.creator.slice(0, 1).toUpperCase())
-        );
+      const root = element("article", "novel-ui onlyfans"), header = element("header", "onlyfans__header"), avatar2 = renderDefaultAvatar("onlyfans__avatar", `${props.creator}的默认头像`);
       const identity = element("div", "onlyfans__identity");
       identity.append(
         element(
@@ -514,7 +566,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       header.append(avatar2, identity, element("span", "onlyfans__more", "•••"));
       root.append(header, element("div", "onlyfans__text", props.text));
       if (props.media || props.mediaAlt) {
-        const media = element("div", "onlyfans__media"), url = safeUrl$2(props.media);
+        const media = element("div", "onlyfans__media"), url = safeUrl$1(props.media);
         if (url) {
           const img = element("img");
           img.src = url;
@@ -527,7 +579,11 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       }
       const stats = element("footer", "onlyfans__footer");
       stats.append(
-        element("span", "", `♡ ${props.likes ?? 0}　💬 ${Array.isArray(props.comments) ? props.comments.length : props.comments ?? 0}`),
+        element(
+          "span",
+          "",
+          `♡ ${props.likes ?? 0}　💬 ${Array.isArray(props.comments) ? props.comments.length : props.comments ?? 0}`
+        ),
         element(
           "span",
           "onlyfans__status",
@@ -535,12 +591,13 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
         )
       );
       root.append(stats);
-      if (Array.isArray(props.comments) && props.comments.length) root.append(renderPlatformComments(props.comments));
+      if (Array.isArray(props.comments) && props.comments.length)
+        root.append(renderPlatformComments(props.comments));
       return root;
     }
   };
   const styles$3 = ".video-page {\n  width: min(100%, 720px);\n  overflow: hidden;\n  border: 1px solid #ddd;\n  border-radius: 10px;\n  background: #fff;\n  color: #0f0f0f;\n  font-family: Arial, sans-serif;\n}\n.video-page__brand {\n  padding: 10px 14px;\n  font-size: 17px;\n  font-weight: 800;\n}\n.video-page--youtube .video-page__brand {\n  color: #f00;\n}\n.video-page--pornhub {\n  background: #171717;\n  color: #f5f5f5;\n  border-color: #333;\n}\n.video-page--pornhub .video-page__brand {\n  color: #ff9b19;\n}\n.video-page__player {\n  position: relative;\n  display: grid;\n  aspect-ratio: 16/9;\n  place-items: center;\n  overflow: hidden;\n  background: #202020;\n  color: #aaa;\n}\n.video-page__player img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.video-page__play {\n  position: absolute;\n  display: grid;\n  width: 54px;\n  height: 40px;\n  place-items: center;\n  border-radius: 10px;\n  background: #000b;\n  color: #fff;\n  font-size: 20px;\n}\n.video-page--youtube .video-page__play {\n  background: #f00;\n}\n.video-page--pornhub .video-page__play {\n  background: #ff9b19;\n  color: #111;\n}\n.video-page__duration {\n  position: absolute;\n  right: 8px;\n  bottom: 7px;\n  border-radius: 3px;\n  background: #000c;\n  color: #fff;\n  padding: 2px 5px;\n  font-size: 11px;\n}\n.video-page__title {\n  margin: 12px 14px 5px;\n  font-size: 18px;\n}\n.video-page__meta,\n.video-page__subscribers {\n  color: #777;\n  font-size: 12px;\n}\n.video-page__meta {\n  margin: 0 14px 10px;\n}\n.video-page--pornhub .video-page__meta,\n.video-page--pornhub .video-page__subscribers {\n  color: #aaa;\n}\n.video-page__channel {\n  display: flex;\n  align-items: center;\n  gap: 9px;\n  padding: 10px 14px;\n  border-top: 1px solid #ddd;\n}\n.video-page--pornhub .video-page__channel {\n  border-color: #333;\n}\n.video-page__avatar {\n  display: grid;\n  width: 34px;\n  height: 34px;\n  place-items: center;\n  border-radius: 50%;\n  background: #777;\n  color: #fff;\n}\n.video-page__subscribers {\n  flex: 1;\n}\n.video-page__subscribe {\n  margin-left: auto;\n  border-radius: 18px;\n  background: #111;\n  color: #fff;\n  padding: 7px 13px;\n  font-size: 12px;\n  font-weight: 700;\n}\n.video-page--pornhub .video-page__subscribe {\n  background: #ff9b19;\n  color: #111;\n}\n.video-page__description {\n  margin: 0 14px 10px;\n  border-radius: 7px;\n  background: #eee;\n  padding: 10px;\n  white-space: pre-wrap;\n  font-size: 12px;\n}\n.video-page--pornhub .video-page__description {\n  background: #292929;\n}\n.video-page__stats {\n  padding: 9px 14px;\n  border-top: 1px solid #ddd;\n  font-size: 13px;\n}\n.video-page--pornhub .video-page__stats {\n  border-color: #333;\n}\n.platform-comments{border-top:1px solid #ddd;padding:12px 14px}.video-page--pornhub .platform-comments{border-color:#333}.platform-comments__title{margin:0 0 10px;font-size:14px}.platform-comment{display:grid;grid-template-columns:32px 1fr;gap:9px;padding:8px 0}.platform-comment__avatar{display:grid;width:32px;height:32px;place-items:center;border-radius:50%;background:#777;color:#fff;font-size:11px;font-weight:700}.platform-comment__meta{font-size:11px;font-weight:700}.platform-comment__text{margin-top:3px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.45}.platform-comment__likes{margin-top:4px;color:#888;font-size:10px}\n";
-  function safeUrl$1(value) {
+  function safeUrl(value) {
     if (!value) return;
     try {
       const url = new URL(value, location.href);
@@ -565,7 +622,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
         const root = element(
           "article",
           `novel-ui video-page video-page--${variant}`
-        ), player = element("div", "video-page__player"), url = safeUrl$1(props.thumbnail);
+        ), player = element("div", "video-page__player"), url = safeUrl(props.thumbnail);
         if (url) {
           const img = element("img");
           img.src = url;
@@ -592,11 +649,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
           `${props.views} 次观看 · ${props.uploaded}`
         ), channel = element("div", "video-page__channel");
         channel.append(
-          element(
-            "span",
-            "video-page__avatar",
-            props.channel.slice(0, 1).toUpperCase()
-          ),
+          renderDefaultAvatar("video-page__avatar", `${props.channel}的默认头像`),
           element("strong", "", props.channel + (props.verified ? " ✓" : ""))
         );
         if (props.subscribers)
@@ -626,7 +679,8 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
             `👍 ${props.likes ?? 0}　↗ 分享　⋯`
           )
         );
-        if ((_a = props.comments) == null ? void 0 : _a.length) root.append(renderPlatformComments(props.comments));
+        if ((_a = props.comments) == null ? void 0 : _a.length)
+          root.append(renderPlatformComments(props.comments));
         return root;
       }
     };
@@ -638,11 +692,17 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   const isText = (value) => value === void 0 || typeof value === "string";
   const isMedia = (value) => {
     const media = value;
-    return !!media && (media.type === "image" || media.type === "link") && [media.url, media.alt, media.title, media.description, media.domain].every(isText);
+    return !!media && (media.type === "image" || media.type === "link") && [media.url, media.alt, media.title, media.description, media.domain].every(
+      isText
+    );
   };
   function isXPostProps(value) {
     const post = value;
-    return !!post && [post.displayName, post.handle, post.text, post.timestamp].every((item) => typeof item === "string") && [post.replies, post.reposts, post.likes, post.views].every(optionalNumber) && (post.media === void 0 || Array.isArray(post.media) && post.media.every(isMedia));
+    return !!post && [post.displayName, post.handle, post.text, post.timestamp].every(
+      (item) => typeof item === "string"
+    ) && [post.replies, post.reposts, post.likes, post.views].every(
+      optionalNumber
+    ) && (post.media === void 0 || Array.isArray(post.media) && post.media.every(isMedia));
   }
   function safeImageUrl(value) {
     if (!value) return;
@@ -654,16 +714,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     }
   }
   function avatar(props) {
-    const box = element("div", "x-avatar"), url = safeImageUrl(props.avatar);
-    if (url) {
-      const image = element("img", "x-avatar__image");
-      image.src = url;
-      image.alt = `${props.displayName}的头像`;
-      image.loading = "lazy";
-      image.referrerPolicy = "no-referrer";
-      box.append(image);
-    } else box.append(element("span", "x-avatar__fallback", props.displayName.trim().slice(0, 1).toUpperCase() || "?"));
-    return box;
+    return renderDefaultAvatar("x-avatar", `${props.displayName}的默认头像`);
   }
   function renderMedia(items) {
     const grid = element("div", `x-media x-media--${Math.min(items.length, 4)}`);
@@ -678,7 +729,10 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
           image.loading = "lazy";
           image.referrerPolicy = "no-referrer";
           frame.append(image);
-        } else frame.append(element("span", "x-media__placeholder", item.alt ?? "图片"));
+        } else
+          frame.append(
+            element("span", "x-media__placeholder", item.alt ?? "图片")
+          );
         grid.append(frame);
       } else {
         const card = element("div", "x-media__link");
@@ -691,8 +745,12 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
           card.append(image);
         }
         const copy = element("div", "x-media__link-copy");
-        copy.append(element("div", "x-media__domain", item.domain ?? "链接"), element("div", "x-media__title", item.title ?? "链接内容"));
-        if (item.description) copy.append(element("div", "x-media__description", item.description));
+        copy.append(
+          element("div", "x-media__domain", item.domain ?? "链接"),
+          element("div", "x-media__title", item.title ?? "链接内容")
+        );
+        if (item.description)
+          copy.append(element("div", "x-media__description", item.description));
         card.append(copy);
         grid.append(card);
       }
@@ -707,14 +765,36 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     const body = element("div", "x-post__body"), header = element("header", "x-post__author");
     header.append(element("span", "x-post__name", props.displayName));
     if (props.verified) header.append(element("span", "x-post__verified", "✓"));
-    header.append(element("span", "x-post__handle", `@${props.handle.replace(/^@/, "")}`), element("span", "x-post__time", `· ${props.timestamp}`), element("span", "x-post__more", "⋮"));
+    header.append(
+      element("span", "x-post__handle", `@${props.handle.replace(/^@/, "")}`),
+      element("span", "x-post__time", `· ${props.timestamp}`),
+      element("span", "x-post__more", "⋮")
+    );
     body.append(header);
-    if (props.translatedFrom) body.append(element("div", "x-post__translation", `◉ 翻译自${props.translatedFrom}　${props.translationLabel ?? "显示原文"}`));
+    if (props.translatedFrom)
+      body.append(
+        element(
+          "div",
+          "x-post__translation",
+          `◉ 翻译自${props.translatedFrom}　${props.translationLabel ?? "显示原文"}`
+        )
+      );
     body.append(element("div", "x-post__text", props.text));
     if ((_a = props.media) == null ? void 0 : _a.length) body.append(renderMedia(props.media));
     const stats = element("footer", "x-post__stats");
-    [["◯", props.replies, "回复"], ["⇄", props.reposts, "转发"], ["♡", props.likes, "喜欢"], ["▥", props.views, "浏览"], ["⌑", void 0, "收藏"], ["⌯", void 0, "分享"]].forEach(([icon, value, label]) => {
-      const stat = element("span", "x-post__stat", `${icon}${typeof value === "number" ? ` ${compact(value)}` : ""}`);
+    [
+      ["◯", props.replies, "回复"],
+      ["⇄", props.reposts, "转发"],
+      ["♡", props.likes, "喜欢"],
+      ["▥", props.views, "浏览"],
+      ["⌑", void 0, "收藏"],
+      ["⌯", void 0, "分享"]
+    ].forEach(([icon, value, label]) => {
+      const stat = element(
+        "span",
+        "x-post__stat",
+        `${icon}${typeof value === "number" ? ` ${compact(value)}` : ""}`
+      );
       stat.setAttribute("aria-label", String(label));
       stats.append(stat);
     });
@@ -722,91 +802,180 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     root.append(body);
     return root;
   }
-  const XPostRenderer = { component: "social", variant: "x-post", styles: common + styles$2, validate: isXPostProps, render(props) {
-    const shell = element("section", "novel-ui x-shell x-shell--single");
-    shell.append(renderXPost(props));
-    return shell;
-  } };
-  const XFeedRenderer = { component: "social", variant: "x-feed", styles: common + styles$2, validate(value) {
-    const p = value;
-    return !!p && Array.isArray(p.posts) && p.posts.every(isXPostProps) && (p.title === void 0 || typeof p.title === "string");
-  }, render(props) {
-    const shell = element("section", "novel-ui x-shell"), header = element("header", "x-app-header", props.title ?? "首页");
-    header.append(element("span", "x-app-header__avatar"), element("span", "x-app-header__action", "⚙"));
-    const tabs = element("nav", "x-tabs");
-    tabs.append(element("span", `x-tab ${props.activeTab !== "following" ? "x-tab--active" : ""}`, "为你推荐"), element("span", `x-tab ${props.activeTab === "following" ? "x-tab--active" : ""}`, "正在关注"));
-    shell.append(header, tabs);
-    if (props.posts.length) props.posts.forEach((post) => shell.append(renderXPost(post)));
-    else shell.append(element("div", "x-feed-empty", "暂无帖子"));
-    return shell;
-  } };
+  const XPostRenderer = {
+    component: "social",
+    variant: "x-post",
+    styles: common + styles$2,
+    validate: isXPostProps,
+    render(props) {
+      const shell = element("section", "novel-ui x-shell x-shell--single");
+      shell.append(renderXPost(props));
+      return shell;
+    }
+  };
+  const XFeedRenderer = {
+    component: "social",
+    variant: "x-feed",
+    styles: common + styles$2,
+    validate(value) {
+      const p = value;
+      return !!p && Array.isArray(p.posts) && p.posts.every(isXPostProps) && (p.title === void 0 || typeof p.title === "string");
+    },
+    render(props) {
+      const shell = element("section", "novel-ui x-shell"), header = element("header", "x-app-header", props.title ?? "首页");
+      header.append(
+        renderDefaultAvatar("x-app-header__avatar"),
+        element("span", "x-app-header__action", "⚙")
+      );
+      const tabs = element("nav", "x-tabs");
+      tabs.append(
+        element(
+          "span",
+          `x-tab ${props.activeTab !== "following" ? "x-tab--active" : ""}`,
+          "为你推荐"
+        ),
+        element(
+          "span",
+          `x-tab ${props.activeTab === "following" ? "x-tab--active" : ""}`,
+          "正在关注"
+        )
+      );
+      shell.append(header, tabs);
+      if (props.posts.length)
+        props.posts.forEach((post) => shell.append(renderXPost(post)));
+      else shell.append(element("div", "x-feed-empty", "暂无帖子"));
+      return shell;
+    }
+  };
   const isNotification = (value) => {
     const n = value;
     return !!n && typeof n.id === "string" && typeof n.displayName === "string" && typeof n.timestamp === "string" && typeof n.text === "string";
   };
-  function safeUrl(value) {
-    if (!value) return;
-    try {
-      const url = new URL(value, location.href);
-      if (["http:", "https:"].includes(url.protocol)) return url.href;
-    } catch {
-      return;
+  const XNotificationsRenderer = {
+    component: "social",
+    variant: "x-notifications",
+    styles: common + styles$2,
+    validate(value) {
+      const p = value;
+      return !!p && Array.isArray(p.notifications) && p.notifications.every(isNotification);
+    },
+    render(props) {
+      const shell = element("section", "novel-ui x-shell"), header = element("header", "x-app-header", "通知");
+      header.append(
+        renderDefaultAvatar("x-app-header__avatar"),
+        element("span", "x-app-header__action", "⚙")
+      );
+      const tabs = element("nav", "x-tabs"), active = props.activeTab ?? "all";
+      [
+        ["all", "全部"],
+        ["mentions", "提及"],
+        ["verified", "已认证"]
+      ].forEach(
+        ([key, label]) => tabs.append(
+          element(
+            "span",
+            `x-tab ${active === key ? "x-tab--active" : ""}`,
+            label
+          )
+        )
+      );
+      shell.append(header, tabs);
+      props.notifications.forEach((notice) => {
+        const row = element("article", "x-notification");
+        row.append(
+          element(
+            "div",
+            "x-notification__type",
+            notice.type === "mention" ? "@" : "✦"
+          )
+        );
+        const body = element("div", "x-notification__body"), top = element("div", "x-notification__top"), avatar2 = renderDefaultAvatar("x-notification__avatar", `${notice.displayName}的默认头像`);
+        top.append(avatar2, element("span", "x-post__more", "⋮"));
+        body.append(top);
+        const name = element(
+          "div",
+          "x-notification__name",
+          `${notice.displayName} `
+        );
+        name.append(
+          element("span", "x-notification__meta", `· ${notice.timestamp}`)
+        );
+        body.append(name);
+        if (notice.translatedFrom)
+          body.append(
+            element(
+              "div",
+              "x-notification__translation",
+              `◉ 翻译自${notice.translatedFrom}　显示原文`
+            )
+          );
+        body.append(element("div", "x-notification__text", notice.text));
+        row.append(body);
+        shell.append(row);
+      });
+      return shell;
     }
-  }
-  const XNotificationsRenderer = { component: "social", variant: "x-notifications", styles: common + styles$2, validate(value) {
-    const p = value;
-    return !!p && Array.isArray(p.notifications) && p.notifications.every(isNotification);
-  }, render(props) {
-    const shell = element("section", "novel-ui x-shell"), header = element("header", "x-app-header", "通知");
-    header.append(element("span", "x-app-header__avatar"), element("span", "x-app-header__action", "⚙"));
-    const tabs = element("nav", "x-tabs"), active = props.activeTab ?? "all";
-    [["all", "全部"], ["mentions", "提及"], ["verified", "已认证"]].forEach(([key, label]) => tabs.append(element("span", `x-tab ${active === key ? "x-tab--active" : ""}`, label)));
-    shell.append(header, tabs);
-    props.notifications.forEach((notice) => {
-      const row = element("article", "x-notification");
-      row.append(element("div", "x-notification__type", notice.type === "mention" ? "@" : "✦"));
-      const body = element("div", "x-notification__body"), top = element("div", "x-notification__top"), avatar2 = element("div", "x-notification__avatar"), url = safeUrl(notice.avatar);
-      if (url) {
-        const image = element("img");
-        image.src = url;
-        image.alt = "";
-        image.loading = "lazy";
-        avatar2.append(image);
-      } else avatar2.append(element("span", "x-avatar__fallback", notice.displayName.slice(0, 1)));
-      top.append(avatar2, element("span", "x-post__more", "⋮"));
-      body.append(top);
-      const name = element("div", "x-notification__name", `${notice.displayName} `);
-      name.append(element("span", "x-notification__meta", `· ${notice.timestamp}`));
-      body.append(name);
-      if (notice.translatedFrom) body.append(element("div", "x-notification__translation", `◉ 翻译自${notice.translatedFrom}　显示原文`));
-      body.append(element("div", "x-notification__text", notice.text));
-      row.append(body);
-      shell.append(row);
-    });
-    return shell;
-  } };
+  };
   const isTrend = (value) => {
     const t = value;
     return !!t && typeof t.id === "string" && typeof t.category === "string" && typeof t.title === "string" && (t.posts === void 0 || typeof t.posts === "number" && t.posts >= 0);
   };
-  const XTrendsRenderer = { component: "social", variant: "x-trends", styles: common + styles$2, validate(value) {
-    const p = value;
-    return !!p && Array.isArray(p.trends) && p.trends.every(isTrend);
-  }, render(props) {
-    const shell = element("section", "novel-ui x-shell"), search = element("header", "x-search");
-    search.append(element("span", "x-search__avatar"), element("div", "x-search__box", `⌕　${props.searchPlaceholder ?? "搜索"}`), element("span", "x-search__gear", "⚙"));
-    const tabs = element("nav", "x-tabs"), active = props.activeTab ?? "explore";
-    [["explore", "探索"], ["trending", "当前趋势"], ["news", "新闻"], ["sports", "体育"], ["entertainment", "娱乐"]].forEach(([key, label]) => tabs.append(element("span", `x-tab ${active === key ? "x-tab--active" : ""}`, label)));
-    shell.append(search, tabs);
-    props.trends.forEach((trend) => {
-      const item = element("div", "x-trend");
-      item.append(element("div", "x-trend__category", trend.category), element("div", "x-trend__title", trend.title));
-      if (trend.posts !== void 0) item.append(element("div", "x-trend__posts", `${trend.posts.toLocaleString()} 帖子`));
-      item.append(element("span", "x-trend__more", "⋮"));
-      shell.append(item);
-    });
-    return shell;
-  } };
+  const XTrendsRenderer = {
+    component: "social",
+    variant: "x-trends",
+    styles: common + styles$2,
+    validate(value) {
+      const p = value;
+      return !!p && Array.isArray(p.trends) && p.trends.every(isTrend);
+    },
+    render(props) {
+      const shell = element("section", "novel-ui x-shell"), search = element("header", "x-search");
+      search.append(
+        renderDefaultAvatar("x-search__avatar"),
+        element(
+          "div",
+          "x-search__box",
+          `⌕　${props.searchPlaceholder ?? "搜索"}`
+        ),
+        element("span", "x-search__gear", "⚙")
+      );
+      const tabs = element("nav", "x-tabs"), active = props.activeTab ?? "explore";
+      [
+        ["explore", "探索"],
+        ["trending", "当前趋势"],
+        ["news", "新闻"],
+        ["sports", "体育"],
+        ["entertainment", "娱乐"]
+      ].forEach(
+        ([key, label]) => tabs.append(
+          element(
+            "span",
+            `x-tab ${active === key ? "x-tab--active" : ""}`,
+            label
+          )
+        )
+      );
+      shell.append(search, tabs);
+      props.trends.forEach((trend) => {
+        const item = element("div", "x-trend");
+        item.append(
+          element("div", "x-trend__category", trend.category),
+          element("div", "x-trend__title", trend.title)
+        );
+        if (trend.posts !== void 0)
+          item.append(
+            element(
+              "div",
+              "x-trend__posts",
+              `${trend.posts.toLocaleString()} 帖子`
+            )
+          );
+        item.append(element("span", "x-trend__more", "⋮"));
+        shell.append(item);
+      });
+      return shell;
+    }
+  };
   const styles$1 = ':host {\n  --ticket-accent: #2463a9;\n  --ticket-accent-soft: #eaf2fb;\n  --ticket-paper: #fff;\n  --ticket-ink: #17202a;\n  --ticket-muted: #69727d;\n  --ticket-line: #d9dee5;\n}\n.ticket {\n  position: relative;\n  width: min(100%, 760px);\n  overflow: hidden;\n  border: 1px solid var(--ticket-line);\n  border-radius: 18px;\n  background: var(--ticket-paper);\n  color: var(--ticket-ink);\n  box-shadow: 0 8px 24px #1f293714;\n}\n.ticket--compact {\n  width: min(100%, 480px);\n  border-radius: 14px;\n}\n.ticket--red {\n  --ticket-accent: #b4232f;\n  --ticket-accent-soft: #fff0f1;\n}\n.ticket--green {\n  --ticket-accent: #167a59;\n  --ticket-accent-soft: #eaf8f2;\n}\n.ticket--gold {\n  --ticket-accent: #8a6418;\n  --ticket-accent-soft: #fff8df;\n}\n.ticket__header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 16px 20px;\n  background: var(--ticket-accent);\n  color: #fff;\n}\n.ticket__operator {\n  font-size: 19px;\n  font-weight: 800;\n}\n.ticket__operator-code {\n  font-size: 12px;\n  letter-spacing: 0.14em;\n}\n.ticket__kind {\n  font-size: 11px;\n  opacity: 0.82;\n}\n.ticket__route {\n  display: grid;\n  grid-template-columns: 1fr auto 1fr;\n  align-items: center;\n  gap: 16px;\n  padding: 24px 20px;\n  background: var(--ticket-accent-soft);\n}\n.ticket__place:last-child {\n  text-align: right;\n}\n.ticket__code {\n  font-size: 32px;\n  font-weight: 800;\n  letter-spacing: 0.04em;\n}\n.ticket__name {\n  color: var(--ticket-muted);\n  font-size: 12px;\n}\n.ticket__route-line {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  color: var(--ticket-accent);\n  font-size: 21px;\n}\n.ticket__route-line::before,\n.ticket__route-line::after {\n  content: "";\n  width: 34px;\n  border-top: 1px solid currentColor;\n}\n.ticket__details {\n  display: grid;\n  grid-template-columns: repeat(4, minmax(0, 1fr));\n  gap: 18px;\n  padding: 20px;\n}\n.ticket__field {\n  min-width: 0;\n}\n.ticket__label {\n  margin-bottom: 4px;\n  color: var(--ticket-muted);\n  font-size: 10px;\n  text-transform: uppercase;\n  letter-spacing: 0.08em;\n}\n.ticket__value {\n  overflow-wrap: anywhere;\n  font-size: 14px;\n  font-weight: 700;\n}\n.ticket__footer {\n  display: grid;\n  grid-template-columns: 1fr auto;\n  gap: 20px;\n  align-items: end;\n  padding: 16px 20px;\n  border-top: 1px dashed var(--ticket-line);\n}\n.ticket__number {\n  color: var(--ticket-muted);\n  font:\n    12px ui-monospace,\n    monospace;\n}\n.ticket__barcode {\n  display: flex;\n  height: 38px;\n  align-items: stretch;\n  gap: 2px;\n}\n.ticket__bar {\n  display: block;\n  background: var(--ticket-ink);\n}\n.ticket__notice {\n  position: absolute;\n  right: 10px;\n  bottom: 3px;\n  color: #9aa1a9;\n  font-size: 8px;\n  letter-spacing: 0.12em;\n}\n.ticket--compact .ticket__header {\n  padding: 10px 13px;\n}\n.ticket--compact .ticket__operator {\n  font-size: 15px;\n}\n.ticket--compact .ticket__operator-code,\n.ticket--compact .ticket__kind {\n  font-size: 9px;\n}\n.ticket--compact .ticket__route {\n  gap: 8px;\n  padding: 15px 13px;\n}\n.ticket--compact .ticket__code {\n  font-size: 24px;\n}\n.ticket--compact .ticket__name {\n  font-size: 10px;\n}\n.ticket--compact .ticket__route-line {\n  font-size: 16px;\n}\n.ticket--compact .ticket__route-line::before,\n.ticket--compact .ticket__route-line::after {\n  width: 19px;\n}\n.ticket--compact .ticket__details {\n  gap: 11px 12px;\n  padding: 13px;\n}\n.ticket--compact .ticket__label {\n  font-size: 8px;\n}\n.ticket--compact .ticket__value {\n  font-size: 11px;\n}\n.ticket--compact .ticket__footer {\n  gap: 12px;\n  padding: 10px 13px;\n}\n.ticket--compact .ticket__number {\n  font-size: 9px;\n}\n.ticket--compact .ticket__barcode {\n  height: 25px;\n  gap: 1px;\n}\n.ticket--compact .ticket__notice {\n  font-size: 6px;\n}\n.ticket--flight .ticket__header {\n  padding: 10px 18px;\n}\n.ticket--flight .ticket__route {\n  padding: 14px 18px;\n}\n.ticket--flight .ticket__details {\n  grid-template-columns: repeat(6, minmax(0, 1fr));\n  gap: 10px 18px;\n  padding: 12px 18px;\n}\n.ticket--flight .ticket__footer {\n  padding: 8px 18px;\n}\n.ticket--flight .ticket__barcode {\n  height: 28px;\n}\n.person-avatar {\n  position: relative;\n  width: 56px;\n  height: 64px;\n  overflow: hidden;\n  border-radius: 8px;\n  background: #e5e8ec;\n}\n.person-avatar__head {\n  position: absolute;\n  top: 9px;\n  left: 50%;\n  width: 22px;\n  height: 22px;\n  transform: translateX(-50%);\n  border-radius: 50%;\n  background: #9aa3ad;\n}\n.person-avatar__body {\n  position: absolute;\n  bottom: -11px;\n  left: 50%;\n  width: 48px;\n  height: 43px;\n  transform: translateX(-50%);\n  border-radius: 50% 50% 12px 12px;\n  background: #9aa3ad;\n}\n@media (max-width: 560px) {\n  .ticket__details,\n  .ticket--flight .ticket__details {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n  }\n  .ticket__route {\n    gap: 8px;\n  }\n  .ticket__code {\n    font-size: 25px;\n  }\n  .ticket__route-line::before,\n  .ticket__route-line::after {\n    width: 16px;\n  }\n}\n';
   const isPlace = (value) => {
     const p = value;
@@ -951,13 +1120,6 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     locationValue: (p) => p.platform,
     routeIcon: "→"
   });
-  function renderDefaultPersonAvatar(className = "person-avatar") {
-    const avatar2 = element("div", className);
-    avatar2.setAttribute("role", "img");
-    avatar2.setAttribute("aria-label", "默认人物头像");
-    avatar2.append(element("span", `${className}__head`), element("span", `${className}__body`));
-    return avatar2;
-  }
   const styles = ':host {\n  --id-blue: #244f78;\n  --id-red: #9d303b;\n  --id-paper: #f5f0e6;\n  --id-ink: #19232d;\n  --id-muted: #68737d;\n}\n.identity-card,\n.work-card {\n  position: relative;\n  width: min(100%, 660px);\n  overflow: hidden;\n  border: 1px solid #c9c4b9;\n  border-radius: 16px;\n  background: linear-gradient(135deg, #faf7ef, #e8edf0);\n  color: var(--id-ink);\n  box-shadow: 0 8px 24px #1f29371a;\n}\n.identity-card::after {\n  content: "FICTIONAL · NOVEL UI";\n  position: absolute;\n  top: 48%;\n  left: 18%;\n  transform: rotate(-16deg);\n  color: #8b949e1f;\n  font-size: 38px;\n  font-weight: 800;\n  letter-spacing: 0.08em;\n  pointer-events: none;\n}\n.identity-card {\n  width: min(100%, 480px);\n  border-radius: 12px;\n}\n.identity-card__header,\n.work-card__header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 14px 18px;\n  background: var(--id-blue);\n  color: #fff;\n}\n.identity-card__country,\n.work-card__organization {\n  font-size: 18px;\n  font-weight: 800;\n}\n.identity-card__kind,\n.work-card__kind {\n  font-size: 11px;\n  letter-spacing: 0.1em;\n  opacity: 0.8;\n}\n.identity-card__body {\n  display: grid;\n  grid-template-columns: 1fr 96px;\n  align-items: start;\n  gap: 18px;\n  padding: 18px;\n}\n.identity-card .person-avatar {\n  width: 96px;\n  height: 120px;\n  border: 1px solid #c4cbd1;\n  background: #dbe0e4;\n}\n.identity-card .person-avatar__head {\n  top: 16px;\n  width: 32px;\n  height: 32px;\n  background: #66727d;\n}\n.identity-card .person-avatar__body {\n  bottom: -12px;\n  width: 72px;\n  height: 68px;\n  background: #66727d;\n}\n.identity-card__fields {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 12px 20px;\n}\n.identity-card__field--wide {\n  grid-column: 1/-1;\n}\n.identity-card__label,\n.work-card__label {\n  color: var(--id-muted);\n  font-size: 9px;\n  letter-spacing: 0.08em;\n}\n.identity-card__value,\n.work-card__value {\n  margin-top: 2px;\n  font-weight: 700;\n  overflow-wrap: anywhere;\n}\n.identity-card__footer {\n  display: flex;\n  justify-content: space-between;\n  padding: 12px 18px;\n  border-top: 1px solid #cfd4d7;\n  color: var(--id-muted);\n  font-size: 10px;\n}\n.work-card {\n  display: flex;\n  min-height: 485px;\n  width: min(100%, 340px);\n  flex-direction: column;\n  text-align: center;\n}\n.work-card__header {\n  display: block;\n  padding: 16px 18px;\n}\n.work-card__body {\n  display: grid;\n  flex: 1;\n  align-content: start;\n  justify-items: center;\n  padding: 20px 24px 24px;\n}\n.work-card .person-avatar {\n  width: 114px;\n  height: 124px;\n  border: 1px solid #c4cbd1;\n  border-radius: 8px;\n  background: #dbe0e4;\n}\n.work-card .person-avatar__head {\n  top: 18px;\n  width: 34px;\n  height: 34px;\n  background: #66727d;\n}\n.work-card .person-avatar__body {\n  bottom: -13px;\n  width: 82px;\n  height: 76px;\n  background: #66727d;\n}\n.work-card__name {\n  margin-top: 14px;\n  font-size: 22px;\n  font-weight: 800;\n}\n.work-card__title {\n  color: var(--id-blue);\n  font-size: 14px;\n  font-weight: 700;\n}\n.work-card__details {\n  display: grid;\n  width: 100%;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 16px 18px;\n  margin-top: 26px;\n  padding-top: 20px;\n  border-top: 1px solid #ccd2d7;\n  text-align: left;\n}\n.work-card__footer {\n  padding: 12px;\n  background: #e2e7ea;\n  color: var(--id-muted);\n  font:\n    11px ui-monospace,\n    monospace;\n}\n@media (max-width: 380px) {\n  .identity-card__body {\n    grid-template-columns: 1fr 64px;\n    gap: 13px;\n    padding: 16px;\n  }\n  .identity-card .person-avatar {\n    width: 64px;\n    height: 86px;\n  }\n  .identity-card__fields {\n    grid-template-columns: 1fr;\n  }\n  .identity-card__field--wide {\n    grid-column: auto;\n  }\n  .identity-card::after {\n    font-size: 26px;\n  }\n}\n';
   const IdentityCardRenderer = {
     component: "document",

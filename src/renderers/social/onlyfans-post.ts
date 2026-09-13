@@ -1,6 +1,11 @@
 import type { NovelUIRenderer } from "../../core/renderer-registry";
 import { element } from "../../utils/dom";
-import { isPlatformComment,renderPlatformComments,type PlatformComment } from "../shared/platform-comments";
+import { renderDefaultAvatar } from "../shared/person-avatar";
+import {
+  isPlatformComment,
+  renderPlatformComments,
+  type PlatformComment,
+} from "../shared/platform-comments";
 import common from "../../styles/common.css?inline";
 import styles from "../../styles/onlyfans.css?inline";
 
@@ -41,24 +46,15 @@ export const OnlyFansRenderer: NovelUIRenderer<OnlyFansProps> = {
         (x) => typeof x === "string",
       ) &&
       optionalNumber(p.likes) &&
-      (p.comments === undefined || optionalNumber(p.comments) || (Array.isArray(p.comments) && p.comments.every(isPlatformComment)))
+      (p.comments === undefined ||
+        optionalNumber(p.comments) ||
+        (Array.isArray(p.comments) && p.comments.every(isPlatformComment)))
     );
   },
   render(props) {
     const root = element("article", "novel-ui onlyfans"),
       header = element("header", "onlyfans__header"),
-      avatar = element("div", "onlyfans__avatar"),
-      avatarUrl = safeUrl(props.avatar);
-    if (avatarUrl) {
-      const img = element("img");
-      img.src = avatarUrl;
-      img.alt = "";
-      img.loading = "lazy";
-      avatar.append(img);
-    } else
-      avatar.append(
-        element("span", "", props.creator.slice(0, 1).toUpperCase()),
-      );
+      avatar = renderDefaultAvatar("onlyfans__avatar",`${props.creator}的默认头像`);
     const identity = element("div", "onlyfans__identity");
     identity.append(
       element(
@@ -89,7 +85,11 @@ export const OnlyFansRenderer: NovelUIRenderer<OnlyFansProps> = {
     }
     const stats = element("footer", "onlyfans__footer");
     stats.append(
-      element("span", "", `♡ ${props.likes ?? 0}　💬 ${Array.isArray(props.comments) ? props.comments.length : props.comments ?? 0}`),
+      element(
+        "span",
+        "",
+        `♡ ${props.likes ?? 0}　💬 ${Array.isArray(props.comments) ? props.comments.length : (props.comments ?? 0)}`,
+      ),
       element(
         "span",
         "onlyfans__status",
@@ -101,7 +101,8 @@ export const OnlyFansRenderer: NovelUIRenderer<OnlyFansProps> = {
       ),
     );
     root.append(stats);
-    if(Array.isArray(props.comments)&&props.comments.length)root.append(renderPlatformComments(props.comments));
+    if (Array.isArray(props.comments) && props.comments.length)
+      root.append(renderPlatformComments(props.comments));
     return root;
   },
 };
