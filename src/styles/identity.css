@@ -1,1 +1,173 @@
-:host{--id-blue:#244f78;--id-red:#9d303b;--id-paper:#f5f0e6;--id-ink:#19232d;--id-muted:#68737d}.identity-card,.work-card{position:relative;width:min(100%,660px);overflow:hidden;border:1px solid #c9c4b9;border-radius:16px;background:linear-gradient(135deg,#faf7ef,#e8edf0);color:var(--id-ink);box-shadow:0 8px 24px #1f29371a}.identity-card::after{content:"FICTIONAL · NOVEL UI";position:absolute;top:48%;left:18%;transform:rotate(-16deg);color:#8b949e1f;font-size:38px;font-weight:800;letter-spacing:.08em;pointer-events:none}.identity-card__header,.work-card__header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--id-blue);color:#fff}.identity-card__country,.work-card__organization{font-size:18px;font-weight:800}.identity-card__kind,.work-card__kind{font-size:11px;letter-spacing:.1em;opacity:.8}.identity-card__body{display:grid;grid-template-columns:82px 1fr;gap:20px;padding:22px}.identity-card .person-avatar{width:82px;height:106px}.identity-card__fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 20px}.identity-card__field--wide{grid-column:1/-1}.identity-card__label,.work-card__label{color:var(--id-muted);font-size:9px;letter-spacing:.08em}.identity-card__value,.work-card__value{margin-top:2px;font-weight:700;overflow-wrap:anywhere}.identity-card__footer{display:flex;justify-content:space-between;padding:12px 18px;border-top:1px solid #cfd4d7;color:var(--id-muted);font-size:10px}.work-card{width:min(100%,390px);text-align:center}.work-card__header{display:block}.work-card__body{display:grid;justify-items:center;padding:24px}.work-card .person-avatar{width:90px;height:105px;border-radius:50% 50% 12px 12px}.work-card__name{margin-top:14px;font-size:22px;font-weight:800}.work-card__title{color:var(--id-blue);font-size:14px;font-weight:700}.work-card__details{display:grid;width:100%;grid-template-columns:repeat(2,1fr);gap:13px;margin-top:22px;padding-top:18px;border-top:1px solid #ccd2d7;text-align:left}.work-card__footer{padding:12px;background:#e2e7ea;color:var(--id-muted);font:11px ui-monospace,monospace}@media(max-width:480px){.identity-card__body{grid-template-columns:64px 1fr;gap:13px;padding:16px}.identity-card .person-avatar{width:64px;height:86px}.identity-card__fields{grid-template-columns:1fr}.identity-card__field--wide{grid-column:auto}.identity-card::after{font-size:26px}}
+:host {
+  --id-blue: #244f78;
+  --id-red: #9d303b;
+  --id-paper: #f5f0e6;
+  --id-ink: #19232d;
+  --id-muted: #68737d;
+}
+.identity-card,
+.work-card {
+  position: relative;
+  width: min(100%, 660px);
+  overflow: hidden;
+  border: 1px solid #c9c4b9;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #faf7ef, #e8edf0);
+  color: var(--id-ink);
+  box-shadow: 0 8px 24px #1f29371a;
+}
+.identity-card::after {
+  content: "FICTIONAL · NOVEL UI";
+  position: absolute;
+  top: 48%;
+  left: 18%;
+  transform: rotate(-16deg);
+  color: #8b949e1f;
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+}
+.identity-card__header,
+.work-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: var(--id-blue);
+  color: #fff;
+}
+.identity-card__country,
+.work-card__organization {
+  font-size: 18px;
+  font-weight: 800;
+}
+.identity-card__kind,
+.work-card__kind {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+}
+.identity-card__body {
+  display: grid;
+  grid-template-columns: 82px 1fr;
+  gap: 20px;
+  padding: 22px;
+}
+.identity-card .person-avatar {
+  width: 82px;
+  height: 106px;
+}
+.identity-card__fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px;
+}
+.identity-card__field--wide {
+  grid-column: 1/-1;
+}
+.identity-card__label,
+.work-card__label {
+  color: var(--id-muted);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+.identity-card__value,
+.work-card__value {
+  margin-top: 2px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.identity-card__footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-top: 1px solid #cfd4d7;
+  color: var(--id-muted);
+  font-size: 10px;
+}
+.work-card {
+  display: flex;
+  min-height: 485px;
+  width: min(100%, 340px);
+  flex-direction: column;
+  text-align: center;
+}
+.work-card__header {
+  display: block;
+  padding: 16px 18px;
+}
+.work-card__body {
+  display: grid;
+  flex: 1;
+  align-content: start;
+  justify-items: center;
+  padding: 20px 24px 24px;
+}
+.work-card .person-avatar {
+  width: 114px;
+  height: 124px;
+  border: 1px solid #c4cbd1;
+  border-radius: 8px;
+  background: #dbe0e4;
+}
+.work-card .person-avatar__head {
+  top: 18px;
+  width: 34px;
+  height: 34px;
+  background: #66727d;
+}
+.work-card .person-avatar__body {
+  bottom: -13px;
+  width: 82px;
+  height: 76px;
+  background: #66727d;
+}
+.work-card__name {
+  margin-top: 14px;
+  font-size: 22px;
+  font-weight: 800;
+}
+.work-card__title {
+  color: var(--id-blue);
+  font-size: 14px;
+  font-weight: 700;
+}
+.work-card__details {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 18px;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid #ccd2d7;
+  text-align: left;
+}
+.work-card__footer {
+  padding: 12px;
+  background: #e2e7ea;
+  color: var(--id-muted);
+  font:
+    11px ui-monospace,
+    monospace;
+}
+@media (max-width: 480px) {
+  .identity-card__body {
+    grid-template-columns: 64px 1fr;
+    gap: 13px;
+    padding: 16px;
+  }
+  .identity-card .person-avatar {
+    width: 64px;
+    height: 86px;
+  }
+  .identity-card__fields {
+    grid-template-columns: 1fr;
+  }
+  .identity-card__field--wide {
+    grid-column: auto;
+  }
+  .identity-card::after {
+    font-size: 26px;
+  }
+}

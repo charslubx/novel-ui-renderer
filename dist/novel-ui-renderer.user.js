@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.3.2
+// @version      0.3.3
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -544,14 +544,32 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     });
     return shell;
   } };
-  const styles$1 = ':host{--ticket-accent:#2463a9;--ticket-accent-soft:#eaf2fb;--ticket-paper:#fff;--ticket-ink:#17202a;--ticket-muted:#69727d;--ticket-line:#d9dee5}.ticket{position:relative;width:min(100%,760px);overflow:hidden;border:1px solid var(--ticket-line);border-radius:18px;background:var(--ticket-paper);color:var(--ticket-ink);box-shadow:0 8px 24px #1f293714}.ticket--red{--ticket-accent:#b4232f;--ticket-accent-soft:#fff0f1}.ticket--green{--ticket-accent:#167a59;--ticket-accent-soft:#eaf8f2}.ticket--gold{--ticket-accent:#8a6418;--ticket-accent-soft:#fff8df}.ticket__header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:var(--ticket-accent);color:#fff}.ticket__operator{font-size:19px;font-weight:800}.ticket__operator-code{font-size:12px;letter-spacing:.14em}.ticket__kind{font-size:11px;opacity:.82}.ticket__route{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:24px 20px;background:var(--ticket-accent-soft)}.ticket__place:last-child{text-align:right}.ticket__code{font-size:32px;font-weight:800;letter-spacing:.04em}.ticket__name{color:var(--ticket-muted);font-size:12px}.ticket__route-line{display:flex;align-items:center;gap:6px;color:var(--ticket-accent);font-size:21px}.ticket__route-line::before,.ticket__route-line::after{content:"";width:34px;border-top:1px solid currentColor}.ticket__details{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;padding:20px}.ticket__field{min-width:0}.ticket__label{margin-bottom:4px;color:var(--ticket-muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em}.ticket__value{overflow-wrap:anywhere;font-size:14px;font-weight:700}.ticket__footer{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;padding:16px 20px;border-top:1px dashed var(--ticket-line)}.ticket__number{color:var(--ticket-muted);font:12px ui-monospace,monospace}.ticket__barcode{display:flex;height:38px;align-items:stretch;gap:2px}.ticket__bar{display:block;background:var(--ticket-ink)}.ticket__notice{position:absolute;right:10px;bottom:3px;color:#9aa1a9;font-size:8px;letter-spacing:.12em}.person-avatar{position:relative;width:56px;height:64px;overflow:hidden;border-radius:8px;background:#e5e8ec}.person-avatar__head{position:absolute;top:9px;left:50%;width:22px;height:22px;transform:translateX(-50%);border-radius:50%;background:#9aa3ad}.person-avatar__body{position:absolute;bottom:-11px;left:50%;width:48px;height:43px;transform:translateX(-50%);border-radius:50% 50% 12px 12px;background:#9aa3ad}@media(max-width:560px){.ticket__details{grid-template-columns:repeat(2,minmax(0,1fr))}.ticket__route{gap:8px}.ticket__code{font-size:25px}.ticket__route-line::before,.ticket__route-line::after{width:16px}}\n';
+  const styles$1 = ':host {\n  --ticket-accent: #2463a9;\n  --ticket-accent-soft: #eaf2fb;\n  --ticket-paper: #fff;\n  --ticket-ink: #17202a;\n  --ticket-muted: #69727d;\n  --ticket-line: #d9dee5;\n}\n.ticket {\n  position: relative;\n  width: min(100%, 760px);\n  overflow: hidden;\n  border: 1px solid var(--ticket-line);\n  border-radius: 18px;\n  background: var(--ticket-paper);\n  color: var(--ticket-ink);\n  box-shadow: 0 8px 24px #1f293714;\n}\n.ticket--compact {\n  width: min(100%, 480px);\n  border-radius: 14px;\n}\n.ticket--red {\n  --ticket-accent: #b4232f;\n  --ticket-accent-soft: #fff0f1;\n}\n.ticket--green {\n  --ticket-accent: #167a59;\n  --ticket-accent-soft: #eaf8f2;\n}\n.ticket--gold {\n  --ticket-accent: #8a6418;\n  --ticket-accent-soft: #fff8df;\n}\n.ticket__header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 16px 20px;\n  background: var(--ticket-accent);\n  color: #fff;\n}\n.ticket__operator {\n  font-size: 19px;\n  font-weight: 800;\n}\n.ticket__operator-code {\n  font-size: 12px;\n  letter-spacing: 0.14em;\n}\n.ticket__kind {\n  font-size: 11px;\n  opacity: 0.82;\n}\n.ticket__route {\n  display: grid;\n  grid-template-columns: 1fr auto 1fr;\n  align-items: center;\n  gap: 16px;\n  padding: 24px 20px;\n  background: var(--ticket-accent-soft);\n}\n.ticket__place:last-child {\n  text-align: right;\n}\n.ticket__code {\n  font-size: 32px;\n  font-weight: 800;\n  letter-spacing: 0.04em;\n}\n.ticket__name {\n  color: var(--ticket-muted);\n  font-size: 12px;\n}\n.ticket__route-line {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  color: var(--ticket-accent);\n  font-size: 21px;\n}\n.ticket__route-line::before,\n.ticket__route-line::after {\n  content: "";\n  width: 34px;\n  border-top: 1px solid currentColor;\n}\n.ticket__details {\n  display: grid;\n  grid-template-columns: repeat(4, minmax(0, 1fr));\n  gap: 18px;\n  padding: 20px;\n}\n.ticket__field {\n  min-width: 0;\n}\n.ticket__label {\n  margin-bottom: 4px;\n  color: var(--ticket-muted);\n  font-size: 10px;\n  text-transform: uppercase;\n  letter-spacing: 0.08em;\n}\n.ticket__value {\n  overflow-wrap: anywhere;\n  font-size: 14px;\n  font-weight: 700;\n}\n.ticket__footer {\n  display: grid;\n  grid-template-columns: 1fr auto;\n  gap: 20px;\n  align-items: end;\n  padding: 16px 20px;\n  border-top: 1px dashed var(--ticket-line);\n}\n.ticket__number {\n  color: var(--ticket-muted);\n  font:\n    12px ui-monospace,\n    monospace;\n}\n.ticket__barcode {\n  display: flex;\n  height: 38px;\n  align-items: stretch;\n  gap: 2px;\n}\n.ticket__bar {\n  display: block;\n  background: var(--ticket-ink);\n}\n.ticket__notice {\n  position: absolute;\n  right: 10px;\n  bottom: 3px;\n  color: #9aa1a9;\n  font-size: 8px;\n  letter-spacing: 0.12em;\n}\n.ticket--compact .ticket__header {\n  padding: 10px 13px;\n}\n.ticket--compact .ticket__operator {\n  font-size: 15px;\n}\n.ticket--compact .ticket__operator-code,\n.ticket--compact .ticket__kind {\n  font-size: 9px;\n}\n.ticket--compact .ticket__route {\n  gap: 8px;\n  padding: 15px 13px;\n}\n.ticket--compact .ticket__code {\n  font-size: 24px;\n}\n.ticket--compact .ticket__name {\n  font-size: 10px;\n}\n.ticket--compact .ticket__route-line {\n  font-size: 16px;\n}\n.ticket--compact .ticket__route-line::before,\n.ticket--compact .ticket__route-line::after {\n  width: 19px;\n}\n.ticket--compact .ticket__details {\n  gap: 11px 12px;\n  padding: 13px;\n}\n.ticket--compact .ticket__label {\n  font-size: 8px;\n}\n.ticket--compact .ticket__value {\n  font-size: 11px;\n}\n.ticket--compact .ticket__footer {\n  gap: 12px;\n  padding: 10px 13px;\n}\n.ticket--compact .ticket__number {\n  font-size: 9px;\n}\n.ticket--compact .ticket__barcode {\n  height: 25px;\n  gap: 1px;\n}\n.ticket--compact .ticket__notice {\n  font-size: 6px;\n}\n.ticket--flight .ticket__header {\n  padding: 10px 18px;\n}\n.ticket--flight .ticket__route {\n  padding: 14px 18px;\n}\n.ticket--flight .ticket__details {\n  grid-template-columns: repeat(6, minmax(0, 1fr));\n  gap: 10px 18px;\n  padding: 12px 18px;\n}\n.ticket--flight .ticket__footer {\n  padding: 8px 18px;\n}\n.ticket--flight .ticket__barcode {\n  height: 28px;\n}\n.person-avatar {\n  position: relative;\n  width: 56px;\n  height: 64px;\n  overflow: hidden;\n  border-radius: 8px;\n  background: #e5e8ec;\n}\n.person-avatar__head {\n  position: absolute;\n  top: 9px;\n  left: 50%;\n  width: 22px;\n  height: 22px;\n  transform: translateX(-50%);\n  border-radius: 50%;\n  background: #9aa3ad;\n}\n.person-avatar__body {\n  position: absolute;\n  bottom: -11px;\n  left: 50%;\n  width: 48px;\n  height: 43px;\n  transform: translateX(-50%);\n  border-radius: 50% 50% 12px 12px;\n  background: #9aa3ad;\n}\n@media (max-width: 560px) {\n  .ticket__details,\n  .ticket--flight .ticket__details {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n  }\n  .ticket__route {\n    gap: 8px;\n  }\n  .ticket__code {\n    font-size: 25px;\n  }\n  .ticket__route-line::before,\n  .ticket__route-line::after {\n    width: 16px;\n  }\n}\n';
   const isPlace = (value) => {
     const p = value;
     return !!p && typeof p.name === "string" && (p.code === void 0 || typeof p.code === "string");
   };
   function isTransportTicket(value) {
     const p = value;
-    return !!p && [p.operator, p.ticketNumber, p.passenger, p.date, p.departure, p.serviceNumber].every((x) => typeof x === "string") && isPlace(p.origin) && isPlace(p.destination) && [p.operatorCode, p.arrival, p.seat, p.travelClass, p.boardingTime, p.gate, p.platform, p.pier, p.terminal, p.duration].every((x) => x === void 0 || typeof x === "string") && (p.theme === void 0 || ["blue", "red", "green", "gold"].includes(p.theme));
+    return !!p && [
+      p.operator,
+      p.ticketNumber,
+      p.passenger,
+      p.date,
+      p.departure,
+      p.serviceNumber
+    ].every((x) => typeof x === "string") && isPlace(p.origin) && isPlace(p.destination) && [
+      p.operatorCode,
+      p.arrival,
+      p.seat,
+      p.travelClass,
+      p.boardingTime,
+      p.gate,
+      p.platform,
+      p.pier,
+      p.terminal,
+      p.duration
+    ].every((x) => x === void 0 || typeof x === "string") && (p.theme === void 0 || ["blue", "red", "green", "gold"].includes(p.theme));
   }
   function barcode(seed) {
     const root = element("div", "ticket__barcode");
@@ -566,35 +584,110 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     return root;
   }
   function createTransportRenderer(variant, labels) {
-    return { component: "ticket", variant, styles: common + styles$1, validate: isTransportTicket, render(props) {
-      const root = element("article", `novel-ui ticket ticket--${props.theme ?? "blue"}`);
-      const header = element("header", "ticket__header"), brand = element("div");
-      brand.append(element("div", "ticket__operator", props.operator), element("div", "ticket__operator-code", props.operatorCode ?? ""));
-      header.append(brand, element("div", "ticket__kind", labels.kind));
-      const route = element("section", "ticket__route");
-      for (const [place, side] of [[props.origin, "origin"], [props.destination, "destination"]]) {
-        const box = element("div", `ticket__place ticket__place--${side}`);
-        box.append(element("div", "ticket__code", place.code ?? place.name.slice(0, 3).toUpperCase()), element("div", "ticket__name", place.name));
-        if (side === "origin") route.append(box, element("div", "ticket__route-line", labels.routeIcon));
-        else route.append(box);
+    return {
+      component: "ticket",
+      variant,
+      styles: common + styles$1,
+      validate: isTransportTicket,
+      render(props) {
+        const sizeClass = variant === "flight" ? "ticket--wide" : "ticket--compact";
+        const root = element(
+          "article",
+          `novel-ui ticket ticket--${variant} ${sizeClass} ticket--${props.theme ?? "blue"}`
+        );
+        const header = element("header", "ticket__header"), brand = element("div");
+        brand.append(
+          element("div", "ticket__operator", props.operator),
+          element("div", "ticket__operator-code", props.operatorCode ?? "")
+        );
+        header.append(brand, element("div", "ticket__kind", labels.kind));
+        const route = element("section", "ticket__route");
+        for (const [place, side] of [
+          [props.origin, "origin"],
+          [props.destination, "destination"]
+        ]) {
+          const box = element("div", `ticket__place ticket__place--${side}`);
+          box.append(
+            element(
+              "div",
+              "ticket__code",
+              place.code ?? place.name.slice(0, 3).toUpperCase()
+            ),
+            element("div", "ticket__name", place.name)
+          );
+          if (side === "origin")
+            route.append(
+              box,
+              element("div", "ticket__route-line", labels.routeIcon)
+            );
+          else route.append(box);
+        }
+        const details = element("section", "ticket__details");
+        const fields = [
+          ["PASSENGER", props.passenger],
+          ["DATE", props.date],
+          ["DEPARTURE", props.departure],
+          ["ARRIVAL", props.arrival],
+          [labels.service, props.serviceNumber],
+          ["CLASS", props.travelClass],
+          ["SEAT", props.seat],
+          ["BOARDING", props.boardingTime],
+          [labels.location, labels.locationValue(props)],
+          ["TERMINAL", props.terminal],
+          ["DURATION", props.duration]
+        ];
+        fields.filter(([, value]) => value).forEach(([label, value]) => {
+          const field = element("div", "ticket__field");
+          field.append(
+            element("div", "ticket__label", label),
+            element("div", "ticket__value", value)
+          );
+          details.append(field);
+        });
+        const footer = element("footer", "ticket__footer");
+        footer.append(
+          element("div", "ticket__number", `TICKET ${props.ticketNumber}`),
+          barcode(props.ticketNumber)
+        );
+        root.append(
+          header,
+          route,
+          details,
+          footer,
+          element("span", "ticket__notice", "FICTIONAL TRAVEL DOCUMENT")
+        );
+        return root;
       }
-      const details = element("section", "ticket__details");
-      const fields = [["PASSENGER", props.passenger], ["DATE", props.date], ["DEPARTURE", props.departure], ["ARRIVAL", props.arrival], [labels.service, props.serviceNumber], ["CLASS", props.travelClass], ["SEAT", props.seat], ["BOARDING", props.boardingTime], [labels.location, labels.locationValue(props)], ["TERMINAL", props.terminal], ["DURATION", props.duration]];
-      fields.filter(([, value]) => value).forEach(([label, value]) => {
-        const field = element("div", "ticket__field");
-        field.append(element("div", "ticket__label", label), element("div", "ticket__value", value));
-        details.append(field);
-      });
-      const footer = element("footer", "ticket__footer");
-      footer.append(element("div", "ticket__number", `TICKET ${props.ticketNumber}`), barcode(props.ticketNumber));
-      root.append(header, route, details, footer, element("span", "ticket__notice", "FICTIONAL TRAVEL DOCUMENT"));
-      return root;
-    } };
+    };
   }
-  const FlightTicketRenderer = createTransportRenderer("flight", { kind: "BOARDING PASS", service: "FLIGHT", location: "GATE", locationValue: (p) => p.gate, routeIcon: "✈" });
-  const FerryTicketRenderer = createTransportRenderer("ferry", { kind: "FERRY PASS", service: "VESSEL / VOYAGE", location: "PIER", locationValue: (p) => p.pier, routeIcon: "≈" });
-  const RailTicketRenderer = createTransportRenderer("rail", { kind: "RAIL TICKET", service: "TRAIN", location: "PLATFORM", locationValue: (p) => p.platform, routeIcon: "→" });
-  const BusTicketRenderer = createTransportRenderer("bus", { kind: "COACH TICKET", service: "SERVICE", location: "PLATFORM", locationValue: (p) => p.platform, routeIcon: "→" });
+  const FlightTicketRenderer = createTransportRenderer("flight", {
+    kind: "BOARDING PASS",
+    service: "FLIGHT",
+    location: "GATE",
+    locationValue: (p) => p.gate,
+    routeIcon: "✈"
+  });
+  const FerryTicketRenderer = createTransportRenderer("ferry", {
+    kind: "FERRY PASS",
+    service: "VESSEL / VOYAGE",
+    location: "PIER",
+    locationValue: (p) => p.pier,
+    routeIcon: "≈"
+  });
+  const RailTicketRenderer = createTransportRenderer("rail", {
+    kind: "RAIL TICKET",
+    service: "TRAIN",
+    location: "PLATFORM",
+    locationValue: (p) => p.platform,
+    routeIcon: "→"
+  });
+  const BusTicketRenderer = createTransportRenderer("bus", {
+    kind: "COACH TICKET",
+    service: "SERVICE",
+    location: "PLATFORM",
+    locationValue: (p) => p.platform,
+    routeIcon: "→"
+  });
   function renderDefaultPersonAvatar(className = "person-avatar") {
     const avatar2 = element("div", className);
     avatar2.setAttribute("role", "img");
@@ -602,7 +695,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     avatar2.append(element("span", `${className}__head`), element("span", `${className}__body`));
     return avatar2;
   }
-  const styles = ':host{--id-blue:#244f78;--id-red:#9d303b;--id-paper:#f5f0e6;--id-ink:#19232d;--id-muted:#68737d}.identity-card,.work-card{position:relative;width:min(100%,660px);overflow:hidden;border:1px solid #c9c4b9;border-radius:16px;background:linear-gradient(135deg,#faf7ef,#e8edf0);color:var(--id-ink);box-shadow:0 8px 24px #1f29371a}.identity-card::after{content:"FICTIONAL · NOVEL UI";position:absolute;top:48%;left:18%;transform:rotate(-16deg);color:#8b949e1f;font-size:38px;font-weight:800;letter-spacing:.08em;pointer-events:none}.identity-card__header,.work-card__header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:var(--id-blue);color:#fff}.identity-card__country,.work-card__organization{font-size:18px;font-weight:800}.identity-card__kind,.work-card__kind{font-size:11px;letter-spacing:.1em;opacity:.8}.identity-card__body{display:grid;grid-template-columns:82px 1fr;gap:20px;padding:22px}.identity-card .person-avatar{width:82px;height:106px}.identity-card__fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 20px}.identity-card__field--wide{grid-column:1/-1}.identity-card__label,.work-card__label{color:var(--id-muted);font-size:9px;letter-spacing:.08em}.identity-card__value,.work-card__value{margin-top:2px;font-weight:700;overflow-wrap:anywhere}.identity-card__footer{display:flex;justify-content:space-between;padding:12px 18px;border-top:1px solid #cfd4d7;color:var(--id-muted);font-size:10px}.work-card{width:min(100%,390px);text-align:center}.work-card__header{display:block}.work-card__body{display:grid;justify-items:center;padding:24px}.work-card .person-avatar{width:90px;height:105px;border-radius:50% 50% 12px 12px}.work-card__name{margin-top:14px;font-size:22px;font-weight:800}.work-card__title{color:var(--id-blue);font-size:14px;font-weight:700}.work-card__details{display:grid;width:100%;grid-template-columns:repeat(2,1fr);gap:13px;margin-top:22px;padding-top:18px;border-top:1px solid #ccd2d7;text-align:left}.work-card__footer{padding:12px;background:#e2e7ea;color:var(--id-muted);font:11px ui-monospace,monospace}@media(max-width:480px){.identity-card__body{grid-template-columns:64px 1fr;gap:13px;padding:16px}.identity-card .person-avatar{width:64px;height:86px}.identity-card__fields{grid-template-columns:1fr}.identity-card__field--wide{grid-column:auto}.identity-card::after{font-size:26px}}\n';
+  const styles = ':host {\n  --id-blue: #244f78;\n  --id-red: #9d303b;\n  --id-paper: #f5f0e6;\n  --id-ink: #19232d;\n  --id-muted: #68737d;\n}\n.identity-card,\n.work-card {\n  position: relative;\n  width: min(100%, 660px);\n  overflow: hidden;\n  border: 1px solid #c9c4b9;\n  border-radius: 16px;\n  background: linear-gradient(135deg, #faf7ef, #e8edf0);\n  color: var(--id-ink);\n  box-shadow: 0 8px 24px #1f29371a;\n}\n.identity-card::after {\n  content: "FICTIONAL · NOVEL UI";\n  position: absolute;\n  top: 48%;\n  left: 18%;\n  transform: rotate(-16deg);\n  color: #8b949e1f;\n  font-size: 38px;\n  font-weight: 800;\n  letter-spacing: 0.08em;\n  pointer-events: none;\n}\n.identity-card__header,\n.work-card__header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 14px 18px;\n  background: var(--id-blue);\n  color: #fff;\n}\n.identity-card__country,\n.work-card__organization {\n  font-size: 18px;\n  font-weight: 800;\n}\n.identity-card__kind,\n.work-card__kind {\n  font-size: 11px;\n  letter-spacing: 0.1em;\n  opacity: 0.8;\n}\n.identity-card__body {\n  display: grid;\n  grid-template-columns: 82px 1fr;\n  gap: 20px;\n  padding: 22px;\n}\n.identity-card .person-avatar {\n  width: 82px;\n  height: 106px;\n}\n.identity-card__fields {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 12px 20px;\n}\n.identity-card__field--wide {\n  grid-column: 1/-1;\n}\n.identity-card__label,\n.work-card__label {\n  color: var(--id-muted);\n  font-size: 9px;\n  letter-spacing: 0.08em;\n}\n.identity-card__value,\n.work-card__value {\n  margin-top: 2px;\n  font-weight: 700;\n  overflow-wrap: anywhere;\n}\n.identity-card__footer {\n  display: flex;\n  justify-content: space-between;\n  padding: 12px 18px;\n  border-top: 1px solid #cfd4d7;\n  color: var(--id-muted);\n  font-size: 10px;\n}\n.work-card {\n  display: flex;\n  min-height: 485px;\n  width: min(100%, 340px);\n  flex-direction: column;\n  text-align: center;\n}\n.work-card__header {\n  display: block;\n  padding: 16px 18px;\n}\n.work-card__body {\n  display: grid;\n  flex: 1;\n  align-content: start;\n  justify-items: center;\n  padding: 20px 24px 24px;\n}\n.work-card .person-avatar {\n  width: 114px;\n  height: 124px;\n  border: 1px solid #c4cbd1;\n  border-radius: 8px;\n  background: #dbe0e4;\n}\n.work-card .person-avatar__head {\n  top: 18px;\n  width: 34px;\n  height: 34px;\n  background: #66727d;\n}\n.work-card .person-avatar__body {\n  bottom: -13px;\n  width: 82px;\n  height: 76px;\n  background: #66727d;\n}\n.work-card__name {\n  margin-top: 14px;\n  font-size: 22px;\n  font-weight: 800;\n}\n.work-card__title {\n  color: var(--id-blue);\n  font-size: 14px;\n  font-weight: 700;\n}\n.work-card__details {\n  display: grid;\n  width: 100%;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 16px 18px;\n  margin-top: 26px;\n  padding-top: 20px;\n  border-top: 1px solid #ccd2d7;\n  text-align: left;\n}\n.work-card__footer {\n  padding: 12px;\n  background: #e2e7ea;\n  color: var(--id-muted);\n  font:\n    11px ui-monospace,\n    monospace;\n}\n@media (max-width: 480px) {\n  .identity-card__body {\n    grid-template-columns: 64px 1fr;\n    gap: 13px;\n    padding: 16px;\n  }\n  .identity-card .person-avatar {\n    width: 64px;\n    height: 86px;\n  }\n  .identity-card__fields {\n    grid-template-columns: 1fr;\n  }\n  .identity-card__field--wide {\n    grid-column: auto;\n  }\n  .identity-card::after {\n    font-size: 26px;\n  }\n}\n';
   const IdentityCardRenderer = { component: "document", variant: "identity-card", styles: common + styles, validate(value) {
     const p = value;
     return !!p && [p.country, p.fullName, p.idNumber, p.birthDate, p.validUntil].every((x) => typeof x === "string");
