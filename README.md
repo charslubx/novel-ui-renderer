@@ -1,6 +1,6 @@
 # Novel UI Renderer
 
-Tampermonkey / Userscript runtime that finds `:::novel-ui ... :::` data in AI responses and renders isolated story UI in place. Version 0.1 supports ChatGPT, includes a preliminary Gemini adapter, and ships five renderers. It does not call any model API.
+Tampermonkey / Userscript runtime that finds Novel UI data in AI responses and renders isolated story UI in place. The recommended marker format is `[[novel-ui]] ... [[/novel-ui]]`; the original `:::novel-ui ... :::` format remains supported for backward compatibility. It does not call any model API.
 
 ## Install and build
 
@@ -20,9 +20,9 @@ Ask the model to output the following exactly (without wrapping it in a Markdown
 
 ```text
 请在回答中严格输出以下 Novel UI Schema：
-:::novel-ui
+[[novel-ui]]
 {"schema":"novel-ui","version":"1.0","component":"chat","variant":"kakao","props":{"title":"凑崎纱夏","date":"2026-09-13","messages":[{"id":"1","sender":"sana","name":"凑崎纱夏","side":"left","text":"你在哪里？","time":"23:41","read":null},{"id":"2","sender":"yihyun","name":"徐以炫","side":"right","text":"医院。","time":"23:43","read":1}]}}
-:::
+[[/novel-ui]]
 ```
 
 ## Architecture

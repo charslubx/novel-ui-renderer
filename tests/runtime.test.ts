@@ -3,7 +3,7 @@ import type { SiteAdapter } from "../src/adapters/site-adapter";
 import { NovelUIRuntime } from "../src/core/observer";
 import { RendererRegistry, type NovelUIRenderer } from "../src/core/renderer-registry";
 
-const raw=':::novel-ui {"schema":"novel-ui","version":"1.0","component":"test","variant":"card","props":{"text":"UI"}} :::';
+const raw='[[novel-ui]] {"schema":"novel-ui","version":"1.0","component":"test","variant":"card","props":{"text":"UI"}} [[/novel-ui]]';
 const TestRenderer:NovelUIRenderer<{text:string}>={component:"test",variant:"card",styles:"",validate(value):value is {text:string}{return typeof (value as {text?:unknown})?.text==="string";},render(props){const el=document.createElement("div");el.textContent=props.text;return el;}};
 
 describe("Novel UI runtime",()=>{
@@ -27,6 +27,6 @@ describe("Novel UI runtime",()=>{
     const message=document.querySelector("article") as HTMLElement;
     const adapter:SiteAdapter={name:"test",match:()=>true,getAssistantMessages:()=>[message],observe:()=>()=>{}};
     new NovelUIRuntime(adapter,new RendererRegistry()).start();
-    expect(message.textContent).toContain(":::novel-ui");
+    expect(message.textContent).toContain("[[novel-ui]]");
   });
 });

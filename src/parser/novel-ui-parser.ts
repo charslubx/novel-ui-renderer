@@ -1,19 +1,31 @@
 import { logger } from "../core/logger";
 import { isNovelUIBlock, type NovelUIBlock, type ParsedNovelUIBlock } from "./schema";
 
-const OPEN = ":::novel-ui";
-const CLOSE = ":::";
+interface MarkerPair { open: string; close: string; }
+
+const MARKERS: MarkerPair[] = [
+  { open: "[[novel-ui]]", close: "[[/novel-ui]]" },
+  { open: ":::novel-ui", close: ":::" },
+];
+
+function findNextMarker(text: string, cursor: number): { marker: MarkerPair; start: number } | undefined {
+  return MARKERS
+    .map((marker) => ({ marker, start: text.indexOf(marker.open, cursor) }))
+    .filter(({ start }) => start >= 0)
+    .sort((left, right) => left.start - right.start)[0];
+}
 
 export function parseNovelUIBlocksDetailed(text: string): ParsedNovelUIBlock[] {
   const result: ParsedNovelUIBlock[] = [];
   let cursor = 0;
   while (cursor < text.length) {
-    const start = text.indexOf(OPEN, cursor);
-    if (start < 0) break;
-    const jsonStart = start + OPEN.length;
-    const close = text.indexOf(CLOSE, jsonStart);
+    const match = findNextMarker(text, cursor);
+    if (!match) break;
+    const { marker, start } = match;
+    const jsonStart = start + marker.open.length;
+    const close = text.indexOf(marker.close, jsonStart);
     if (close < 0) break; // streaming block: wait for the terminator
-    const end = close + CLOSE.length;
+    const end = close + marker.close.length;
     const raw = text.slice(start, end);
     const json = text.slice(jsonStart, close).trim();
     try {

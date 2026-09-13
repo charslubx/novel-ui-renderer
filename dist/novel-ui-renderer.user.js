@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.3.1
+// @version      0.3.2
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -98,18 +98,24 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     const item = value;
     return item.schema === "novel-ui" && typeof item.version === "string" && item.version.length > 0 && typeof item.component === "string" && item.component.length > 0 && typeof item.variant === "string" && item.variant.length > 0 && !!item.props && typeof item.props === "object" && !Array.isArray(item.props);
   }
-  const OPEN = ":::novel-ui";
-  const CLOSE = ":::";
+  const MARKERS = [
+    { open: "[[novel-ui]]", close: "[[/novel-ui]]" },
+    { open: ":::novel-ui", close: ":::" }
+  ];
+  function findNextMarker(text, cursor) {
+    return MARKERS.map((marker) => ({ marker, start: text.indexOf(marker.open, cursor) })).filter(({ start }) => start >= 0).sort((left, right) => left.start - right.start)[0];
+  }
   function parseNovelUIBlocksDetailed(text) {
     const result = [];
     let cursor = 0;
     while (cursor < text.length) {
-      const start = text.indexOf(OPEN, cursor);
-      if (start < 0) break;
-      const jsonStart = start + OPEN.length;
-      const close = text.indexOf(CLOSE, jsonStart);
+      const match = findNextMarker(text, cursor);
+      if (!match) break;
+      const { marker, start } = match;
+      const jsonStart = start + marker.open.length;
+      const close = text.indexOf(marker.close, jsonStart);
       if (close < 0) break;
-      const end = close + CLOSE.length;
+      const end = close + marker.close.length;
       const raw = text.slice(start, end);
       const json = text.slice(jsonStart, close).trim();
       try {
