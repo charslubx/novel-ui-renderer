@@ -139,7 +139,7 @@
 
 ### 11. OnlyFans 创作者帖子 `social:onlyfans-post`
 
-必填：`creator`、`handle`、`timestamp`、`text`。可选：`verified`、`avatar`、`media`、`mediaAlt`、`likes`、`comments`、`subscribed`、`subscriptionPrice`。
+必填：`creator`、`handle`、`timestamp`、`text`。可选：`verified`、`avatar`、`media`、`mediaAlt`、`likes`、`comments`、`subscribed`、`subscriptionPrice`。`comments` 可沿用旧版非负评论总数，或传入评论数组；数组中的每项必填 `id`、`displayName`、`text`，可选 `handle`、`timestamp`、`likes`。
 
     [[novel-ui]]
     {"schema":"novel-ui","version":"1.0","component":"social","variant":"onlyfans-post","props":{"creator":"Sasha M.","handle":"@sasha_m","verified":true,"timestamp":"15分钟前","text":"新的一组后台花絮已经上传。","mediaAlt":"后台拍摄花絮","likes":1820,"comments":94,"subscribed":true}}
@@ -147,7 +147,7 @@
 
 ### 12–13. 视频页 `video:youtube|pornhub`
 
-两者共用字段。必填：`title`、`channel`、`duration`、`views`、`uploaded`。可选：`verified`、`thumbnail`、`thumbnailAlt`、`description`、`likes`、`subscribers`、`category`。
+两者共用字段。必填：`title`、`channel`、`duration`、`views`、`uploaded`。可选：`verified`、`thumbnail`、`thumbnailAlt`、`description`、`likes`、`subscribers`、`category`、`comments`。评论数组中的每项必填 `id`、`displayName`、`text`，可选 `handle`、`timestamp`、`likes`；没有评论时省略 `comments`，页面不会显示空评论区。
 
     [[novel-ui]]
     {"schema":"novel-ui","version":"1.0","component":"video","variant":"youtube","props":{"title":"雨夜首尔：凌晨医院外的街道","channel":"Seoul Night Archive","verified":true,"thumbnailAlt":"雨夜中的医院入口","duration":"12:48","views":"128万","uploaded":"3小时前","likes":42000,"subscribers":"86.4万位订阅者","description":"记录首尔雨夜的城市声音。"}}

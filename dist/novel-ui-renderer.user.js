@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.4.0
+// @version      0.4.1
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -448,7 +448,24 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     root.append(header, media, actions, element("div", "instagram__likes", `${props.likes ?? 0} 次赞`), caption, element("div", "instagram__comments", `查看全部 ${props.comments ?? 0} 条评论`), element("time", "instagram__time", props.timestamp));
     return root;
   } };
-  const styles$4 = ".onlyfans{width:min(100%,540px);border:1px solid #d8e2e8;border-radius:10px;background:#fff;color:#242529;font-family:Arial,sans-serif}.onlyfans__header{display:flex;align-items:center;gap:11px;padding:13px 15px}.onlyfans__avatar{display:grid;width:42px;height:42px;place-items:center;overflow:hidden;border-radius:50%;background:#00aff0;color:#fff;font-weight:800}.onlyfans__avatar img,.onlyfans__media img{width:100%;height:100%;object-fit:cover}.onlyfans__identity{min-width:0;flex:1}.onlyfans__creator{font-size:14px;font-weight:700}.onlyfans__handle{color:#8a96a3;font-size:11px}.onlyfans__more{color:#8a96a3}.onlyfans__text{padding:2px 15px 14px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.55}.onlyfans__media{display:grid;min-height:270px;place-items:center;overflow:hidden;background:#edf1f4;color:#84909a}.onlyfans__footer{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;color:#596773;font-size:13px}.onlyfans__status{border-radius:16px;background:#00aff0;color:#fff;padding:6px 12px;font-weight:700}\n";
+  function isPlatformComment(value) {
+    const c = value;
+    return !!c && typeof c.id === "string" && typeof c.displayName === "string" && typeof c.text === "string" && (c.handle === void 0 || typeof c.handle === "string") && (c.timestamp === void 0 || typeof c.timestamp === "string") && (c.likes === void 0 || typeof c.likes === "number" && c.likes >= 0);
+  }
+  function renderPlatformComments(comments) {
+    const root = element("section", "platform-comments");
+    root.append(element("h3", "platform-comments__title", `评论 ${comments.length}`));
+    for (const c of comments) {
+      const row = element("article", "platform-comment"), body = element("div", "platform-comment__body");
+      row.append(element("span", "platform-comment__avatar", c.displayName.trim().slice(0, 1).toUpperCase() || "?"));
+      body.append(element("div", "platform-comment__meta", [c.displayName, c.handle, c.timestamp].filter(Boolean).join(" · ")), element("div", "platform-comment__text", c.text));
+      if (c.likes !== void 0) body.append(element("div", "platform-comment__likes", `♡ ${c.likes}`));
+      row.append(body);
+      root.append(row);
+    }
+    return root;
+  }
+  const styles$4 = ".onlyfans {\n  width: min(100%, 540px);\n  border: 1px solid #d8e2e8;\n  border-radius: 10px;\n  background: #fff;\n  color: #242529;\n  font-family: Arial, sans-serif;\n}\n.onlyfans__header {\n  display: flex;\n  align-items: center;\n  gap: 11px;\n  padding: 13px 15px;\n}\n.onlyfans__avatar {\n  display: grid;\n  width: 42px;\n  height: 42px;\n  place-items: center;\n  overflow: hidden;\n  border-radius: 50%;\n  background: #00aff0;\n  color: #fff;\n  font-weight: 800;\n}\n.onlyfans__avatar img,\n.onlyfans__media img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.onlyfans__identity {\n  min-width: 0;\n  flex: 1;\n}\n.onlyfans__creator {\n  font-size: 14px;\n  font-weight: 700;\n}\n.onlyfans__handle {\n  color: #8a96a3;\n  font-size: 11px;\n}\n.onlyfans__more {\n  color: #8a96a3;\n}\n.onlyfans__text {\n  padding: 2px 15px 14px;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  font-size: 14px;\n  line-height: 1.55;\n}\n.onlyfans__media {\n  display: grid;\n  min-height: 270px;\n  place-items: center;\n  overflow: hidden;\n  background: #edf1f4;\n  color: #84909a;\n}\n.onlyfans__footer {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 11px 15px;\n  color: #596773;\n  font-size: 13px;\n}\n.onlyfans__status {\n  border-radius: 16px;\n  background: #00aff0;\n  color: #fff;\n  padding: 6px 12px;\n  font-weight: 700;\n}\n.platform-comments{border-top:1px solid #e5edf2;padding:10px 15px}.platform-comments__title{margin:0 0 10px;font-size:13px}.platform-comment{display:grid;grid-template-columns:30px 1fr;gap:9px;padding:8px 0}.platform-comment__avatar{display:grid;width:30px;height:30px;place-items:center;border-radius:50%;background:#dce4e9;color:#52606b;font-size:11px;font-weight:700}.platform-comment__meta{font-size:11px;font-weight:700}.platform-comment__text{margin-top:2px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.45}.platform-comment__likes{margin-top:4px;color:#8a96a3;font-size:10px}\n";
   const optionalNumber$1 = (value) => value === void 0 || typeof value === "number" && value >= 0;
   function safeUrl$2(value) {
     if (!value) return;
@@ -459,40 +476,70 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return;
     }
   }
-  const OnlyFansRenderer = { component: "social", variant: "onlyfans-post", styles: common + styles$4, validate(value) {
-    const p = value;
-    return !!p && [p.creator, p.handle, p.timestamp, p.text].every((x) => typeof x === "string") && [p.likes, p.comments].every(optionalNumber$1);
-  }, render(props) {
-    const root = element("article", "novel-ui onlyfans"), header = element("header", "onlyfans__header"), avatar2 = element("div", "onlyfans__avatar"), avatarUrl = safeUrl$2(props.avatar);
-    if (avatarUrl) {
-      const img = element("img");
-      img.src = avatarUrl;
-      img.alt = "";
-      img.loading = "lazy";
-      avatar2.append(img);
-    } else avatar2.append(element("span", "", props.creator.slice(0, 1).toUpperCase()));
-    const identity = element("div", "onlyfans__identity");
-    identity.append(element("div", "onlyfans__creator", props.creator + (props.verified ? "  ✓" : "")), element("div", "onlyfans__handle", `${props.handle} · ${props.timestamp}`));
-    header.append(avatar2, identity, element("span", "onlyfans__more", "•••"));
-    root.append(header, element("div", "onlyfans__text", props.text));
-    if (props.media || props.mediaAlt) {
-      const media = element("div", "onlyfans__media"), url = safeUrl$2(props.media);
-      if (url) {
+  const OnlyFansRenderer = {
+    component: "social",
+    variant: "onlyfans-post",
+    styles: common + styles$4,
+    validate(value) {
+      const p = value;
+      return !!p && [p.creator, p.handle, p.timestamp, p.text].every(
+        (x) => typeof x === "string"
+      ) && optionalNumber$1(p.likes) && (p.comments === void 0 || optionalNumber$1(p.comments) || Array.isArray(p.comments) && p.comments.every(isPlatformComment));
+    },
+    render(props) {
+      const root = element("article", "novel-ui onlyfans"), header = element("header", "onlyfans__header"), avatar2 = element("div", "onlyfans__avatar"), avatarUrl = safeUrl$2(props.avatar);
+      if (avatarUrl) {
         const img = element("img");
-        img.src = url;
-        img.alt = props.mediaAlt ?? "创作者帖子图片";
+        img.src = avatarUrl;
+        img.alt = "";
         img.loading = "lazy";
-        img.referrerPolicy = "no-referrer";
-        media.append(img);
-      } else media.append(element("span", "", props.mediaAlt ?? "媒体内容"));
-      root.append(media);
+        avatar2.append(img);
+      } else
+        avatar2.append(
+          element("span", "", props.creator.slice(0, 1).toUpperCase())
+        );
+      const identity = element("div", "onlyfans__identity");
+      identity.append(
+        element(
+          "div",
+          "onlyfans__creator",
+          props.creator + (props.verified ? "  ✓" : "")
+        ),
+        element(
+          "div",
+          "onlyfans__handle",
+          `${props.handle} · ${props.timestamp}`
+        )
+      );
+      header.append(avatar2, identity, element("span", "onlyfans__more", "•••"));
+      root.append(header, element("div", "onlyfans__text", props.text));
+      if (props.media || props.mediaAlt) {
+        const media = element("div", "onlyfans__media"), url = safeUrl$2(props.media);
+        if (url) {
+          const img = element("img");
+          img.src = url;
+          img.alt = props.mediaAlt ?? "创作者帖子图片";
+          img.loading = "lazy";
+          img.referrerPolicy = "no-referrer";
+          media.append(img);
+        } else media.append(element("span", "", props.mediaAlt ?? "媒体内容"));
+        root.append(media);
+      }
+      const stats = element("footer", "onlyfans__footer");
+      stats.append(
+        element("span", "", `♡ ${props.likes ?? 0}　💬 ${Array.isArray(props.comments) ? props.comments.length : props.comments ?? 0}`),
+        element(
+          "span",
+          "onlyfans__status",
+          props.subscribed ? "已订阅" : props.subscriptionPrice ? `订阅 ${props.subscriptionPrice}` : "订阅"
+        )
+      );
+      root.append(stats);
+      if (Array.isArray(props.comments) && props.comments.length) root.append(renderPlatformComments(props.comments));
+      return root;
     }
-    const stats = element("footer", "onlyfans__footer");
-    stats.append(element("span", "", `♡ ${props.likes ?? 0}　💬 ${props.comments ?? 0}`), element("span", "onlyfans__status", props.subscribed ? "已订阅" : props.subscriptionPrice ? `订阅 ${props.subscriptionPrice}` : "订阅"));
-    root.append(stats);
-    return root;
-  } };
-  const styles$3 = ".video-page{width:min(100%,720px);overflow:hidden;border:1px solid #ddd;border-radius:10px;background:#fff;color:#0f0f0f;font-family:Arial,sans-serif}.video-page__brand{padding:10px 14px;font-size:17px;font-weight:800}.video-page--youtube .video-page__brand{color:#f00}.video-page--pornhub{background:#171717;color:#f5f5f5;border-color:#333}.video-page--pornhub .video-page__brand{color:#ff9b19}.video-page__player{position:relative;display:grid;aspect-ratio:16/9;place-items:center;overflow:hidden;background:#202020;color:#aaa}.video-page__player img{width:100%;height:100%;object-fit:cover}.video-page__play{position:absolute;display:grid;width:54px;height:40px;place-items:center;border-radius:10px;background:#000b;color:#fff;font-size:20px}.video-page--youtube .video-page__play{background:#f00}.video-page--pornhub .video-page__play{background:#ff9b19;color:#111}.video-page__duration{position:absolute;right:8px;bottom:7px;border-radius:3px;background:#000c;color:#fff;padding:2px 5px;font-size:11px}.video-page__title{margin:12px 14px 5px;font-size:18px}.video-page__meta,.video-page__subscribers{color:#777;font-size:12px}.video-page__meta{margin:0 14px 10px}.video-page--pornhub .video-page__meta,.video-page--pornhub .video-page__subscribers{color:#aaa}.video-page__channel{display:flex;align-items:center;gap:9px;padding:10px 14px;border-top:1px solid #ddd}.video-page--pornhub .video-page__channel{border-color:#333}.video-page__avatar{display:grid;width:34px;height:34px;place-items:center;border-radius:50%;background:#777;color:#fff}.video-page__subscribers{flex:1}.video-page__subscribe{margin-left:auto;border-radius:18px;background:#111;color:#fff;padding:7px 13px;font-size:12px;font-weight:700}.video-page--pornhub .video-page__subscribe{background:#ff9b19;color:#111}.video-page__description{margin:0 14px 10px;border-radius:7px;background:#eee;padding:10px;white-space:pre-wrap;font-size:12px}.video-page--pornhub .video-page__description{background:#292929}.video-page__stats{padding:9px 14px;border-top:1px solid #ddd;font-size:13px}.video-page--pornhub .video-page__stats{border-color:#333}\n";
+  };
+  const styles$3 = ".video-page {\n  width: min(100%, 720px);\n  overflow: hidden;\n  border: 1px solid #ddd;\n  border-radius: 10px;\n  background: #fff;\n  color: #0f0f0f;\n  font-family: Arial, sans-serif;\n}\n.video-page__brand {\n  padding: 10px 14px;\n  font-size: 17px;\n  font-weight: 800;\n}\n.video-page--youtube .video-page__brand {\n  color: #f00;\n}\n.video-page--pornhub {\n  background: #171717;\n  color: #f5f5f5;\n  border-color: #333;\n}\n.video-page--pornhub .video-page__brand {\n  color: #ff9b19;\n}\n.video-page__player {\n  position: relative;\n  display: grid;\n  aspect-ratio: 16/9;\n  place-items: center;\n  overflow: hidden;\n  background: #202020;\n  color: #aaa;\n}\n.video-page__player img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.video-page__play {\n  position: absolute;\n  display: grid;\n  width: 54px;\n  height: 40px;\n  place-items: center;\n  border-radius: 10px;\n  background: #000b;\n  color: #fff;\n  font-size: 20px;\n}\n.video-page--youtube .video-page__play {\n  background: #f00;\n}\n.video-page--pornhub .video-page__play {\n  background: #ff9b19;\n  color: #111;\n}\n.video-page__duration {\n  position: absolute;\n  right: 8px;\n  bottom: 7px;\n  border-radius: 3px;\n  background: #000c;\n  color: #fff;\n  padding: 2px 5px;\n  font-size: 11px;\n}\n.video-page__title {\n  margin: 12px 14px 5px;\n  font-size: 18px;\n}\n.video-page__meta,\n.video-page__subscribers {\n  color: #777;\n  font-size: 12px;\n}\n.video-page__meta {\n  margin: 0 14px 10px;\n}\n.video-page--pornhub .video-page__meta,\n.video-page--pornhub .video-page__subscribers {\n  color: #aaa;\n}\n.video-page__channel {\n  display: flex;\n  align-items: center;\n  gap: 9px;\n  padding: 10px 14px;\n  border-top: 1px solid #ddd;\n}\n.video-page--pornhub .video-page__channel {\n  border-color: #333;\n}\n.video-page__avatar {\n  display: grid;\n  width: 34px;\n  height: 34px;\n  place-items: center;\n  border-radius: 50%;\n  background: #777;\n  color: #fff;\n}\n.video-page__subscribers {\n  flex: 1;\n}\n.video-page__subscribe {\n  margin-left: auto;\n  border-radius: 18px;\n  background: #111;\n  color: #fff;\n  padding: 7px 13px;\n  font-size: 12px;\n  font-weight: 700;\n}\n.video-page--pornhub .video-page__subscribe {\n  background: #ff9b19;\n  color: #111;\n}\n.video-page__description {\n  margin: 0 14px 10px;\n  border-radius: 7px;\n  background: #eee;\n  padding: 10px;\n  white-space: pre-wrap;\n  font-size: 12px;\n}\n.video-page--pornhub .video-page__description {\n  background: #292929;\n}\n.video-page__stats {\n  padding: 9px 14px;\n  border-top: 1px solid #ddd;\n  font-size: 13px;\n}\n.video-page--pornhub .video-page__stats {\n  border-color: #333;\n}\n.platform-comments{border-top:1px solid #ddd;padding:12px 14px}.video-page--pornhub .platform-comments{border-color:#333}.platform-comments__title{margin:0 0 10px;font-size:14px}.platform-comment{display:grid;grid-template-columns:32px 1fr;gap:9px;padding:8px 0}.platform-comment__avatar{display:grid;width:32px;height:32px;place-items:center;border-radius:50%;background:#777;color:#fff;font-size:11px;font-weight:700}.platform-comment__meta{font-size:11px;font-weight:700}.platform-comment__text{margin-top:3px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.45}.platform-comment__likes{margin-top:4px;color:#888;font-size:10px}\n";
   function safeUrl$1(value) {
     if (!value) return;
     try {
@@ -503,30 +550,86 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     }
   }
   function createVideoRenderer(variant) {
-    return { component: "video", variant, styles: common + styles$3, validate(value) {
-      const p = value;
-      return !!p && [p.title, p.channel, p.duration, p.views, p.uploaded].every((x) => typeof x === "string") && (p.likes === void 0 || typeof p.likes === "number" && p.likes >= 0);
-    }, render(props) {
-      const root = element("article", `novel-ui video-page video-page--${variant}`), player = element("div", "video-page__player"), url = safeUrl$1(props.thumbnail);
-      if (url) {
-        const img = element("img");
-        img.src = url;
-        img.alt = props.thumbnailAlt ?? "视频缩略图";
-        img.loading = "lazy";
-        img.referrerPolicy = "no-referrer";
-        player.append(img);
-      } else player.append(element("span", "video-page__placeholder", props.thumbnailAlt ?? "视频缩略图"));
-      player.append(element("span", "video-page__play", "▶"), element("span", "video-page__duration", props.duration));
-      const brand = variant === "youtube" ? "YouTube" : "Pornhub";
-      const header = element("header", "video-page__brand", brand), title = element("h2", "video-page__title", props.title), meta = element("div", "video-page__meta", `${props.views} 次观看 · ${props.uploaded}`), channel = element("div", "video-page__channel");
-      channel.append(element("span", "video-page__avatar", props.channel.slice(0, 1).toUpperCase()), element("strong", "", props.channel + (props.verified ? " ✓" : "")));
-      if (props.subscribers) channel.append(element("span", "video-page__subscribers", props.subscribers));
-      channel.append(element("span", "video-page__subscribe", variant === "youtube" ? "订阅" : "关注"));
-      root.append(header, player, title, meta, channel);
-      if (props.category || props.description) root.append(element("div", "video-page__description", [props.category, props.description].filter(Boolean).join(" · ")));
-      root.append(element("footer", "video-page__stats", `👍 ${props.likes ?? 0}　↗ 分享　⋯`));
-      return root;
-    } };
+    return {
+      component: "video",
+      variant,
+      styles: common + styles$3,
+      validate(value) {
+        const p = value;
+        return !!p && [p.title, p.channel, p.duration, p.views, p.uploaded].every(
+          (x) => typeof x === "string"
+        ) && (p.likes === void 0 || typeof p.likes === "number" && p.likes >= 0) && (p.comments === void 0 || Array.isArray(p.comments) && p.comments.every(isPlatformComment));
+      },
+      render(props) {
+        var _a;
+        const root = element(
+          "article",
+          `novel-ui video-page video-page--${variant}`
+        ), player = element("div", "video-page__player"), url = safeUrl$1(props.thumbnail);
+        if (url) {
+          const img = element("img");
+          img.src = url;
+          img.alt = props.thumbnailAlt ?? "视频缩略图";
+          img.loading = "lazy";
+          img.referrerPolicy = "no-referrer";
+          player.append(img);
+        } else
+          player.append(
+            element(
+              "span",
+              "video-page__placeholder",
+              props.thumbnailAlt ?? "视频缩略图"
+            )
+          );
+        player.append(
+          element("span", "video-page__play", "▶"),
+          element("span", "video-page__duration", props.duration)
+        );
+        const brand = variant === "youtube" ? "YouTube" : "Pornhub";
+        const header = element("header", "video-page__brand", brand), title = element("h2", "video-page__title", props.title), meta = element(
+          "div",
+          "video-page__meta",
+          `${props.views} 次观看 · ${props.uploaded}`
+        ), channel = element("div", "video-page__channel");
+        channel.append(
+          element(
+            "span",
+            "video-page__avatar",
+            props.channel.slice(0, 1).toUpperCase()
+          ),
+          element("strong", "", props.channel + (props.verified ? " ✓" : ""))
+        );
+        if (props.subscribers)
+          channel.append(
+            element("span", "video-page__subscribers", props.subscribers)
+          );
+        channel.append(
+          element(
+            "span",
+            "video-page__subscribe",
+            variant === "youtube" ? "订阅" : "关注"
+          )
+        );
+        root.append(header, player, title, meta, channel);
+        if (props.category || props.description)
+          root.append(
+            element(
+              "div",
+              "video-page__description",
+              [props.category, props.description].filter(Boolean).join(" · ")
+            )
+          );
+        root.append(
+          element(
+            "footer",
+            "video-page__stats",
+            `👍 ${props.likes ?? 0}　↗ 分享　⋯`
+          )
+        );
+        if ((_a = props.comments) == null ? void 0 : _a.length) root.append(renderPlatformComments(props.comments));
+        return root;
+      }
+    };
   }
   const YouTubeRenderer = createVideoRenderer("youtube");
   const PornhubRenderer = createVideoRenderer("pornhub");
