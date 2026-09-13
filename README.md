@@ -25,6 +25,10 @@ Ask the model to output the following exactly (without wrapping it in a Markdown
 [[novel-ui]]
 {"schema":"novel-ui","version":"1.0","component":"chat","variant":"kakao","props":{"title":"凑崎纱夏","date":"2026-09-13","messages":[{"id":"1","sender":"sana","name":"凑崎纱夏","side":"left","text":"你在哪里？","time":"23:41","read":null},{"id":"2","sender":"yihyun","name":"徐以炫","side":"right","text":"医院。","time":"23:43","read":1}]}}
 [[/novel-ui]]
+或
+:::novel-ui
+{"schema":"novel-ui","version":"1.0","component":"chat","variant":"kakao","props":{"title":"凑崎纱夏","date":"2026-09-13","messages":[{"id":"1","sender":"sana","name":"凑崎纱夏","side":"left","text":"你在哪里？","time":"23:41","read":null},{"id":"2","sender":"yihyun","name":"徐以炫","side":"right","text":"医院。","time":"23:43","read":1}]}}
+:::
 ```
 
 ## Architecture
