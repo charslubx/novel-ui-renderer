@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.3.5
+// @version      0.3.6
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -129,7 +129,6 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     }
     return result;
   }
-  const processedNodes = /* @__PURE__ */ new WeakSet();
   function blockKey(item) {
     let hash = 2166136261;
     for (let index = 0; index < item.raw.length; index++) {
@@ -159,7 +158,6 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       messages.forEach((message) => this.processMessage(message));
     }
     processMessage(message) {
-      if (processedNodes.has(message) || message.dataset.novelUiRendered === "true") return;
       if (message.closest('[data-novel-ui-runtime="true"]')) return;
       const text = message.textContent ?? "";
       const parsed = parseNovelUIBlocksDetailed(text);
@@ -186,7 +184,6 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       if (completed.length) {
         this.replaceRawRanges(message, completed);
         message.dataset.novelUiRendered = "true";
-        processedNodes.add(message);
       }
     }
     replaceRawRanges(message, completed) {

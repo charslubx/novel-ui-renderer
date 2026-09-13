@@ -4,8 +4,6 @@ import type { ParsedNovelUIBlock } from "../parser/schema";
 import type { RendererRegistry } from "./renderer-registry";
 import { logger } from "./logger";
 
-const processedNodes = new WeakSet<HTMLElement>();
-
 function blockKey(item: ParsedNovelUIBlock): string {
   let hash = 2166136261;
   for (let index = 0; index < item.raw.length; index++) {
@@ -26,7 +24,6 @@ export class NovelUIRuntime {
   stop() { this.stopObserving?.(); }
   private process(messages: HTMLElement[]) { messages.forEach((message) => this.processMessage(message)); }
   private processMessage(message: HTMLElement) {
-    if (processedNodes.has(message) || message.dataset.novelUiRendered === "true") return;
     if (message.closest('[data-novel-ui-runtime="true"]')) return;
     const text = message.textContent ?? "";
     const parsed = parseNovelUIBlocksDetailed(text);
@@ -48,7 +45,9 @@ export class NovelUIRuntime {
     if (completed.length) {
       // Preserve the DOM source for recovery while hiding the model-visible schema text.
       this.replaceRawRanges(message, completed);
-      message.dataset.novelUiRendered = "true"; processedNodes.add(message);
+      // This attribute is informational only. Streaming can append more complete
+      // blocks to the same assistant message, so deduplication must stay per block.
+      message.dataset.novelUiRendered = "true";
     }
   }
   private replaceRawRanges(message: HTMLElement, completed: { item: ParsedNovelUIBlock; wrapper: HTMLElement }[]) {

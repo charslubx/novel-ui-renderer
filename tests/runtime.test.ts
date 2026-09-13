@@ -29,4 +29,20 @@ describe("Novel UI runtime",()=>{
     new NovelUIRuntime(adapter,new RendererRegistry()).start();
     expect(message.textContent).toContain("[[novel-ui]]");
   });
+
+  it("renders a new block appended to an already processed streaming message",()=>{
+    document.body.innerHTML=`<article data-message-author-role="assistant"><p>${raw}</p></article>`;
+    const message=document.querySelector("article") as HTMLElement;
+    let notify:(messages:HTMLElement[])=>void=()=>{};
+    const adapter:SiteAdapter={name:"test",match:()=>true,getAssistantMessages:()=>[message],observe(callback){notify=callback;return()=>{};}};
+    const registry=new RendererRegistry();registry.register(TestRenderer);
+    new NovelUIRuntime(adapter,registry).start();
+
+    const second=raw.replace('"UI"','"SECOND"');
+    message.append(document.createTextNode(second));
+    notify([message]);
+
+    expect(message.querySelectorAll('[data-novel-ui-runtime="true"]')).toHaveLength(2);
+    expect(message.textContent).toContain("SECOND");
+  });
 });
