@@ -2,8 +2,19 @@
 .medical__hospital { color: #0f4c81; font-size: 20px; font-weight: 800; }
 .medical__department { padding-bottom: 12px; border-bottom: 2px solid #0f4c81; color: #64748b; }
 .medical__title { margin: 22px 0; text-align: center; font-size: 19px; }
-.medical__fields { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 8px 24px; margin-bottom: 20px; }
-.medical__field { display: grid; grid-template-columns: auto 1fr; gap: 8px; }
+.medical__fields { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,.9fr) minmax(240px,1.35fr); gap: 14px 24px; margin-bottom: 20px; }
+.medical__field { display: flex; min-width: 0; align-items: baseline; gap: 8px; }
+.medical__field--wide { grid-column: 1 / -1; }
 .medical__label { color: #64748b; }
+.medical__value { min-width: 0; overflow-wrap: anywhere; }
 .medical__findings-title { margin: 16px 0 6px; font-weight: 700; }
 .medical__findings { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 640px) {
+  .medical { padding: 22px; }
+  .medical__fields { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .medical__field--examination,.medical__field--wide { grid-column: 1 / -1; }
+}
+@media (max-width: 430px) {
+  .medical__fields { grid-template-columns: 1fr; }
+  .medical__field { display: grid; gap: 2px; }
+}

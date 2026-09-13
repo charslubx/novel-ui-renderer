@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.3.0
+// @version      0.3.1
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -282,21 +282,25 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles$5 = ".medical { max-width: 680px; padding: 28px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; box-shadow: 0 8px 24px #0f172a14; }\n.medical__hospital { color: #0f4c81; font-size: 20px; font-weight: 800; }\n.medical__department { padding-bottom: 12px; border-bottom: 2px solid #0f4c81; color: #64748b; }\n.medical__title { margin: 22px 0; text-align: center; font-size: 19px; }\n.medical__fields { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 8px 24px; margin-bottom: 20px; }\n.medical__field { display: grid; grid-template-columns: auto 1fr; gap: 8px; }\n.medical__label { color: #64748b; }\n.medical__findings-title { margin: 16px 0 6px; font-weight: 700; }\n.medical__findings { white-space: pre-wrap; overflow-wrap: anywhere; }\n";
+  const styles$5 = ".medical { max-width: 680px; padding: 28px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; box-shadow: 0 8px 24px #0f172a14; }\n.medical__hospital { color: #0f4c81; font-size: 20px; font-weight: 800; }\n.medical__department { padding-bottom: 12px; border-bottom: 2px solid #0f4c81; color: #64748b; }\n.medical__title { margin: 22px 0; text-align: center; font-size: 19px; }\n.medical__fields { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,.9fr) minmax(240px,1.35fr); gap: 14px 24px; margin-bottom: 20px; }\n.medical__field { display: flex; min-width: 0; align-items: baseline; gap: 8px; }\n.medical__field--wide { grid-column: 1 / -1; }\n.medical__label { color: #64748b; }\n.medical__value { min-width: 0; overflow-wrap: anywhere; }\n.medical__findings-title { margin: 16px 0 6px; font-weight: 700; }\n.medical__findings { white-space: pre-wrap; overflow-wrap: anywhere; }\n@media (max-width: 640px) {\n  .medical { padding: 22px; }\n  .medical__fields { grid-template-columns: repeat(2,minmax(0,1fr)); }\n  .medical__field--examination,.medical__field--wide { grid-column: 1 / -1; }\n}\n@media (max-width: 430px) {\n  .medical__fields { grid-template-columns: 1fr; }\n  .medical__field { display: grid; gap: 2px; }\n}\n";
+  const wideLabels = /* @__PURE__ */ new Set(["clinical history", "history", "clinical indication", "indication", "reason for examination"]);
   const MedicalRenderer = {
     component: "document",
     variant: "medical",
     styles: common + styles$5,
     validate(value) {
       const p = value;
-      return !!p && [p.hospital, p.department, p.patient, p.reportTitle, p.findings].every((x) => typeof x === "string") && Array.isArray(p.fields) && p.fields.every((f) => f && typeof f.label === "string" && typeof f.value === "string");
+      return !!p && [p.hospital, p.department, p.patient, p.reportTitle, p.findings].every((x) => typeof x === "string") && Array.isArray(p.fields) && p.fields.every((f) => f && typeof f.label === "string" && typeof f.value === "string" && (f.wide === void 0 || typeof f.wide === "boolean"));
     },
     render(props) {
       const root = element("article", "novel-ui medical");
       root.append(element("div", "medical__hospital", props.hospital), element("div", "medical__department", props.department), element("h2", "medical__title", props.reportTitle));
       const fields = element("div", "medical__fields");
-      [{ label: "Patient", value: props.patient }, ...props.fields].forEach(({ label, value }) => {
-        const field = element("div", "medical__field");
+      [{ label: "Patient", value: props.patient }, ...props.fields].forEach(({ label, value, wide }) => {
+        const normalized = label.trim().toLowerCase();
+        const isWide = wide === true || wideLabels.has(normalized) || value.length > 42;
+        const classes = ["medical__field", isWide ? "medical__field--wide" : "", normalized === "examination" ? "medical__field--examination" : ""].filter(Boolean).join(" ");
+        const field = element("div", classes);
         field.append(element("span", "medical__label", `${label}:`), element("span", "medical__value", value));
         fields.append(field);
       });
