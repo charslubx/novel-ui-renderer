@@ -23,10 +23,12 @@ describe("new story renderers", () => {
   it("renders a Korean police document", () => {
     expect(KoreaPoliceRenderer.validate(policeProps)).toBe(true);
     expect(KoreaPoliceRenderer.render(policeProps, { raw: "", debug: false }).textContent).toContain("대한민국");
+    expect(KoreaPoliceRenderer.render(policeProps, { raw: "", debug: false }).querySelector(".police__watermark")?.textContent).toContain("가상 문서");
   });
   it("renders a Japanese police document", () => {
     expect(JapanPoliceRenderer.validate(policeProps)).toBe(true);
     expect(JapanPoliceRenderer.render(policeProps, { raw: "", debug: false }).textContent).toContain("日本国");
+    expect(JapanPoliceRenderer.render(policeProps, { raw: "", debug: false }).querySelector(".police__watermark")?.textContent).toContain("架空文書");
   });
 
   it("renders a news article and rejects an empty body", () => {

@@ -37,6 +37,13 @@ function renderPolice(props: PoliceDocumentProps, locale: "kr" | "jp") {
     ? { country: "대한민국 · 경찰 문서", case: "사건번호", date: "작성일", subject: "관련자", officer: "담당관", summary: "사건 개요", notes: "비고", footer: "소설용 가상 경찰 문서" }
     : { country: "日本国 · 警察文書", case: "事件番号", date: "作成日", subject: "関係者", officer: "担当官", summary: "事案概要", notes: "備考", footer: "小説用の架空警察文書" };
   const root = element("article", `novel-ui police police--${locale}`);
+  const watermark = element(
+    "div",
+    "police__watermark",
+    locale === "kr" ? "소설용 · 가상 문서" : "小説用 · 架空文書",
+  );
+  watermark.setAttribute("aria-hidden", "true");
+  root.append(watermark);
   const masthead = element("header", "police__masthead");
   masthead.append(element("div", "police__mark", locale === "kr" ? "경" : "警"));
   const agency = element("div", "police__agency");

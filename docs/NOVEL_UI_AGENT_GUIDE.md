@@ -234,7 +234,7 @@
 
 ### 23–24. 韩国/日本警方文件 `document:police-kr|police-jp`
 
-两者共用数据结构。必填：`agency`、`division`、`documentTitle`、`caseNumber`、`date`、`summary`。可选：`subject`、`officer`、`fields`、`notes`；`fields` 每项必须包含 `label`、`value`。必须使用虚构机关、虚构案号和虚构标识，不能复制真实警徽、公章、二维码或可用于冒充官方文件的认证元素。
+两者共用数据结构。必填：`agency`、`division`、`documentTitle`、`caseNumber`、`date`、`summary`。可选：`subject`、`officer`、`fields`、`notes`；`fields` 每项必须包含 `label`、`value`。Renderer 会自动添加当地语言的“小说用虚构文书”斜向水印。必须使用虚构机关、虚构案号和虚构标识，不能复制真实警徽、公章、二维码或可用于冒充官方文件的认证元素。
 
 韩国警方文件：
 

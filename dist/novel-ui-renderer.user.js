@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.6.0
+// @version      0.6.1
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -1319,7 +1319,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     root.append(header, body, element("footer", "work-card__footer", `ID ${props.employeeId} · FICTIONAL PROP`));
     return root;
   } };
-  const styles$1 = '.police{width:min(100%,760px);padding:30px 38px;border:1px solid #afb8c4;border-radius:3px;background:#fdfdfb;color:#181b20;box-shadow:0 6px 24px #0002;font-family:"Noto Sans CJK KR","Noto Sans CJK JP",system-ui,sans-serif}.police--kr{border-top:7px solid #174d83}.police--jp{border-top:7px double #252525}.police__masthead{display:flex;align-items:center;gap:16px;padding-bottom:15px;border-bottom:2px solid currentColor}.police__mark{display:grid;width:58px;height:58px;place-items:center;border:2px solid currentColor;border-radius:50%;font-family:serif;font-size:27px;font-weight:700}.police--kr .police__mark{color:#174d83}.police__agency{font-size:13px}.police__agency h2{margin:2px 0;font-size:22px}.police__country{color:#66717f;font-size:10px;letter-spacing:.12em}.police__title{margin:25px 0;text-align:center;font-family:serif;font-size:28px;letter-spacing:.08em}.police__meta{display:grid;grid-template-columns:130px 1fr;margin:0;border-top:1px solid #6e7681;border-left:1px solid #6e7681}.police__meta dt,.police__meta dd{min-width:0;margin:0;padding:8px 10px;border-right:1px solid #6e7681;border-bottom:1px solid #6e7681;overflow-wrap:anywhere}.police__meta dt{background:#edf1f4;font-weight:700}.police__section-title{margin:23px 0 7px;padding-left:9px;border-left:4px solid currentColor;font-size:16px}.police__summary,.police__notes{min-height:90px;padding:12px;border:1px solid #a9afb7;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.75}.police__notes{min-height:auto}.police__footer{margin-top:28px;padding-top:9px;border-top:1px solid #a9afb7;color:#727982;font-size:10px;text-align:center;letter-spacing:.15em}@media(max-width:560px){.police{padding:20px 18px}.police__title{font-size:23px}.police__meta{grid-template-columns:95px 1fr}.police__mark{width:48px;height:48px}}\n';
+  const styles$1 = '.police{position:relative;isolation:isolate;width:min(100%,760px);padding:30px 38px;border:1px solid #afb8c4;border-radius:3px;background:#fdfdfb;color:#181b20;box-shadow:0 6px 24px #0002;font-family:"Noto Sans CJK KR","Noto Sans CJK JP",system-ui,sans-serif}.police>*:not(.police__watermark){position:relative;z-index:1}.police__watermark{position:absolute;z-index:0;inset:12% -20%;display:grid;place-items:center;transform:rotate(-24deg);color:#174d83;font-family:serif;font-size:clamp(30px,6vw,58px);font-weight:800;letter-spacing:.16em;opacity:.075;pointer-events:none;user-select:none;white-space:nowrap}.police--jp .police__watermark{color:#6c2323}.police--kr{border-top:7px solid #174d83}.police--jp{border-top:7px double #252525}.police__masthead{display:flex;align-items:center;gap:16px;padding-bottom:15px;border-bottom:2px solid currentColor}.police__mark{display:grid;width:58px;height:58px;place-items:center;border:2px solid currentColor;border-radius:50%;font-family:serif;font-size:27px;font-weight:700}.police--kr .police__mark{color:#174d83}.police__agency{font-size:13px}.police__agency h2{margin:2px 0;font-size:22px}.police__country{color:#66717f;font-size:10px;letter-spacing:.12em}.police__title{margin:25px 0;text-align:center;font-family:serif;font-size:28px;letter-spacing:.08em}.police__meta{display:grid;grid-template-columns:130px 1fr;margin:0;border-top:1px solid #6e7681;border-left:1px solid #6e7681}.police__meta dt,.police__meta dd{min-width:0;margin:0;padding:8px 10px;border-right:1px solid #6e7681;border-bottom:1px solid #6e7681;overflow-wrap:anywhere}.police__meta dt{background:#edf1f4e8;font-weight:700}.police__section-title{margin:23px 0 7px;padding-left:9px;border-left:4px solid currentColor;font-size:16px}.police__summary,.police__notes{min-height:90px;padding:12px;border:1px solid #a9afb7;background:#ffffffbd;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.75}.police__notes{min-height:auto}.police__footer{margin-top:28px;padding-top:9px;border-top:1px solid #a9afb7;color:#727982;font-size:10px;text-align:center;letter-spacing:.15em}@media(max-width:560px){.police{padding:20px 18px}.police__watermark{font-size:28px}.police__title{font-size:23px}.police__meta{grid-template-columns:95px 1fr}.police__mark{width:48px;height:48px}}\n';
   const isField = (value) => {
     const field = value;
     return !!field && typeof field.label === "string" && typeof field.value === "string";
@@ -1331,6 +1331,13 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   function renderPolice(props, locale) {
     const labels = locale === "kr" ? { country: "대한민국 · 경찰 문서", case: "사건번호", date: "작성일", subject: "관련자", officer: "담당관", summary: "사건 개요", notes: "비고", footer: "소설용 가상 경찰 문서" } : { country: "日本国 · 警察文書", case: "事件番号", date: "作成日", subject: "関係者", officer: "担当官", summary: "事案概要", notes: "備考", footer: "小説用の架空警察文書" };
     const root = element("article", `novel-ui police police--${locale}`);
+    const watermark = element(
+      "div",
+      "police__watermark",
+      locale === "kr" ? "소설용 · 가상 문서" : "小説用 · 架空文書"
+    );
+    watermark.setAttribute("aria-hidden", "true");
+    root.append(watermark);
     const masthead = element("header", "police__masthead");
     masthead.append(element("div", "police__mark", locale === "kr" ? "경" : "警"));
     const agency = element("div", "police__agency");
