@@ -14,7 +14,7 @@ Open Tampermonkey, create a userscript, and replace its contents with `dist/nove
 
 For development, run `npm run dev`. Set `localStorage["novel-ui-debug"] = "true"` in the target page console and refresh to enable debug logging and source disclosure controls.
 
-完整的 AI 输出规则、当前 20 种组件字段说明及可复制示例见 [Novel UI Agent 须知](docs/NOVEL_UI_AGENT_GUIDE.md)。可将该文档直接提供给负责小说创作的 AI Agent。
+完整的 AI 输出规则、当前 25 种组件字段说明及可复制示例见 [Novel UI Agent 须知](docs/NOVEL_UI_AGENT_GUIDE.md)。可将该文档直接提供给负责小说创作的 AI Agent。
 
 ## Test prompt
 
@@ -39,6 +39,7 @@ Built-in renderer keys:
 
 - `chat:kakao`
 - `chat:imessage`
+- `phone:lockscreen`
 - `document:medical`
 - `social:x-post`
 - `social:x-feed`
@@ -46,8 +47,10 @@ Built-in renderer keys:
 - `social:x-trends`
 - `article:theqoo`
 - `article:5ch`
+- `article:news`
 - `social:weibo-post`
 - `social:instagram-post`
+- `social:instagram-dm`
 - `social:onlyfans-post`
 - `video:youtube`
 - `video:pornhub`
@@ -57,6 +60,8 @@ Built-in renderer keys:
 - `ticket:bus`
 - `document:identity-card`
 - `document:work-card`
+- `document:police-kr`
+- `document:police-jp`
 
 Transport tickets share one validated schema and vary labels by transport type. Use `operator`, `operatorCode`, and the predefined `theme` values (`blue`, `red`, `green`, or `gold`) to represent fictional operators without copying a real company's protected visual identity. Identity and work cards intentionally use a default silhouette and visible fictional-document markings.
 

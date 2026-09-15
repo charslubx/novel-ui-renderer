@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.5.0
+// @version      0.6.0
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -255,15 +255,15 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     return node;
   }
   const common = ':host {\n  --novel-font-size: 14px;\n  --novel-radius: 12px;\n  --novel-spacing: 8px;\n  color: #202124;\n  font:\n    var(--novel-font-size)/1.45 system-ui,\n    -apple-system,\n    "Segoe UI",\n    sans-serif;\n}\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n.novel-ui {\n  margin: 16px 0;\n  overflow: hidden;\n}\n.novel-default-avatar{display:grid;place-items:center;overflow:hidden;color:#737373}.novel-default-avatar svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}\n.fallback {\n  padding: 12px;\n  border: 1px dashed #d97706;\n  border-radius: var(--novel-radius);\n  color: #92400e;\n  background: #fffbeb;\n}\n.source-toggle {\n  margin: 8px 0 0;\n  border: 0;\n  background: transparent;\n  color: #64748b;\n  cursor: pointer;\n  font: inherit;\n  font-size: 12px;\n}\n.source {\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  padding: 10px;\n  background: #111827;\n  color: #e5e7eb;\n  border-radius: 8px;\n  font:\n    12px/1.45 ui-monospace,\n    monospace;\n}\n';
-  const styles$b = ".kakao { max-width: 430px; border-radius: 18px; background: #b9ced9; box-shadow: 0 10px 30px #0f172a20; }\n.kakao__header { padding: 14px 18px; background: #ffffffde; font-weight: 700; text-align: center; }\n.kakao__date { width: max-content; margin: 12px auto; padding: 4px 10px; border-radius: 999px; color: #fff; background: #607d8b99; font-size: 11px; }\n.kakao__messages { display: grid; gap: 10px; padding: 4px 14px 18px; }\n.message { display: flex; flex-direction: column; max-width: 78%; }\n.message--right { justify-self: end; align-items: end; }\n.message--left { justify-self: start; align-items: start; }\n.message__name { margin: 0 4px 3px; font-size: 11px; color: #475569; }\n.message__line { display: flex; align-items: end; gap: 5px; }\n.message--right .message__line { flex-direction: row-reverse; }\n.message__bubble { padding: 9px 12px; border-radius: 13px; background: #fff; white-space: pre-wrap; overflow-wrap: anywhere; }\n.message--right .message__bubble { background: #fee500; }\n.message__meta { display: grid; justify-items: end; color: #475569; font-size: 10px; white-space: nowrap; }\n.message__read { color: #8a6d00; }\n";
-  const isMessage$1 = (x) => !!x && typeof x === "object" && typeof x.id === "string" && typeof x.sender === "string" && ["left", "right"].includes(x.side) && typeof x.text === "string";
+  const styles$f = ".kakao { max-width: 430px; border-radius: 18px; background: #b9ced9; box-shadow: 0 10px 30px #0f172a20; }\n.kakao__header { padding: 14px 18px; background: #ffffffde; font-weight: 700; text-align: center; }\n.kakao__date { width: max-content; margin: 12px auto; padding: 4px 10px; border-radius: 999px; color: #fff; background: #607d8b99; font-size: 11px; }\n.kakao__messages { display: grid; gap: 10px; padding: 4px 14px 18px; }\n.message { display: flex; flex-direction: column; max-width: 78%; }\n.message--right { justify-self: end; align-items: end; }\n.message--left { justify-self: start; align-items: start; }\n.message__name { margin: 0 4px 3px; font-size: 11px; color: #475569; }\n.message__line { display: flex; align-items: end; gap: 5px; }\n.message--right .message__line { flex-direction: row-reverse; }\n.message__bubble { padding: 9px 12px; border-radius: 13px; background: #fff; white-space: pre-wrap; overflow-wrap: anywhere; }\n.message--right .message__bubble { background: #fee500; }\n.message__meta { display: grid; justify-items: end; color: #475569; font-size: 10px; white-space: nowrap; }\n.message__read { color: #8a6d00; }\n";
+  const isMessage$2 = (x) => !!x && typeof x === "object" && typeof x.id === "string" && typeof x.sender === "string" && ["left", "right"].includes(x.side) && typeof x.text === "string";
   const KakaoRenderer = {
     component: "chat",
     variant: "kakao",
-    styles: common + styles$b,
+    styles: common + styles$f,
     validate(value) {
       const p = value;
-      return !!p && typeof p.title === "string" && Array.isArray(p.messages) && p.messages.every(isMessage$1);
+      return !!p && typeof p.title === "string" && Array.isArray(p.messages) && p.messages.every(isMessage$2);
     },
     render(props) {
       const root = element("section", "novel-ui kakao");
@@ -306,18 +306,18 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   function renderDefaultPersonAvatar(className = "person-avatar") {
     return renderDefaultAvatar(className, "默认人物头像");
   }
-  const styles$a = ':host{--sms-blue:#0a84ff;--sms-left:#e9e9eb;--sms-text:#111;--sms-muted:#8e8e93}.imessage{width:min(100%,430px);overflow:hidden;border:1px solid #d7d7dc;border-radius:22px;background:#fff;color:var(--sms-text);box-shadow:0 8px 24px #00000014;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif}.imessage__header{display:grid;grid-template-columns:34px 1fr 34px;align-items:center;padding:8px 10px 6px;border-bottom:1px solid #e5e5ea;background:#f8f8facc}.imessage__back{color:var(--sms-blue);font-size:36px;font-weight:300;line-height:1}.imessage__contact{display:grid;justify-items:center}.imessage__avatar{width:38px;height:38px;border-radius:50%;background:#d1d1d6;color:#707078}.imessage__title{margin-top:2px;font-size:12px;font-weight:600}.imessage__subtitle{color:var(--sms-muted);font-size:9px}.imessage__chevron{align-self:end;color:#aaa;font-size:21px;text-align:center}.imessage__date{padding:12px 12px 2px;color:var(--sms-muted);font-size:10px;font-weight:600;text-align:center}.imessage__thread{display:flex;min-height:220px;flex-direction:column;gap:4px;padding:10px 12px 14px}.imessage__row{display:flex;max-width:82%;flex-direction:column}.imessage__row--left{align-self:flex-start;align-items:flex-start}.imessage__row--right{align-self:flex-end;align-items:flex-end}.imessage__bubble{padding:8px 12px;border-radius:18px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.35}.imessage__row--left .imessage__bubble{border-bottom-left-radius:5px;background:var(--sms-left)}.imessage__row--right .imessage__bubble{border-bottom-right-radius:5px;background:var(--sms-blue);color:#fff}.imessage__time{align-self:center;margin:8px 5px 4px;color:var(--sms-muted);font-size:9px}.imessage__status{margin:2px 5px 3px;color:var(--sms-muted);font-size:9px}.imessage__composer{display:grid;grid-template-columns:30px 1fr 26px;align-items:center;gap:7px;padding:8px 10px 12px;border-top:1px solid #f0f0f2}.imessage__plus{display:grid;width:28px;height:28px;place-items:center;border-radius:50%;background:#d1d1d6;color:#fff;font-size:20px}.imessage__input{padding:6px 10px;border:1px solid #c7c7cc;border-radius:17px;color:#a0a0a6;font-size:13px}.imessage__mic{color:#777;text-align:center}@media(max-width:480px){.imessage{border-radius:16px}.imessage__thread{min-height:180px}}\n';
-  const isMessage = (value) => {
+  const styles$e = ':host{--sms-blue:#0a84ff;--sms-left:#e9e9eb;--sms-text:#111;--sms-muted:#8e8e93}.imessage{width:min(100%,430px);overflow:hidden;border:1px solid #d7d7dc;border-radius:22px;background:#fff;color:var(--sms-text);box-shadow:0 8px 24px #00000014;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif}.imessage__header{display:grid;grid-template-columns:34px 1fr 34px;align-items:center;padding:8px 10px 6px;border-bottom:1px solid #e5e5ea;background:#f8f8facc}.imessage__back{color:var(--sms-blue);font-size:36px;font-weight:300;line-height:1}.imessage__contact{display:grid;justify-items:center}.imessage__avatar{width:38px;height:38px;border-radius:50%;background:#d1d1d6;color:#707078}.imessage__title{margin-top:2px;font-size:12px;font-weight:600}.imessage__subtitle{color:var(--sms-muted);font-size:9px}.imessage__chevron{align-self:end;color:#aaa;font-size:21px;text-align:center}.imessage__date{padding:12px 12px 2px;color:var(--sms-muted);font-size:10px;font-weight:600;text-align:center}.imessage__thread{display:flex;min-height:220px;flex-direction:column;gap:4px;padding:10px 12px 14px}.imessage__row{display:flex;max-width:82%;flex-direction:column}.imessage__row--left{align-self:flex-start;align-items:flex-start}.imessage__row--right{align-self:flex-end;align-items:flex-end}.imessage__bubble{padding:8px 12px;border-radius:18px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.35}.imessage__row--left .imessage__bubble{border-bottom-left-radius:5px;background:var(--sms-left)}.imessage__row--right .imessage__bubble{border-bottom-right-radius:5px;background:var(--sms-blue);color:#fff}.imessage__time{align-self:center;margin:8px 5px 4px;color:var(--sms-muted);font-size:9px}.imessage__status{margin:2px 5px 3px;color:var(--sms-muted);font-size:9px}.imessage__composer{display:grid;grid-template-columns:30px 1fr 26px;align-items:center;gap:7px;padding:8px 10px 12px;border-top:1px solid #f0f0f2}.imessage__plus{display:grid;width:28px;height:28px;place-items:center;border-radius:50%;background:#d1d1d6;color:#fff;font-size:20px}.imessage__input{padding:6px 10px;border:1px solid #c7c7cc;border-radius:17px;color:#a0a0a6;font-size:13px}.imessage__mic{color:#777;text-align:center}@media(max-width:480px){.imessage{border-radius:16px}.imessage__thread{min-height:180px}}\n';
+  const isMessage$1 = (value) => {
     const message = value;
     return !!message && typeof message.id === "string" && typeof message.sender === "string" && ["left", "right"].includes(message.side) && typeof message.text === "string" && (message.time === void 0 || typeof message.time === "string") && (message.status === void 0 || typeof message.status === "string");
   };
   const IMessageRenderer = {
     component: "chat",
     variant: "imessage",
-    styles: common + styles$a,
+    styles: common + styles$e,
     validate(value) {
       const props = value;
-      return !!props && typeof props.title === "string" && Array.isArray(props.messages) && props.messages.every(isMessage) && (props.subtitle === void 0 || typeof props.subtitle === "string") && (props.date === void 0 || typeof props.date === "string");
+      return !!props && typeof props.title === "string" && Array.isArray(props.messages) && props.messages.every(isMessage$1) && (props.subtitle === void 0 || typeof props.subtitle === "string") && (props.date === void 0 || typeof props.date === "string");
     },
     render(props) {
       const root = element("section", "novel-ui imessage");
@@ -347,12 +347,52 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles$9 = ".medical { max-width: 680px; padding: 28px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; box-shadow: 0 8px 24px #0f172a14; }\n.medical__hospital { color: #0f4c81; font-size: 20px; font-weight: 800; }\n.medical__department { padding-bottom: 12px; border-bottom: 2px solid #0f4c81; color: #64748b; }\n.medical__title { margin: 22px 0; text-align: center; font-size: 19px; }\n.medical__fields { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,.9fr) minmax(240px,1.35fr); gap: 14px 24px; margin-bottom: 20px; }\n.medical__field { display: flex; min-width: 0; align-items: baseline; gap: 8px; }\n.medical__field--wide { grid-column: 1 / -1; }\n.medical__label { color: #64748b; }\n.medical__value { min-width: 0; overflow-wrap: anywhere; }\n.medical__findings-title { margin: 16px 0 6px; font-weight: 700; }\n.medical__findings { white-space: pre-wrap; overflow-wrap: anywhere; }\n@media (max-width: 640px) {\n  .medical { padding: 22px; }\n  .medical__fields { grid-template-columns: repeat(2,minmax(0,1fr)); }\n  .medical__field--examination,.medical__field--wide { grid-column: 1 / -1; }\n}\n@media (max-width: 430px) {\n  .medical__fields { grid-template-columns: 1fr; }\n  .medical__field { display: grid; gap: 2px; }\n}\n";
+  const styles$d = '.lockscreen{position:relative;width:min(100%,390px);min-height:650px;padding:12px 14px 18px;border:1px solid #46536a;border-radius:34px;background:radial-gradient(circle at 25% 15%,#8291ba 0,#455674 28%,#19263d 62%,#0e1626 100%);color:#fff;box-shadow:0 18px 45px #0005;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.lockscreen__status{display:flex;justify-content:space-between;padding:2px 8px;font-size:11px;font-weight:650}.lockscreen__lock{text-align:center;font-size:22px;line-height:1}.lockscreen__clock{text-align:center;text-shadow:0 1px 8px #0005}.lockscreen__date{font-size:17px}.lockscreen__time{font-size:76px;font-weight:200;letter-spacing:-5px;line-height:1.05}.lockscreen__notifications{display:grid;gap:9px;margin-top:28px}.lockscreen__notification{padding:10px 12px;border:1px solid #fff4;border-radius:16px;background:#edf2f8d9;color:#18202b;box-shadow:0 3px 10px #0002;backdrop-filter:blur(12px)}.lockscreen__notification-header{display:grid;grid-template-columns:20px 1fr auto;align-items:center;gap:6px;color:#5e6672;font-size:10px;text-transform:uppercase}.lockscreen__app-icon{display:grid;width:18px;height:18px;place-items:center;border-radius:5px;background:#3478f6;color:#fff;font-weight:700}.lockscreen__notification-time{text-transform:none}.lockscreen__notification-title{margin-top:5px;font-size:13px;font-weight:700}.lockscreen__notification-text{margin-top:2px;display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:3;font-size:13px;line-height:1.35}.lockscreen__homebar{position:absolute;bottom:8px;left:50%;width:120px;height:5px;transform:translateX(-50%);border-radius:9px;background:#fff}@media(max-width:480px){.lockscreen{min-height:570px;border-radius:26px}.lockscreen__time{font-size:64px}.lockscreen__notifications{margin-top:20px}}\n';
+  const isNotification$1 = (value) => {
+    const item = value;
+    return !!item && [item.id, item.app, item.title, item.text].every((field) => typeof field === "string") && (item.time === void 0 || typeof item.time === "string");
+  };
+  const LockscreenRenderer = {
+    component: "phone",
+    variant: "lockscreen",
+    styles: common + styles$d,
+    validate(value) {
+      const props = value;
+      return !!props && typeof props.time === "string" && typeof props.date === "string" && (props.owner === void 0 || typeof props.owner === "string") && (props.battery === void 0 || typeof props.battery === "number" && props.battery >= 0 && props.battery <= 100) && Array.isArray(props.notifications) && props.notifications.every(isNotification$1);
+    },
+    render(props) {
+      const root = element("section", "novel-ui lockscreen");
+      const status = element("div", "lockscreen__status");
+      status.append(
+        element("span", "", props.owner ?? ""),
+        element("span", "", `●●●  Wi-Fi  ${props.battery ?? 100}%`)
+      );
+      root.append(status, element("div", "lockscreen__lock", "⌁"));
+      const clock = element("header", "lockscreen__clock");
+      clock.append(element("div", "lockscreen__date", props.date), element("div", "lockscreen__time", props.time));
+      root.append(clock);
+      const notifications = element("div", "lockscreen__notifications");
+      for (const item of props.notifications) {
+        const card = element("article", "lockscreen__notification");
+        const header = element("div", "lockscreen__notification-header");
+        header.append(
+          element("span", "lockscreen__app-icon", item.app.slice(0, 1).toUpperCase()),
+          element("span", "lockscreen__app", item.app),
+          element("time", "lockscreen__notification-time", item.time ?? "现在")
+        );
+        card.append(header, element("div", "lockscreen__notification-title", item.title), element("div", "lockscreen__notification-text", item.text));
+        notifications.append(card);
+      }
+      root.append(notifications, element("div", "lockscreen__homebar"));
+      return root;
+    }
+  };
+  const styles$c = ".medical { max-width: 680px; padding: 28px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; box-shadow: 0 8px 24px #0f172a14; }\n.medical__hospital { color: #0f4c81; font-size: 20px; font-weight: 800; }\n.medical__department { padding-bottom: 12px; border-bottom: 2px solid #0f4c81; color: #64748b; }\n.medical__title { margin: 22px 0; text-align: center; font-size: 19px; }\n.medical__fields { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,.9fr) minmax(240px,1.35fr); gap: 14px 24px; margin-bottom: 20px; }\n.medical__field { display: flex; min-width: 0; align-items: baseline; gap: 8px; }\n.medical__field--wide { grid-column: 1 / -1; }\n.medical__label { color: #64748b; }\n.medical__value { min-width: 0; overflow-wrap: anywhere; }\n.medical__findings-title { margin: 16px 0 6px; font-weight: 700; }\n.medical__findings { white-space: pre-wrap; overflow-wrap: anywhere; }\n@media (max-width: 640px) {\n  .medical { padding: 22px; }\n  .medical__fields { grid-template-columns: repeat(2,minmax(0,1fr)); }\n  .medical__field--examination,.medical__field--wide { grid-column: 1 / -1; }\n}\n@media (max-width: 430px) {\n  .medical__fields { grid-template-columns: 1fr; }\n  .medical__field { display: grid; gap: 2px; }\n}\n";
   const wideLabels = /* @__PURE__ */ new Set(["clinical history", "history", "clinical indication", "indication", "reason for examination"]);
   const MedicalRenderer = {
     component: "document",
     variant: "medical",
-    styles: common + styles$9,
+    styles: common + styles$c,
     validate(value) {
       const p = value;
       return !!p && [p.hospital, p.department, p.patient, p.reportTitle, p.findings].every((x) => typeof x === "string") && Array.isArray(p.fields) && p.fields.every((f) => f && typeof f.label === "string" && typeof f.value === "string" && (f.wide === void 0 || typeof f.wide === "boolean"));
@@ -373,7 +413,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles$8 = ".theqoo { max-width: 720px; border: 1px solid #dedede; background: #fff; color: #333; }\n.theqoo__bar { padding: 9px 14px; background: #375486; color: #fff; font-weight: 700; }\n.theqoo__header { padding: 16px; border-bottom: 1px solid #e5e5e5; }\n.theqoo__category { color: #e34b61; font-size: 12px; font-weight: 700; }\n.theqoo__title { margin: 5px 0 8px; font-size: 19px; }\n.theqoo__meta { color: #888; font-size: 11px; }\n.theqoo__content { padding: 22px 16px; white-space: pre-wrap; overflow-wrap: anywhere; }\n.theqoo__comments { border-top: 8px solid #f3f3f3; }\n.theqoo__comment { padding: 11px 16px; border-top: 1px solid #eee; }\n.theqoo__comment-meta { margin-bottom: 4px; color: #667; font-size: 11px; }\n.theqoo__likes { float: right; color: #e34b61; }\n";
+  const styles$b = ".theqoo { max-width: 720px; border: 1px solid #dedede; background: #fff; color: #333; }\n.theqoo__bar { padding: 9px 14px; background: #375486; color: #fff; font-weight: 700; }\n.theqoo__header { padding: 16px; border-bottom: 1px solid #e5e5e5; }\n.theqoo__category { color: #e34b61; font-size: 12px; font-weight: 700; }\n.theqoo__title { margin: 5px 0 8px; font-size: 19px; }\n.theqoo__meta { color: #888; font-size: 11px; }\n.theqoo__content { padding: 22px 16px; white-space: pre-wrap; overflow-wrap: anywhere; }\n.theqoo__comments { border-top: 8px solid #f3f3f3; }\n.theqoo__comment { padding: 11px 16px; border-top: 1px solid #eee; }\n.theqoo__comment-meta { margin-bottom: 4px; color: #667; font-size: 11px; }\n.theqoo__likes { float: right; color: #e34b61; }\n";
   const isComment = (value) => {
     const c = value;
     return !!c && typeof c.id === "string" && typeof c.author === "string" && typeof c.text === "string" && (c.likes === void 0 || typeof c.likes === "number");
@@ -381,7 +421,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   const TheqooRenderer = {
     component: "article",
     variant: "theqoo",
-    styles: common + styles$8,
+    styles: common + styles$b,
     validate(value) {
       const p = value;
       return !!p && typeof p.title === "string" && typeof p.date === "string" && typeof p.content === "string" && (p.comments === void 0 || Array.isArray(p.comments) && p.comments.every(isComment));
@@ -407,7 +447,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles$7 = '.fivech{width:min(100%,720px);overflow:hidden;border:1px solid #b9b6aa;background:#efefef;color:#111;font-family:"MS PGothic","Yu Gothic",sans-serif;box-shadow:0 6px 18px #00000012}.fivech__header{padding:10px 14px;border-bottom:1px solid #c5c1b5;background:#ddd9ca}.fivech__board{color:#555;font-size:11px}.fivech__title{margin:3px 0;color:#800000;font-size:17px;font-weight:700}.fivech__thread-id{color:#777;font-size:10px}.fivech__thread{padding:8px 12px 14px}.fivech__post{padding:6px 0}.fivech__meta{display:flex;flex-wrap:wrap;gap:5px;font-size:12px;line-height:1.45}.fivech__number{color:#333}.fivech__name{color:#008000;font-weight:700}.fivech__time,.fivech__id{color:#555}.fivech__text{padding:3px 0 3px 20px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.55}.fivech__footer{padding:6px 12px;border-top:1px solid #d2cec2;color:#888;font-size:9px;letter-spacing:.08em;text-align:right}@media(max-width:480px){.fivech__thread{padding-right:8px;padding-left:8px}.fivech__text{padding-left:12px;font-size:13px}}\n';
+  const styles$a = '.fivech{width:min(100%,720px);overflow:hidden;border:1px solid #b9b6aa;background:#efefef;color:#111;font-family:"MS PGothic","Yu Gothic",sans-serif;box-shadow:0 6px 18px #00000012}.fivech__header{padding:10px 14px;border-bottom:1px solid #c5c1b5;background:#ddd9ca}.fivech__board{color:#555;font-size:11px}.fivech__title{margin:3px 0;color:#800000;font-size:17px;font-weight:700}.fivech__thread-id{color:#777;font-size:10px}.fivech__thread{padding:8px 12px 14px}.fivech__post{padding:6px 0}.fivech__meta{display:flex;flex-wrap:wrap;gap:5px;font-size:12px;line-height:1.45}.fivech__number{color:#333}.fivech__name{color:#008000;font-weight:700}.fivech__time,.fivech__id{color:#555}.fivech__text{padding:3px 0 3px 20px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.55}.fivech__footer{padding:6px 12px;border-top:1px solid #d2cec2;color:#888;font-size:9px;letter-spacing:.08em;text-align:right}@media(max-width:480px){.fivech__thread{padding-right:8px;padding-left:8px}.fivech__text{padding-left:12px;font-size:13px}}\n';
   const isPost = (value) => {
     const post = value;
     return !!post && Number.isInteger(post.number) && post.number > 0 && [post.name, post.timestamp, post.text].every((item) => typeof item === "string") && (post.id === void 0 || typeof post.id === "string");
@@ -415,7 +455,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   const FiveChRenderer = {
     component: "article",
     variant: "5ch",
-    styles: common + styles$7,
+    styles: common + styles$a,
     validate(value) {
       const props = value;
       return !!props && typeof props.title === "string" && Array.isArray(props.posts) && props.posts.every(isPost) && (props.board === void 0 || typeof props.board === "string") && (props.threadId === void 0 || typeof props.threadId === "string");
@@ -473,12 +513,12 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     }
     return root;
   }
-  const styles$6 = ".weibo {\n  max-width: 620px;\n  padding: 16px;\n  border: 1px solid #e6e6e6;\n  border-radius: 10px;\n  background: #fff;\n  color: #222;\n  box-shadow: 0 4px 16px #0000000d;\n}\n.weibo__author {\n  display: flex;\n  align-items: baseline;\n  gap: 7px;\n}\n.weibo__header{display:flex;align-items:center;gap:10px}.weibo__avatar{width:38px;height:38px;flex:0 0 38px;border-radius:50%;background:#f0f0f0}.weibo__author{flex-wrap:wrap}.platform-comments{margin-top:10px;border-top:1px solid #f0f0f0;padding-top:10px}.platform-comments__title{margin:0 0 8px;font-size:13px}.platform-comment{display:grid;grid-template-columns:30px 1fr;gap:9px;padding:8px 0}.platform-comment__avatar{width:30px;height:30px;border-radius:50%;background:#f0f0f0}.platform-comment__meta{color:#507daf;font-size:11px}.platform-comment__text{margin-top:2px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.5}.platform-comment__likes{margin-top:3px;color:#999;font-size:10px}\n.weibo__name {\n  font-weight: 700;\n}\n.weibo__verified {\n  color: #ff8200;\n}\n.weibo__handle,\n.weibo__meta {\n  color: #939393;\n  font-size: 11px;\n}\n.weibo__text {\n  margin: 12px 0 16px;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  font-size: 15px;\n  line-height: 1.65;\n}\n.weibo__stats {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  padding-top: 11px;\n  border-top: 1px solid #f2f2f2;\n  color: #666;\n  text-align: center;\n  font-size: 12px;\n}\n";
+  const styles$9 = ".weibo {\n  max-width: 620px;\n  padding: 16px;\n  border: 1px solid #e6e6e6;\n  border-radius: 10px;\n  background: #fff;\n  color: #222;\n  box-shadow: 0 4px 16px #0000000d;\n}\n.weibo__author {\n  display: flex;\n  align-items: baseline;\n  gap: 7px;\n}\n.weibo__header{display:flex;align-items:center;gap:10px}.weibo__avatar{width:38px;height:38px;flex:0 0 38px;border-radius:50%;background:#f0f0f0}.weibo__author{flex-wrap:wrap}.platform-comments{margin-top:10px;border-top:1px solid #f0f0f0;padding-top:10px}.platform-comments__title{margin:0 0 8px;font-size:13px}.platform-comment{display:grid;grid-template-columns:30px 1fr;gap:9px;padding:8px 0}.platform-comment__avatar{width:30px;height:30px;border-radius:50%;background:#f0f0f0}.platform-comment__meta{color:#507daf;font-size:11px}.platform-comment__text{margin-top:2px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.5}.platform-comment__likes{margin-top:3px;color:#999;font-size:10px}\n.weibo__name {\n  font-weight: 700;\n}\n.weibo__verified {\n  color: #ff8200;\n}\n.weibo__handle,\n.weibo__meta {\n  color: #939393;\n  font-size: 11px;\n}\n.weibo__text {\n  margin: 12px 0 16px;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  font-size: 15px;\n  line-height: 1.65;\n}\n.weibo__stats {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  padding-top: 11px;\n  border-top: 1px solid #f2f2f2;\n  color: #666;\n  text-align: center;\n  font-size: 12px;\n}\n";
   const optionalNumber$3 = (value) => value === void 0 || typeof value === "number" && value >= 0;
   const WeiboRenderer = {
     component: "social",
     variant: "weibo-post",
-    styles: common + styles$6,
+    styles: common + styles$9,
     validate(value) {
       const p = value;
       return !!p && [p.displayName, p.timestamp, p.text].every(
@@ -512,9 +552,9 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles$5 = ".instagram{width:min(100%,470px);border:1px solid #dbdbdb;border-radius:10px;background:#fff;color:#161616;font-family:Arial,sans-serif}.instagram__header{display:flex;align-items:center;gap:10px;padding:10px 12px}.instagram__avatar{display:grid;width:34px;height:34px;place-items:center;overflow:hidden;border:2px solid #dc3d79;border-radius:50%;background:#eee;font-weight:700}.instagram__avatar img,.instagram__media img{width:100%;height:100%;object-fit:cover}.instagram__author{min-width:0;flex:1}.instagram__username{font-size:13px;font-weight:700}.instagram__location{font-size:10px}.instagram__more{font-weight:700}.instagram__media{display:grid;min-height:300px;place-items:center;overflow:hidden;background:#ececec}.instagram__placeholder{color:#888}.instagram__actions{padding:11px 12px 7px;font-size:22px;white-space:pre}.instagram__likes,.instagram__caption,.instagram__comments,.instagram__time{padding:0 12px 7px;font-size:13px}.instagram__likes{font-weight:700}.instagram__caption{white-space:pre-wrap;overflow-wrap:anywhere}.instagram__comments,.instagram__time{color:#737373}.instagram__time{padding-bottom:12px;font-size:10px;text-transform:uppercase}@media(max-width:480px){.instagram__media{min-height:240px}}\n";
+  const styles$8 = ".instagram{width:min(100%,470px);border:1px solid #dbdbdb;border-radius:10px;background:#fff;color:#161616;font-family:Arial,sans-serif}.instagram__header{display:flex;align-items:center;gap:10px;padding:10px 12px}.instagram__avatar{display:grid;width:34px;height:34px;place-items:center;overflow:hidden;border:2px solid #dc3d79;border-radius:50%;background:#eee;font-weight:700}.instagram__avatar img,.instagram__media img{width:100%;height:100%;object-fit:cover}.instagram__author{min-width:0;flex:1}.instagram__username{font-size:13px;font-weight:700}.instagram__location{font-size:10px}.instagram__more{font-weight:700}.instagram__media{display:grid;min-height:300px;place-items:center;overflow:hidden;background:#ececec}.instagram__placeholder{color:#888}.instagram__actions{padding:11px 12px 7px;font-size:22px;white-space:pre}.instagram__likes,.instagram__caption,.instagram__comments,.instagram__time{padding:0 12px 7px;font-size:13px}.instagram__likes{font-weight:700}.instagram__caption{white-space:pre-wrap;overflow-wrap:anywhere}.instagram__comments,.instagram__time{color:#737373}.instagram__time{padding-bottom:12px;font-size:10px;text-transform:uppercase}@media(max-width:480px){.instagram__media{min-height:240px}}\n";
   const optionalNumber$2 = (value) => value === void 0 || typeof value === "number" && value >= 0;
-  function safeUrl$2(value) {
+  function safeUrl$3(value) {
     if (!value) return;
     try {
       const url = new URL(value, location.href);
@@ -526,7 +566,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   const InstagramRenderer = {
     component: "social",
     variant: "instagram-post",
-    styles: common + styles$5,
+    styles: common + styles$8,
     validate(value) {
       const p = value;
       return !!p && [p.username, p.text, p.timestamp].every((x) => typeof x === "string") && [p.likes, p.comments].every(optionalNumber$2);
@@ -544,7 +584,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       if (props.location)
         author.append(element("div", "instagram__location", props.location));
       header.append(avatar2, author, element("span", "instagram__more", "•••"));
-      const media = element("div", "instagram__media"), imageUrl = safeUrl$2(props.image);
+      const media = element("div", "instagram__media"), imageUrl = safeUrl$3(props.image);
       if (imageUrl) {
         const img = element("img");
         img.src = imageUrl;
@@ -582,9 +622,45 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles$4 = ".onlyfans {\n  width: min(100%, 540px);\n  border: 1px solid #d8e2e8;\n  border-radius: 10px;\n  background: #fff;\n  color: #242529;\n  font-family: Arial, sans-serif;\n}\n.onlyfans__header {\n  display: flex;\n  align-items: center;\n  gap: 11px;\n  padding: 13px 15px;\n}\n.onlyfans__avatar {\n  display: grid;\n  width: 42px;\n  height: 42px;\n  place-items: center;\n  overflow: hidden;\n  border-radius: 50%;\n  background: #00aff0;\n  color: #fff;\n  font-weight: 800;\n}\n.onlyfans__avatar img,\n.onlyfans__media img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.onlyfans__identity {\n  min-width: 0;\n  flex: 1;\n}\n.onlyfans__creator {\n  font-size: 14px;\n  font-weight: 700;\n}\n.onlyfans__handle {\n  color: #8a96a3;\n  font-size: 11px;\n}\n.onlyfans__more {\n  color: #8a96a3;\n}\n.onlyfans__text {\n  padding: 2px 15px 14px;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  font-size: 14px;\n  line-height: 1.55;\n}\n.onlyfans__media {\n  display: grid;\n  min-height: 270px;\n  place-items: center;\n  overflow: hidden;\n  background: #edf1f4;\n  color: #84909a;\n}\n.onlyfans__footer {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 11px 15px;\n  color: #596773;\n  font-size: 13px;\n}\n.onlyfans__status {\n  border-radius: 16px;\n  background: #00aff0;\n  color: #fff;\n  padding: 6px 12px;\n  font-weight: 700;\n}\n.platform-comments{border-top:1px solid #e5edf2;padding:10px 15px}.platform-comments__title{margin:0 0 10px;font-size:13px}.platform-comment{display:grid;grid-template-columns:30px 1fr;gap:9px;padding:8px 0}.platform-comment__avatar{display:grid;width:30px;height:30px;place-items:center;border-radius:50%;background:#dce4e9;color:#52606b;font-size:11px;font-weight:700}.platform-comment__meta{font-size:11px;font-weight:700}.platform-comment__text{margin-top:2px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.45}.platform-comment__likes{margin-top:4px;color:#8a96a3;font-size:10px}\n";
+  const styles$7 = '.instagram-dm{width:min(100%,430px);border:1px solid #dbdbdb;border-radius:18px;background:#fff;color:#151515;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.instagram-dm__header{display:grid;grid-template-columns:28px 38px 1fr auto;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #e8e8e8}.instagram-dm__back{font-size:32px;line-height:1}.instagram-dm__avatar{width:36px;height:36px;border-radius:50%;background:#eee}.instagram-dm__identity{display:grid;min-width:0;font-size:13px}.instagram-dm__identity span{overflow:hidden;color:#777;font-size:10px;text-overflow:ellipsis;white-space:nowrap}.instagram-dm__actions{font-size:18px;white-space:nowrap}.instagram-dm__thread{display:flex;min-height:300px;flex-direction:column;gap:5px;padding:15px 12px}.instagram-dm__row{display:flex;max-width:78%;flex-direction:column}.instagram-dm__row--left{align-self:flex-start;align-items:flex-start}.instagram-dm__row--right{align-self:flex-end;align-items:flex-end}.instagram-dm__bubble{padding:9px 13px;border:1px solid #dedede;border-radius:20px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.35}.instagram-dm__row--right .instagram-dm__bubble{border:0;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff}.instagram-dm__time,.instagram-dm__status{margin:2px 7px;color:#8e8e8e;font-size:9px}.instagram-dm__composer{display:grid;grid-template-columns:30px 1fr 22px;align-items:center;gap:7px;margin:0 10px 10px;padding:5px 8px;border:1px solid #ddd;border-radius:22px}.instagram-dm__camera{display:grid;width:27px;height:27px;place-items:center;border-radius:50%;background:#3797f0;color:#fff}.instagram-dm__input{color:#999;font-size:13px}@media(max-width:480px){.instagram-dm__thread{min-height:240px}}\n';
+  const isMessage = (value) => {
+    const message = value;
+    return !!message && [message.id, message.sender, message.text].every((field) => typeof field === "string") && ["left", "right"].includes(message.side) && (message.time === void 0 || typeof message.time === "string") && (message.status === void 0 || typeof message.status === "string");
+  };
+  const InstagramDmRenderer = {
+    component: "social",
+    variant: "instagram-dm",
+    styles: common + styles$7,
+    validate(value) {
+      const props = value;
+      return !!props && typeof props.title === "string" && (props.handle === void 0 || typeof props.handle === "string") && (props.active === void 0 || typeof props.active === "string") && Array.isArray(props.messages) && props.messages.every(isMessage);
+    },
+    render(props) {
+      const root = element("section", "novel-ui instagram-dm");
+      const header = element("header", "instagram-dm__header");
+      header.append(element("span", "instagram-dm__back", "‹"), renderDefaultAvatar("instagram-dm__avatar"));
+      const identity = element("div", "instagram-dm__identity");
+      identity.append(element("strong", "", props.title));
+      if (props.handle || props.active) identity.append(element("span", "", [props.handle, props.active].filter(Boolean).join(" · ")));
+      header.append(identity, element("span", "instagram-dm__actions", "⌕  ⓘ"));
+      root.append(header);
+      const thread = element("div", "instagram-dm__thread");
+      for (const message of props.messages) {
+        const row = element("div", `instagram-dm__row instagram-dm__row--${message.side}`);
+        if (message.time) row.append(element("time", "instagram-dm__time", message.time));
+        row.append(element("div", "instagram-dm__bubble", message.text));
+        if (message.status && message.side === "right") row.append(element("span", "instagram-dm__status", message.status));
+        thread.append(row);
+      }
+      const composer = element("footer", "instagram-dm__composer");
+      composer.append(element("span", "instagram-dm__camera", "◉"), element("span", "instagram-dm__input", "发消息……"), element("span", "", "♡"));
+      root.append(thread, composer);
+      return root;
+    }
+  };
+  const styles$6 = ".onlyfans {\n  width: min(100%, 540px);\n  border: 1px solid #d8e2e8;\n  border-radius: 10px;\n  background: #fff;\n  color: #242529;\n  font-family: Arial, sans-serif;\n}\n.onlyfans__header {\n  display: flex;\n  align-items: center;\n  gap: 11px;\n  padding: 13px 15px;\n}\n.onlyfans__avatar {\n  display: grid;\n  width: 42px;\n  height: 42px;\n  place-items: center;\n  overflow: hidden;\n  border-radius: 50%;\n  background: #00aff0;\n  color: #fff;\n  font-weight: 800;\n}\n.onlyfans__avatar img,\n.onlyfans__media img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.onlyfans__identity {\n  min-width: 0;\n  flex: 1;\n}\n.onlyfans__creator {\n  font-size: 14px;\n  font-weight: 700;\n}\n.onlyfans__handle {\n  color: #8a96a3;\n  font-size: 11px;\n}\n.onlyfans__more {\n  color: #8a96a3;\n}\n.onlyfans__text {\n  padding: 2px 15px 14px;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  font-size: 14px;\n  line-height: 1.55;\n}\n.onlyfans__media {\n  display: grid;\n  min-height: 270px;\n  place-items: center;\n  overflow: hidden;\n  background: #edf1f4;\n  color: #84909a;\n}\n.onlyfans__footer {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 11px 15px;\n  color: #596773;\n  font-size: 13px;\n}\n.onlyfans__status {\n  border-radius: 16px;\n  background: #00aff0;\n  color: #fff;\n  padding: 6px 12px;\n  font-weight: 700;\n}\n.platform-comments{border-top:1px solid #e5edf2;padding:10px 15px}.platform-comments__title{margin:0 0 10px;font-size:13px}.platform-comment{display:grid;grid-template-columns:30px 1fr;gap:9px;padding:8px 0}.platform-comment__avatar{display:grid;width:30px;height:30px;place-items:center;border-radius:50%;background:#dce4e9;color:#52606b;font-size:11px;font-weight:700}.platform-comment__meta{font-size:11px;font-weight:700}.platform-comment__text{margin-top:2px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.45}.platform-comment__likes{margin-top:4px;color:#8a96a3;font-size:10px}\n";
   const optionalNumber$1 = (value) => value === void 0 || typeof value === "number" && value >= 0;
-  function safeUrl$1(value) {
+  function safeUrl$2(value) {
     if (!value) return;
     try {
       const url = new URL(value, location.href);
@@ -596,7 +672,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   const OnlyFansRenderer = {
     component: "social",
     variant: "onlyfans-post",
-    styles: common + styles$4,
+    styles: common + styles$6,
     validate(value) {
       const p = value;
       return !!p && [p.creator, p.handle, p.timestamp, p.text].every(
@@ -621,7 +697,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       header.append(avatar2, identity, element("span", "onlyfans__more", "•••"));
       root.append(header, element("div", "onlyfans__text", props.text));
       if (props.media || props.mediaAlt) {
-        const media = element("div", "onlyfans__media"), url = safeUrl$1(props.media);
+        const media = element("div", "onlyfans__media"), url = safeUrl$2(props.media);
         if (url) {
           const img = element("img");
           img.src = url;
@@ -651,8 +727,8 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const styles$3 = ".video-page {\n  width: min(100%, 720px);\n  overflow: hidden;\n  border: 1px solid #ddd;\n  border-radius: 10px;\n  background: #fff;\n  color: #0f0f0f;\n  font-family: Arial, sans-serif;\n}\n.video-page__brand {\n  padding: 10px 14px;\n  font-size: 17px;\n  font-weight: 800;\n}\n.video-page--youtube .video-page__brand {\n  color: #f00;\n}\n.video-page--pornhub {\n  background: #171717;\n  color: #f5f5f5;\n  border-color: #333;\n}\n.video-page--pornhub .video-page__brand {\n  color: #ff9b19;\n}\n.video-page__player {\n  position: relative;\n  display: grid;\n  aspect-ratio: 16/9;\n  place-items: center;\n  overflow: hidden;\n  background: #202020;\n  color: #aaa;\n}\n.video-page__player img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.video-page__play {\n  position: absolute;\n  display: grid;\n  width: 54px;\n  height: 40px;\n  place-items: center;\n  border-radius: 10px;\n  background: #000b;\n  color: #fff;\n  font-size: 20px;\n}\n.video-page--youtube .video-page__play {\n  background: #f00;\n}\n.video-page--pornhub .video-page__play {\n  background: #ff9b19;\n  color: #111;\n}\n.video-page__duration {\n  position: absolute;\n  right: 8px;\n  bottom: 7px;\n  border-radius: 3px;\n  background: #000c;\n  color: #fff;\n  padding: 2px 5px;\n  font-size: 11px;\n}\n.video-page__title {\n  margin: 12px 14px 5px;\n  font-size: 18px;\n}\n.video-page__meta,\n.video-page__subscribers {\n  color: #777;\n  font-size: 12px;\n}\n.video-page__meta {\n  margin: 0 14px 10px;\n}\n.video-page--pornhub .video-page__meta,\n.video-page--pornhub .video-page__subscribers {\n  color: #aaa;\n}\n.video-page__channel {\n  display: flex;\n  align-items: center;\n  gap: 9px;\n  padding: 10px 14px;\n  border-top: 1px solid #ddd;\n}\n.video-page--pornhub .video-page__channel {\n  border-color: #333;\n}\n.video-page__avatar {\n  display: grid;\n  width: 34px;\n  height: 34px;\n  place-items: center;\n  border-radius: 50%;\n  background: #777;\n  color: #fff;\n}\n.video-page__subscribers {\n  flex: 1;\n}\n.video-page__subscribe {\n  margin-left: auto;\n  border-radius: 18px;\n  background: #111;\n  color: #fff;\n  padding: 7px 13px;\n  font-size: 12px;\n  font-weight: 700;\n}\n.video-page--pornhub .video-page__subscribe {\n  background: #ff9b19;\n  color: #111;\n}\n.video-page__description {\n  margin: 0 14px 10px;\n  border-radius: 7px;\n  background: #eee;\n  padding: 10px;\n  white-space: pre-wrap;\n  font-size: 12px;\n}\n.video-page--pornhub .video-page__description {\n  background: #292929;\n}\n.video-page__stats {\n  padding: 9px 14px;\n  border-top: 1px solid #ddd;\n  font-size: 13px;\n}\n.video-page--pornhub .video-page__stats {\n  border-color: #333;\n}\n.platform-comments{border-top:1px solid #ddd;padding:12px 14px}.video-page--pornhub .platform-comments{border-color:#333}.platform-comments__title{margin:0 0 10px;font-size:14px}.platform-comment{display:grid;grid-template-columns:32px 1fr;gap:9px;padding:8px 0}.platform-comment__avatar{display:grid;width:32px;height:32px;place-items:center;border-radius:50%;background:#777;color:#fff;font-size:11px;font-weight:700}.platform-comment__meta{font-size:11px;font-weight:700}.platform-comment__text{margin-top:3px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.45}.platform-comment__likes{margin-top:4px;color:#888;font-size:10px}\n";
-  function safeUrl(value) {
+  const styles$5 = ".video-page {\n  width: min(100%, 720px);\n  overflow: hidden;\n  border: 1px solid #ddd;\n  border-radius: 10px;\n  background: #fff;\n  color: #0f0f0f;\n  font-family: Arial, sans-serif;\n}\n.video-page__brand {\n  padding: 10px 14px;\n  font-size: 17px;\n  font-weight: 800;\n}\n.video-page--youtube .video-page__brand {\n  color: #f00;\n}\n.video-page--pornhub {\n  background: #171717;\n  color: #f5f5f5;\n  border-color: #333;\n}\n.video-page--pornhub .video-page__brand {\n  color: #ff9b19;\n}\n.video-page__player {\n  position: relative;\n  display: grid;\n  aspect-ratio: 16/9;\n  place-items: center;\n  overflow: hidden;\n  background: #202020;\n  color: #aaa;\n}\n.video-page__player img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n.video-page__play {\n  position: absolute;\n  display: grid;\n  width: 54px;\n  height: 40px;\n  place-items: center;\n  border-radius: 10px;\n  background: #000b;\n  color: #fff;\n  font-size: 20px;\n}\n.video-page--youtube .video-page__play {\n  background: #f00;\n}\n.video-page--pornhub .video-page__play {\n  background: #ff9b19;\n  color: #111;\n}\n.video-page__duration {\n  position: absolute;\n  right: 8px;\n  bottom: 7px;\n  border-radius: 3px;\n  background: #000c;\n  color: #fff;\n  padding: 2px 5px;\n  font-size: 11px;\n}\n.video-page__title {\n  margin: 12px 14px 5px;\n  font-size: 18px;\n}\n.video-page__meta,\n.video-page__subscribers {\n  color: #777;\n  font-size: 12px;\n}\n.video-page__meta {\n  margin: 0 14px 10px;\n}\n.video-page--pornhub .video-page__meta,\n.video-page--pornhub .video-page__subscribers {\n  color: #aaa;\n}\n.video-page__channel {\n  display: flex;\n  align-items: center;\n  gap: 9px;\n  padding: 10px 14px;\n  border-top: 1px solid #ddd;\n}\n.video-page--pornhub .video-page__channel {\n  border-color: #333;\n}\n.video-page__avatar {\n  display: grid;\n  width: 34px;\n  height: 34px;\n  place-items: center;\n  border-radius: 50%;\n  background: #777;\n  color: #fff;\n}\n.video-page__subscribers {\n  flex: 1;\n}\n.video-page__subscribe {\n  margin-left: auto;\n  border-radius: 18px;\n  background: #111;\n  color: #fff;\n  padding: 7px 13px;\n  font-size: 12px;\n  font-weight: 700;\n}\n.video-page--pornhub .video-page__subscribe {\n  background: #ff9b19;\n  color: #111;\n}\n.video-page__description {\n  margin: 0 14px 10px;\n  border-radius: 7px;\n  background: #eee;\n  padding: 10px;\n  white-space: pre-wrap;\n  font-size: 12px;\n}\n.video-page--pornhub .video-page__description {\n  background: #292929;\n}\n.video-page__stats {\n  padding: 9px 14px;\n  border-top: 1px solid #ddd;\n  font-size: 13px;\n}\n.video-page--pornhub .video-page__stats {\n  border-color: #333;\n}\n.platform-comments{border-top:1px solid #ddd;padding:12px 14px}.video-page--pornhub .platform-comments{border-color:#333}.platform-comments__title{margin:0 0 10px;font-size:14px}.platform-comment{display:grid;grid-template-columns:32px 1fr;gap:9px;padding:8px 0}.platform-comment__avatar{display:grid;width:32px;height:32px;place-items:center;border-radius:50%;background:#777;color:#fff;font-size:11px;font-weight:700}.platform-comment__meta{font-size:11px;font-weight:700}.platform-comment__text{margin-top:3px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.45}.platform-comment__likes{margin-top:4px;color:#888;font-size:10px}\n";
+  function safeUrl$1(value) {
     if (!value) return;
     try {
       const url = new URL(value, location.href);
@@ -665,7 +741,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     return {
       component: "video",
       variant,
-      styles: common + styles$3,
+      styles: common + styles$5,
       validate(value) {
         const p = value;
         return !!p && [p.title, p.channel, p.duration, p.views, p.uploaded].every(
@@ -677,7 +753,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
         const root = element(
           "article",
           `novel-ui video-page video-page--${variant}`
-        ), player = element("div", "video-page__player"), url = safeUrl(props.thumbnail);
+        ), player = element("div", "video-page__player"), url = safeUrl$1(props.thumbnail);
         if (url) {
           const img = element("img");
           img.src = url;
@@ -742,7 +818,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   }
   const YouTubeRenderer = createVideoRenderer("youtube");
   const PornhubRenderer = createVideoRenderer("pornhub");
-  const styles$2 = ':host{--x-bg:#000;--x-text:#e7e9ea;--x-muted:#71767b;--x-line:#2f3336;--x-blue:#1d9bf0}.x-shell{width:min(100%,680px);overflow:hidden;border:1px solid var(--x-line);border-radius:18px;background:var(--x-bg);color:var(--x-text);font-family:Arial,"Microsoft YaHei","PingFang SC",sans-serif}.x-shell--single{border-radius:14px}.x-app-header{position:relative;display:flex;min-height:58px;align-items:center;justify-content:center;padding:8px 52px;border-bottom:1px solid var(--x-line);font-size:19px;font-weight:800}.x-app-header__avatar{position:absolute;left:16px;width:34px;height:34px;border-radius:50%;background:#30353a}.x-app-header__action{position:absolute;right:16px;color:var(--x-text);font-size:24px}.x-tabs{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;min-height:48px;border-bottom:1px solid var(--x-line);color:var(--x-muted)}.x-tab{display:flex;position:relative;align-items:center;justify-content:center;padding:12px 8px;font-weight:700;white-space:nowrap}.x-tab--active{color:var(--x-text)}.x-tab--active::after{content:"";position:absolute;right:20%;bottom:0;left:20%;height:3px;border-radius:3px;background:var(--x-blue)}.x-post{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;padding:14px 16px 7px;border-bottom:1px solid var(--x-line)}.x-avatar{width:48px;height:48px;overflow:hidden;border-radius:50%;background:#272b2f}.x-avatar__image{width:100%;height:100%;object-fit:cover}.x-avatar__fallback{display:grid;width:100%;height:100%;place-items:center;color:#fff;font-size:20px;font-weight:800}.x-post__body{min-width:0}.x-post__author{display:flex;min-width:0;align-items:center;gap:4px;font-size:15px;line-height:20px}.x-post__name{overflow:hidden;font-weight:800;text-overflow:ellipsis;white-space:nowrap}.x-post__verified{display:grid;width:15px;height:15px;flex:0 0 15px;place-items:center;border-radius:50%;background:var(--x-blue);color:#fff;font-size:10px}.x-post__handle,.x-post__time{overflow:hidden;color:var(--x-muted);text-overflow:ellipsis;white-space:nowrap}.x-post__more{margin-left:auto;color:var(--x-muted);font-size:20px}.x-post__translation{margin:5px 0 2px;color:var(--x-muted);font-size:13px}.x-post__text{margin:4px 0 10px;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--x-text);font-size:16px;line-height:1.45}.x-media{display:grid;max-height:520px;overflow:hidden;margin:8px 0;border:1px solid var(--x-line);border-radius:16px;gap:2px;background:var(--x-line)}.x-media--2,.x-media--3,.x-media--4{grid-template-columns:repeat(2,1fr)}.x-media__image-frame{display:grid;min-height:180px;place-items:center;overflow:hidden;background:#16181c}.x-media--1 .x-media__image-frame{min-height:280px}.x-media__image{width:100%;height:100%;min-height:inherit;object-fit:cover}.x-media__placeholder{padding:30px;color:var(--x-muted);text-align:center}.x-media__link{grid-column:1/-1;overflow:hidden;background:#000}.x-media__link-image{width:100%;max-height:290px;object-fit:cover}.x-media__link-copy{padding:10px 12px;border-top:1px solid var(--x-line)}.x-media__domain,.x-media__description{color:var(--x-muted);font-size:13px}.x-media__title{margin:2px 0;color:var(--x-text)}.x-post__stats{display:grid;grid-template-columns:repeat(6,1fr);align-items:center;margin:4px 0 1px;color:var(--x-muted);font-size:12px}.x-post__stat{min-width:0;white-space:nowrap}.x-feed-empty{padding:46px 20px;color:var(--x-muted);text-align:center}.x-search{display:flex;align-items:center;gap:10px;padding:10px 16px}.x-search__avatar{width:34px;height:34px;flex:0 0 34px;border-radius:50%;background:#30353a}.x-search__box{flex:1;padding:11px 18px;border-radius:999px;background:#202327;color:var(--x-muted);font-size:16px}.x-search__gear{color:var(--x-text);font-size:23px}.x-trend{position:relative;padding:13px 20px}.x-trend__category,.x-trend__posts{color:var(--x-muted);font-size:13px}.x-trend__title{margin:3px 0;color:var(--x-text);font-size:16px;font-weight:800}.x-trend__more{position:absolute;top:9px;right:18px;color:var(--x-muted);font-size:20px}.x-notification{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--x-line)}.x-notification__type{color:#7856ff;font-size:29px;text-align:center}.x-notification__top{display:flex;align-items:center;gap:7px}.x-notification__avatar{width:38px;height:38px;overflow:hidden;border-radius:50%;background:#272b2f}.x-notification__avatar img{width:100%;height:100%;object-fit:cover}.x-notification__name{margin-top:7px;font-weight:800}.x-notification__meta{color:var(--x-muted);font-weight:400}.x-notification__translation{margin:7px 0;color:var(--x-muted);font-size:13px}.x-notification__text{color:var(--x-muted);font-size:16px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}@media(max-width:520px){.x-shell{border-radius:12px}.x-post{grid-template-columns:40px minmax(0,1fr);padding-inline:12px}.x-avatar{width:40px;height:40px}.x-post__stats{font-size:11px}.x-post__handle{max-width:90px}.x-tabs{overflow-x:auto}.x-tab{padding-inline:14px}}\n';
+  const styles$4 = ':host{--x-bg:#000;--x-text:#e7e9ea;--x-muted:#71767b;--x-line:#2f3336;--x-blue:#1d9bf0}.x-shell{width:min(100%,680px);overflow:hidden;border:1px solid var(--x-line);border-radius:18px;background:var(--x-bg);color:var(--x-text);font-family:Arial,"Microsoft YaHei","PingFang SC",sans-serif}.x-shell--single{border-radius:14px}.x-app-header{position:relative;display:flex;min-height:58px;align-items:center;justify-content:center;padding:8px 52px;border-bottom:1px solid var(--x-line);font-size:19px;font-weight:800}.x-app-header__avatar{position:absolute;left:16px;width:34px;height:34px;border-radius:50%;background:#30353a}.x-app-header__action{position:absolute;right:16px;color:var(--x-text);font-size:24px}.x-tabs{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;min-height:48px;border-bottom:1px solid var(--x-line);color:var(--x-muted)}.x-tab{display:flex;position:relative;align-items:center;justify-content:center;padding:12px 8px;font-weight:700;white-space:nowrap}.x-tab--active{color:var(--x-text)}.x-tab--active::after{content:"";position:absolute;right:20%;bottom:0;left:20%;height:3px;border-radius:3px;background:var(--x-blue)}.x-post{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;padding:14px 16px 7px;border-bottom:1px solid var(--x-line)}.x-avatar{width:48px;height:48px;overflow:hidden;border-radius:50%;background:#272b2f}.x-avatar__image{width:100%;height:100%;object-fit:cover}.x-avatar__fallback{display:grid;width:100%;height:100%;place-items:center;color:#fff;font-size:20px;font-weight:800}.x-post__body{min-width:0}.x-post__author{display:flex;min-width:0;align-items:center;gap:4px;font-size:15px;line-height:20px}.x-post__name{overflow:hidden;font-weight:800;text-overflow:ellipsis;white-space:nowrap}.x-post__verified{display:grid;width:15px;height:15px;flex:0 0 15px;place-items:center;border-radius:50%;background:var(--x-blue);color:#fff;font-size:10px}.x-post__handle,.x-post__time{overflow:hidden;color:var(--x-muted);text-overflow:ellipsis;white-space:nowrap}.x-post__more{margin-left:auto;color:var(--x-muted);font-size:20px}.x-post__translation{margin:5px 0 2px;color:var(--x-muted);font-size:13px}.x-post__text{margin:4px 0 10px;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--x-text);font-size:16px;line-height:1.45}.x-media{display:grid;max-height:520px;overflow:hidden;margin:8px 0;border:1px solid var(--x-line);border-radius:16px;gap:2px;background:var(--x-line)}.x-media--2,.x-media--3,.x-media--4{grid-template-columns:repeat(2,1fr)}.x-media__image-frame{display:grid;min-height:180px;place-items:center;overflow:hidden;background:#16181c}.x-media--1 .x-media__image-frame{min-height:280px}.x-media__image{width:100%;height:100%;min-height:inherit;object-fit:cover}.x-media__placeholder{padding:30px;color:var(--x-muted);text-align:center}.x-media__link{grid-column:1/-1;overflow:hidden;background:#000}.x-media__link-image{width:100%;max-height:290px;object-fit:cover}.x-media__link-copy{padding:10px 12px;border-top:1px solid var(--x-line)}.x-media__domain,.x-media__description{color:var(--x-muted);font-size:13px}.x-media__title{margin:2px 0;color:var(--x-text)}.x-post__stats{display:grid;grid-template-columns:repeat(6,1fr);align-items:center;margin:4px 0 1px;color:var(--x-muted);font-size:12px}.x-post__stat{min-width:0;white-space:nowrap}.x-feed-empty{padding:46px 20px;color:var(--x-muted);text-align:center}.x-search{display:flex;align-items:center;gap:10px;padding:10px 16px}.x-search__avatar{width:34px;height:34px;flex:0 0 34px;border-radius:50%;background:#30353a}.x-search__box{flex:1;padding:11px 18px;border-radius:999px;background:#202327;color:var(--x-muted);font-size:16px}.x-search__gear{color:var(--x-text);font-size:23px}.x-trend{position:relative;padding:13px 20px}.x-trend__category,.x-trend__posts{color:var(--x-muted);font-size:13px}.x-trend__title{margin:3px 0;color:var(--x-text);font-size:16px;font-weight:800}.x-trend__more{position:absolute;top:9px;right:18px;color:var(--x-muted);font-size:20px}.x-notification{display:grid;grid-template-columns:48px minmax(0,1fr);gap:10px;padding:14px 16px;border-bottom:1px solid var(--x-line)}.x-notification__type{color:#7856ff;font-size:29px;text-align:center}.x-notification__top{display:flex;align-items:center;gap:7px}.x-notification__avatar{width:38px;height:38px;overflow:hidden;border-radius:50%;background:#272b2f}.x-notification__avatar img{width:100%;height:100%;object-fit:cover}.x-notification__name{margin-top:7px;font-weight:800}.x-notification__meta{color:var(--x-muted);font-weight:400}.x-notification__translation{margin:7px 0;color:var(--x-muted);font-size:13px}.x-notification__text{color:var(--x-muted);font-size:16px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}@media(max-width:520px){.x-shell{border-radius:12px}.x-post{grid-template-columns:40px minmax(0,1fr);padding-inline:12px}.x-avatar{width:40px;height:40px}.x-post__stats{font-size:11px}.x-post__handle{max-width:90px}.x-tabs{overflow-x:auto}.x-tab{padding-inline:14px}}\n';
   const optionalNumber = (value) => value === void 0 || typeof value === "number" && value >= 0;
   const isText = (value) => value === void 0 || typeof value === "string";
   const isMedia = (value) => {
@@ -860,7 +936,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   const XPostRenderer = {
     component: "social",
     variant: "x-post",
-    styles: common + styles$2,
+    styles: common + styles$4,
     validate: isXPostProps,
     render(props) {
       const shell = element("section", "novel-ui x-shell x-shell--single");
@@ -871,7 +947,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   const XFeedRenderer = {
     component: "social",
     variant: "x-feed",
-    styles: common + styles$2,
+    styles: common + styles$4,
     validate(value) {
       const p = value;
       return !!p && Array.isArray(p.posts) && p.posts.every(isXPostProps) && (p.title === void 0 || typeof p.title === "string");
@@ -909,7 +985,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   const XNotificationsRenderer = {
     component: "social",
     variant: "x-notifications",
-    styles: common + styles$2,
+    styles: common + styles$4,
     validate(value) {
       const p = value;
       return !!p && Array.isArray(p.notifications) && p.notifications.every(isNotification);
@@ -978,7 +1054,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   const XTrendsRenderer = {
     component: "social",
     variant: "x-trends",
-    styles: common + styles$2,
+    styles: common + styles$4,
     validate(value) {
       const p = value;
       return !!p && Array.isArray(p.trends) && p.trends.every(isTrend);
@@ -1031,7 +1107,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return shell;
     }
   };
-  const styles$1 = ':host {\n  --ticket-accent: #2463a9;\n  --ticket-accent-soft: #eaf2fb;\n  --ticket-paper: #fff;\n  --ticket-ink: #17202a;\n  --ticket-muted: #69727d;\n  --ticket-line: #d9dee5;\n}\n.ticket {\n  position: relative;\n  width: min(100%, 760px);\n  overflow: hidden;\n  border: 1px solid var(--ticket-line);\n  border-radius: 18px;\n  background: var(--ticket-paper);\n  color: var(--ticket-ink);\n  box-shadow: 0 8px 24px #1f293714;\n}\n.ticket--compact {\n  width: min(100%, 480px);\n  border-radius: 14px;\n}\n.ticket--red {\n  --ticket-accent: #b4232f;\n  --ticket-accent-soft: #fff0f1;\n}\n.ticket--green {\n  --ticket-accent: #167a59;\n  --ticket-accent-soft: #eaf8f2;\n}\n.ticket--gold {\n  --ticket-accent: #8a6418;\n  --ticket-accent-soft: #fff8df;\n}\n.ticket__header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 16px 20px;\n  background: var(--ticket-accent);\n  color: #fff;\n}\n.ticket__operator {\n  font-size: 19px;\n  font-weight: 800;\n}\n.ticket__operator-code {\n  font-size: 12px;\n  letter-spacing: 0.14em;\n}\n.ticket__kind {\n  font-size: 11px;\n  opacity: 0.82;\n}\n.ticket__route {\n  display: grid;\n  grid-template-columns: 1fr auto 1fr;\n  align-items: center;\n  gap: 16px;\n  padding: 24px 20px;\n  background: var(--ticket-accent-soft);\n}\n.ticket__place:last-child {\n  text-align: right;\n}\n.ticket__code {\n  font-size: 32px;\n  font-weight: 800;\n  letter-spacing: 0.04em;\n}\n.ticket__name {\n  color: var(--ticket-muted);\n  font-size: 12px;\n}\n.ticket__route-line {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  color: var(--ticket-accent);\n  font-size: 21px;\n}\n.ticket__route-line::before,\n.ticket__route-line::after {\n  content: "";\n  width: 34px;\n  border-top: 1px solid currentColor;\n}\n.ticket__details {\n  display: grid;\n  grid-template-columns: repeat(4, minmax(0, 1fr));\n  gap: 18px;\n  padding: 20px;\n}\n.ticket__field {\n  min-width: 0;\n}\n.ticket__label {\n  margin-bottom: 4px;\n  color: var(--ticket-muted);\n  font-size: 10px;\n  text-transform: uppercase;\n  letter-spacing: 0.08em;\n}\n.ticket__value {\n  overflow-wrap: anywhere;\n  font-size: 14px;\n  font-weight: 700;\n}\n.ticket__footer {\n  display: grid;\n  grid-template-columns: 1fr auto;\n  gap: 20px;\n  align-items: end;\n  padding: 16px 20px;\n  border-top: 1px dashed var(--ticket-line);\n}\n.ticket__number {\n  color: var(--ticket-muted);\n  font:\n    12px ui-monospace,\n    monospace;\n}\n.ticket__barcode {\n  display: flex;\n  height: 38px;\n  align-items: stretch;\n  gap: 2px;\n}\n.ticket__bar {\n  display: block;\n  background: var(--ticket-ink);\n}\n.ticket__notice {\n  position: absolute;\n  right: 10px;\n  bottom: 3px;\n  color: #9aa1a9;\n  font-size: 8px;\n  letter-spacing: 0.12em;\n}\n.ticket--compact .ticket__header {\n  padding: 10px 13px;\n}\n.ticket--compact .ticket__operator {\n  font-size: 15px;\n}\n.ticket--compact .ticket__operator-code,\n.ticket--compact .ticket__kind {\n  font-size: 9px;\n}\n.ticket--compact .ticket__route {\n  gap: 8px;\n  padding: 15px 13px;\n}\n.ticket--compact .ticket__code {\n  font-size: 24px;\n}\n.ticket--compact .ticket__name {\n  font-size: 10px;\n}\n.ticket--compact .ticket__route-line {\n  font-size: 16px;\n}\n.ticket--compact .ticket__route-line::before,\n.ticket--compact .ticket__route-line::after {\n  width: 19px;\n}\n.ticket--compact .ticket__details {\n  gap: 11px 12px;\n  padding: 13px;\n}\n.ticket--compact .ticket__label {\n  font-size: 8px;\n}\n.ticket--compact .ticket__value {\n  font-size: 11px;\n}\n.ticket--compact .ticket__footer {\n  gap: 12px;\n  padding: 10px 13px;\n}\n.ticket--compact .ticket__number {\n  font-size: 9px;\n}\n.ticket--compact .ticket__barcode {\n  height: 25px;\n  gap: 1px;\n}\n.ticket--compact .ticket__notice {\n  font-size: 6px;\n}\n.ticket--flight .ticket__header {\n  padding: 10px 18px;\n}\n.ticket--flight .ticket__route {\n  padding: 14px 18px;\n}\n.ticket--flight .ticket__details {\n  grid-template-columns: repeat(6, minmax(0, 1fr));\n  gap: 10px 18px;\n  padding: 12px 18px;\n}\n.ticket--flight .ticket__footer {\n  padding: 8px 18px;\n}\n.ticket--flight .ticket__barcode {\n  height: 28px;\n}\n.person-avatar {\n  position: relative;\n  width: 56px;\n  height: 64px;\n  overflow: hidden;\n  border-radius: 8px;\n  background: #e5e8ec;\n}\n.person-avatar__head {\n  position: absolute;\n  top: 9px;\n  left: 50%;\n  width: 22px;\n  height: 22px;\n  transform: translateX(-50%);\n  border-radius: 50%;\n  background: #9aa3ad;\n}\n.person-avatar__body {\n  position: absolute;\n  bottom: -11px;\n  left: 50%;\n  width: 48px;\n  height: 43px;\n  transform: translateX(-50%);\n  border-radius: 50% 50% 12px 12px;\n  background: #9aa3ad;\n}\n@media (max-width: 560px) {\n  .ticket__details,\n  .ticket--flight .ticket__details {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n  }\n  .ticket__route {\n    gap: 8px;\n  }\n  .ticket__code {\n    font-size: 25px;\n  }\n  .ticket__route-line::before,\n  .ticket__route-line::after {\n    width: 16px;\n  }\n}\n';
+  const styles$3 = ':host {\n  --ticket-accent: #2463a9;\n  --ticket-accent-soft: #eaf2fb;\n  --ticket-paper: #fff;\n  --ticket-ink: #17202a;\n  --ticket-muted: #69727d;\n  --ticket-line: #d9dee5;\n}\n.ticket {\n  position: relative;\n  width: min(100%, 760px);\n  overflow: hidden;\n  border: 1px solid var(--ticket-line);\n  border-radius: 18px;\n  background: var(--ticket-paper);\n  color: var(--ticket-ink);\n  box-shadow: 0 8px 24px #1f293714;\n}\n.ticket--compact {\n  width: min(100%, 480px);\n  border-radius: 14px;\n}\n.ticket--red {\n  --ticket-accent: #b4232f;\n  --ticket-accent-soft: #fff0f1;\n}\n.ticket--green {\n  --ticket-accent: #167a59;\n  --ticket-accent-soft: #eaf8f2;\n}\n.ticket--gold {\n  --ticket-accent: #8a6418;\n  --ticket-accent-soft: #fff8df;\n}\n.ticket__header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 16px 20px;\n  background: var(--ticket-accent);\n  color: #fff;\n}\n.ticket__operator {\n  font-size: 19px;\n  font-weight: 800;\n}\n.ticket__operator-code {\n  font-size: 12px;\n  letter-spacing: 0.14em;\n}\n.ticket__kind {\n  font-size: 11px;\n  opacity: 0.82;\n}\n.ticket__route {\n  display: grid;\n  grid-template-columns: 1fr auto 1fr;\n  align-items: center;\n  gap: 16px;\n  padding: 24px 20px;\n  background: var(--ticket-accent-soft);\n}\n.ticket__place:last-child {\n  text-align: right;\n}\n.ticket__code {\n  font-size: 32px;\n  font-weight: 800;\n  letter-spacing: 0.04em;\n}\n.ticket__name {\n  color: var(--ticket-muted);\n  font-size: 12px;\n}\n.ticket__route-line {\n  display: flex;\n  align-items: center;\n  gap: 6px;\n  color: var(--ticket-accent);\n  font-size: 21px;\n}\n.ticket__route-line::before,\n.ticket__route-line::after {\n  content: "";\n  width: 34px;\n  border-top: 1px solid currentColor;\n}\n.ticket__details {\n  display: grid;\n  grid-template-columns: repeat(4, minmax(0, 1fr));\n  gap: 18px;\n  padding: 20px;\n}\n.ticket__field {\n  min-width: 0;\n}\n.ticket__label {\n  margin-bottom: 4px;\n  color: var(--ticket-muted);\n  font-size: 10px;\n  text-transform: uppercase;\n  letter-spacing: 0.08em;\n}\n.ticket__value {\n  overflow-wrap: anywhere;\n  font-size: 14px;\n  font-weight: 700;\n}\n.ticket__footer {\n  display: grid;\n  grid-template-columns: 1fr auto;\n  gap: 20px;\n  align-items: end;\n  padding: 16px 20px;\n  border-top: 1px dashed var(--ticket-line);\n}\n.ticket__number {\n  color: var(--ticket-muted);\n  font:\n    12px ui-monospace,\n    monospace;\n}\n.ticket__barcode {\n  display: flex;\n  height: 38px;\n  align-items: stretch;\n  gap: 2px;\n}\n.ticket__bar {\n  display: block;\n  background: var(--ticket-ink);\n}\n.ticket__notice {\n  position: absolute;\n  right: 10px;\n  bottom: 3px;\n  color: #9aa1a9;\n  font-size: 8px;\n  letter-spacing: 0.12em;\n}\n.ticket--compact .ticket__header {\n  padding: 10px 13px;\n}\n.ticket--compact .ticket__operator {\n  font-size: 15px;\n}\n.ticket--compact .ticket__operator-code,\n.ticket--compact .ticket__kind {\n  font-size: 9px;\n}\n.ticket--compact .ticket__route {\n  gap: 8px;\n  padding: 15px 13px;\n}\n.ticket--compact .ticket__code {\n  font-size: 24px;\n}\n.ticket--compact .ticket__name {\n  font-size: 10px;\n}\n.ticket--compact .ticket__route-line {\n  font-size: 16px;\n}\n.ticket--compact .ticket__route-line::before,\n.ticket--compact .ticket__route-line::after {\n  width: 19px;\n}\n.ticket--compact .ticket__details {\n  gap: 11px 12px;\n  padding: 13px;\n}\n.ticket--compact .ticket__label {\n  font-size: 8px;\n}\n.ticket--compact .ticket__value {\n  font-size: 11px;\n}\n.ticket--compact .ticket__footer {\n  gap: 12px;\n  padding: 10px 13px;\n}\n.ticket--compact .ticket__number {\n  font-size: 9px;\n}\n.ticket--compact .ticket__barcode {\n  height: 25px;\n  gap: 1px;\n}\n.ticket--compact .ticket__notice {\n  font-size: 6px;\n}\n.ticket--flight .ticket__header {\n  padding: 10px 18px;\n}\n.ticket--flight .ticket__route {\n  padding: 14px 18px;\n}\n.ticket--flight .ticket__details {\n  grid-template-columns: repeat(6, minmax(0, 1fr));\n  gap: 10px 18px;\n  padding: 12px 18px;\n}\n.ticket--flight .ticket__footer {\n  padding: 8px 18px;\n}\n.ticket--flight .ticket__barcode {\n  height: 28px;\n}\n.person-avatar {\n  position: relative;\n  width: 56px;\n  height: 64px;\n  overflow: hidden;\n  border-radius: 8px;\n  background: #e5e8ec;\n}\n.person-avatar__head {\n  position: absolute;\n  top: 9px;\n  left: 50%;\n  width: 22px;\n  height: 22px;\n  transform: translateX(-50%);\n  border-radius: 50%;\n  background: #9aa3ad;\n}\n.person-avatar__body {\n  position: absolute;\n  bottom: -11px;\n  left: 50%;\n  width: 48px;\n  height: 43px;\n  transform: translateX(-50%);\n  border-radius: 50% 50% 12px 12px;\n  background: #9aa3ad;\n}\n@media (max-width: 560px) {\n  .ticket__details,\n  .ticket--flight .ticket__details {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n  }\n  .ticket__route {\n    gap: 8px;\n  }\n  .ticket__code {\n    font-size: 25px;\n  }\n  .ticket__route-line::before,\n  .ticket__route-line::after {\n    width: 16px;\n  }\n}\n';
   const isPlace = (value) => {
     const p = value;
     return !!p && typeof p.name === "string" && (p.code === void 0 || typeof p.code === "string");
@@ -1074,7 +1150,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     return {
       component: "ticket",
       variant,
-      styles: common + styles$1,
+      styles: common + styles$3,
       validate: isTransportTicket,
       render(props) {
         const sizeClass = variant === "flight" ? "ticket--wide" : "ticket--compact";
@@ -1175,11 +1251,11 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     locationValue: (p) => p.platform,
     routeIcon: "→"
   });
-  const styles = ':host {\n  --id-blue: #244f78;\n  --id-red: #9d303b;\n  --id-paper: #f5f0e6;\n  --id-ink: #19232d;\n  --id-muted: #68737d;\n}\n.identity-card,\n.work-card {\n  position: relative;\n  width: min(100%, 660px);\n  overflow: hidden;\n  border: 1px solid #c9c4b9;\n  border-radius: 16px;\n  background: linear-gradient(135deg, #faf7ef, #e8edf0);\n  color: var(--id-ink);\n  box-shadow: 0 8px 24px #1f29371a;\n}\n.identity-card::after {\n  content: "FICTIONAL · NOVEL UI";\n  position: absolute;\n  top: 48%;\n  left: 18%;\n  transform: rotate(-16deg);\n  color: #8b949e1f;\n  font-size: 38px;\n  font-weight: 800;\n  letter-spacing: 0.08em;\n  pointer-events: none;\n}\n.identity-card {\n  width: min(100%, 480px);\n  border-radius: 12px;\n}\n.identity-card__header,\n.work-card__header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 14px 18px;\n  background: var(--id-blue);\n  color: #fff;\n}\n.identity-card__country,\n.work-card__organization {\n  font-size: 18px;\n  font-weight: 800;\n}\n.identity-card__kind,\n.work-card__kind {\n  font-size: 11px;\n  letter-spacing: 0.1em;\n  opacity: 0.8;\n}\n.identity-card__body {\n  display: grid;\n  grid-template-columns: 1fr 96px;\n  align-items: start;\n  gap: 18px;\n  padding: 18px;\n}\n.identity-card .person-avatar {\n  width: 96px;\n  height: 120px;\n  border: 1px solid #c4cbd1;\n  background: #dbe0e4;\n}\n.identity-card .person-avatar__head {\n  top: 16px;\n  width: 32px;\n  height: 32px;\n  background: #66727d;\n}\n.identity-card .person-avatar__body {\n  bottom: -12px;\n  width: 72px;\n  height: 68px;\n  background: #66727d;\n}\n.identity-card__fields {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 12px 20px;\n}\n.identity-card__field--wide {\n  grid-column: 1/-1;\n}\n.identity-card__label,\n.work-card__label {\n  color: var(--id-muted);\n  font-size: 9px;\n  letter-spacing: 0.08em;\n}\n.identity-card__value,\n.work-card__value {\n  margin-top: 2px;\n  font-weight: 700;\n  overflow-wrap: anywhere;\n}\n.identity-card__footer {\n  display: flex;\n  justify-content: space-between;\n  padding: 12px 18px;\n  border-top: 1px solid #cfd4d7;\n  color: var(--id-muted);\n  font-size: 10px;\n}\n.work-card {\n  display: flex;\n  min-height: 485px;\n  width: min(100%, 340px);\n  flex-direction: column;\n  text-align: center;\n}\n.work-card__header {\n  display: block;\n  padding: 16px 18px;\n}\n.work-card__body {\n  display: grid;\n  flex: 1;\n  align-content: start;\n  justify-items: center;\n  padding: 20px 24px 24px;\n}\n.work-card .person-avatar {\n  width: 114px;\n  height: 124px;\n  border: 1px solid #c4cbd1;\n  border-radius: 8px;\n  background: #dbe0e4;\n}\n.work-card .person-avatar__head {\n  top: 18px;\n  width: 34px;\n  height: 34px;\n  background: #66727d;\n}\n.work-card .person-avatar__body {\n  bottom: -13px;\n  width: 82px;\n  height: 76px;\n  background: #66727d;\n}\n.work-card__name {\n  margin-top: 14px;\n  font-size: 22px;\n  font-weight: 800;\n}\n.work-card__title {\n  color: var(--id-blue);\n  font-size: 14px;\n  font-weight: 700;\n}\n.work-card__details {\n  display: grid;\n  width: 100%;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 16px 18px;\n  margin-top: 26px;\n  padding-top: 20px;\n  border-top: 1px solid #ccd2d7;\n  text-align: left;\n}\n.work-card__footer {\n  padding: 12px;\n  background: #e2e7ea;\n  color: var(--id-muted);\n  font:\n    11px ui-monospace,\n    monospace;\n}\n@media (max-width: 380px) {\n  .identity-card__body {\n    grid-template-columns: 1fr 64px;\n    gap: 13px;\n    padding: 16px;\n  }\n  .identity-card .person-avatar {\n    width: 64px;\n    height: 86px;\n  }\n  .identity-card__fields {\n    grid-template-columns: 1fr;\n  }\n  .identity-card__field--wide {\n    grid-column: auto;\n  }\n  .identity-card::after {\n    font-size: 26px;\n  }\n}\n';
+  const styles$2 = ':host {\n  --id-blue: #244f78;\n  --id-red: #9d303b;\n  --id-paper: #f5f0e6;\n  --id-ink: #19232d;\n  --id-muted: #68737d;\n}\n.identity-card,\n.work-card {\n  position: relative;\n  width: min(100%, 660px);\n  overflow: hidden;\n  border: 1px solid #c9c4b9;\n  border-radius: 16px;\n  background: linear-gradient(135deg, #faf7ef, #e8edf0);\n  color: var(--id-ink);\n  box-shadow: 0 8px 24px #1f29371a;\n}\n.identity-card::after {\n  content: "FICTIONAL · NOVEL UI";\n  position: absolute;\n  top: 48%;\n  left: 18%;\n  transform: rotate(-16deg);\n  color: #8b949e1f;\n  font-size: 38px;\n  font-weight: 800;\n  letter-spacing: 0.08em;\n  pointer-events: none;\n}\n.identity-card {\n  width: min(100%, 480px);\n  border-radius: 12px;\n}\n.identity-card__header,\n.work-card__header {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 14px 18px;\n  background: var(--id-blue);\n  color: #fff;\n}\n.identity-card__country,\n.work-card__organization {\n  font-size: 18px;\n  font-weight: 800;\n}\n.identity-card__kind,\n.work-card__kind {\n  font-size: 11px;\n  letter-spacing: 0.1em;\n  opacity: 0.8;\n}\n.identity-card__body {\n  display: grid;\n  grid-template-columns: 1fr 96px;\n  align-items: start;\n  gap: 18px;\n  padding: 18px;\n}\n.identity-card .person-avatar {\n  width: 96px;\n  height: 120px;\n  border: 1px solid #c4cbd1;\n  background: #dbe0e4;\n}\n.identity-card .person-avatar__head {\n  top: 16px;\n  width: 32px;\n  height: 32px;\n  background: #66727d;\n}\n.identity-card .person-avatar__body {\n  bottom: -12px;\n  width: 72px;\n  height: 68px;\n  background: #66727d;\n}\n.identity-card__fields {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 12px 20px;\n}\n.identity-card__field--wide {\n  grid-column: 1/-1;\n}\n.identity-card__label,\n.work-card__label {\n  color: var(--id-muted);\n  font-size: 9px;\n  letter-spacing: 0.08em;\n}\n.identity-card__value,\n.work-card__value {\n  margin-top: 2px;\n  font-weight: 700;\n  overflow-wrap: anywhere;\n}\n.identity-card__footer {\n  display: flex;\n  justify-content: space-between;\n  padding: 12px 18px;\n  border-top: 1px solid #cfd4d7;\n  color: var(--id-muted);\n  font-size: 10px;\n}\n.work-card {\n  display: flex;\n  min-height: 485px;\n  width: min(100%, 340px);\n  flex-direction: column;\n  text-align: center;\n}\n.work-card__header {\n  display: block;\n  padding: 16px 18px;\n}\n.work-card__body {\n  display: grid;\n  flex: 1;\n  align-content: start;\n  justify-items: center;\n  padding: 20px 24px 24px;\n}\n.work-card .person-avatar {\n  width: 114px;\n  height: 124px;\n  border: 1px solid #c4cbd1;\n  border-radius: 8px;\n  background: #dbe0e4;\n}\n.work-card .person-avatar__head {\n  top: 18px;\n  width: 34px;\n  height: 34px;\n  background: #66727d;\n}\n.work-card .person-avatar__body {\n  bottom: -13px;\n  width: 82px;\n  height: 76px;\n  background: #66727d;\n}\n.work-card__name {\n  margin-top: 14px;\n  font-size: 22px;\n  font-weight: 800;\n}\n.work-card__title {\n  color: var(--id-blue);\n  font-size: 14px;\n  font-weight: 700;\n}\n.work-card__details {\n  display: grid;\n  width: 100%;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 16px 18px;\n  margin-top: 26px;\n  padding-top: 20px;\n  border-top: 1px solid #ccd2d7;\n  text-align: left;\n}\n.work-card__footer {\n  padding: 12px;\n  background: #e2e7ea;\n  color: var(--id-muted);\n  font:\n    11px ui-monospace,\n    monospace;\n}\n@media (max-width: 380px) {\n  .identity-card__body {\n    grid-template-columns: 1fr 64px;\n    gap: 13px;\n    padding: 16px;\n  }\n  .identity-card .person-avatar {\n    width: 64px;\n    height: 86px;\n  }\n  .identity-card__fields {\n    grid-template-columns: 1fr;\n  }\n  .identity-card__field--wide {\n    grid-column: auto;\n  }\n  .identity-card::after {\n    font-size: 26px;\n  }\n}\n';
   const IdentityCardRenderer = {
     component: "document",
     variant: "identity-card",
-    styles: common + styles,
+    styles: common + styles$2,
     validate(value) {
       const p = value;
       return !!p && [p.country, p.fullName, p.idNumber, p.birthDate, p.validUntil].every(
@@ -1225,7 +1301,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  const WorkCardRenderer = { component: "document", variant: "work-card", styles: common + styles, validate(value) {
+  const WorkCardRenderer = { component: "document", variant: "work-card", styles: common + styles$2, validate(value) {
     const p = value;
     return !!p && [p.organization, p.fullName, p.title, p.employeeId].every((x) => typeof x === "string");
   }, render(props) {
@@ -1243,6 +1319,103 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     root.append(header, body, element("footer", "work-card__footer", `ID ${props.employeeId} · FICTIONAL PROP`));
     return root;
   } };
+  const styles$1 = '.police{width:min(100%,760px);padding:30px 38px;border:1px solid #afb8c4;border-radius:3px;background:#fdfdfb;color:#181b20;box-shadow:0 6px 24px #0002;font-family:"Noto Sans CJK KR","Noto Sans CJK JP",system-ui,sans-serif}.police--kr{border-top:7px solid #174d83}.police--jp{border-top:7px double #252525}.police__masthead{display:flex;align-items:center;gap:16px;padding-bottom:15px;border-bottom:2px solid currentColor}.police__mark{display:grid;width:58px;height:58px;place-items:center;border:2px solid currentColor;border-radius:50%;font-family:serif;font-size:27px;font-weight:700}.police--kr .police__mark{color:#174d83}.police__agency{font-size:13px}.police__agency h2{margin:2px 0;font-size:22px}.police__country{color:#66717f;font-size:10px;letter-spacing:.12em}.police__title{margin:25px 0;text-align:center;font-family:serif;font-size:28px;letter-spacing:.08em}.police__meta{display:grid;grid-template-columns:130px 1fr;margin:0;border-top:1px solid #6e7681;border-left:1px solid #6e7681}.police__meta dt,.police__meta dd{min-width:0;margin:0;padding:8px 10px;border-right:1px solid #6e7681;border-bottom:1px solid #6e7681;overflow-wrap:anywhere}.police__meta dt{background:#edf1f4;font-weight:700}.police__section-title{margin:23px 0 7px;padding-left:9px;border-left:4px solid currentColor;font-size:16px}.police__summary,.police__notes{min-height:90px;padding:12px;border:1px solid #a9afb7;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.75}.police__notes{min-height:auto}.police__footer{margin-top:28px;padding-top:9px;border-top:1px solid #a9afb7;color:#727982;font-size:10px;text-align:center;letter-spacing:.15em}@media(max-width:560px){.police{padding:20px 18px}.police__title{font-size:23px}.police__meta{grid-template-columns:95px 1fr}.police__mark{width:48px;height:48px}}\n';
+  const isField = (value) => {
+    const field = value;
+    return !!field && typeof field.label === "string" && typeof field.value === "string";
+  };
+  function validatePolice(value) {
+    const props = value;
+    return !!props && [props.agency, props.division, props.documentTitle, props.caseNumber, props.date, props.summary].every((field) => typeof field === "string") && (props.subject === void 0 || typeof props.subject === "string") && (props.officer === void 0 || typeof props.officer === "string") && (props.notes === void 0 || typeof props.notes === "string") && (props.fields === void 0 || Array.isArray(props.fields) && props.fields.every(isField));
+  }
+  function renderPolice(props, locale) {
+    const labels = locale === "kr" ? { country: "대한민국 · 경찰 문서", case: "사건번호", date: "작성일", subject: "관련자", officer: "담당관", summary: "사건 개요", notes: "비고", footer: "소설용 가상 경찰 문서" } : { country: "日本国 · 警察文書", case: "事件番号", date: "作成日", subject: "関係者", officer: "担当官", summary: "事案概要", notes: "備考", footer: "小説用の架空警察文書" };
+    const root = element("article", `novel-ui police police--${locale}`);
+    const masthead = element("header", "police__masthead");
+    masthead.append(element("div", "police__mark", locale === "kr" ? "경" : "警"));
+    const agency = element("div", "police__agency");
+    agency.append(element("div", "police__country", labels.country), element("h2", "", props.agency), element("div", "", props.division));
+    masthead.append(agency);
+    root.append(masthead, element("h1", "police__title", props.documentTitle));
+    const meta = element("dl", "police__meta");
+    const entries = [
+      { label: labels.case, value: props.caseNumber },
+      { label: labels.date, value: props.date },
+      ...props.subject ? [{ label: labels.subject, value: props.subject }] : [],
+      ...props.officer ? [{ label: labels.officer, value: props.officer }] : [],
+      ...props.fields ?? []
+    ];
+    for (const field of entries) {
+      meta.append(element("dt", "", field.label), element("dd", "", field.value));
+    }
+    root.append(meta, element("h3", "police__section-title", labels.summary), element("div", "police__summary", props.summary));
+    if (props.notes) root.append(element("h3", "police__section-title", labels.notes), element("div", "police__notes", props.notes));
+    root.append(element("footer", "police__footer", labels.footer));
+    return root;
+  }
+  const KoreaPoliceRenderer = {
+    component: "document",
+    variant: "police-kr",
+    styles: common + styles$1,
+    validate: validatePolice,
+    render: (props) => renderPolice(props, "kr")
+  };
+  const JapanPoliceRenderer = {
+    component: "document",
+    variant: "police-jp",
+    styles: common + styles$1,
+    validate: validatePolice,
+    render: (props) => renderPolice(props, "jp")
+  };
+  const styles = '.news{width:min(100%,760px);padding:24px 30px;border:1px solid #d6d6d6;background:#fff;color:#191919;box-shadow:0 7px 24px #00000014;font-family:Georgia,"Noto Serif SC",serif}.news__masthead{display:flex;align-items:end;justify-content:space-between;padding-bottom:10px;border-bottom:3px double #222}.news__publication{font-size:27px;font-weight:800;letter-spacing:-.03em}.news__edition{color:#777;font:9px/1.2 system-ui,sans-serif;letter-spacing:.12em}.news__category{margin-top:18px;color:#9e1f25;font:700 11px/1.2 system-ui,sans-serif;text-transform:uppercase}.news__title{max-width:680px;margin:8px 0 10px;font-size:34px;line-height:1.16;letter-spacing:-.025em}.news__subtitle{margin:0 0 12px;color:#555;font-size:17px;line-height:1.45}.news__byline{padding:9px 0;border-top:1px solid #ddd;border-bottom:1px solid #ddd;color:#666;font:11px/1.3 system-ui,sans-serif}.news__media{margin:18px 0}.news__media img,.news__placeholder{display:grid;width:100%;max-height:390px;min-height:220px;object-fit:cover;place-items:center;background:#e9e9e6;color:#777}.news__media figcaption{margin-top:5px;color:#777;font:10px/1.35 system-ui,sans-serif}.news__body{font-size:16px;line-height:1.85}.news__body p{margin:0 0 1em;white-space:pre-wrap;overflow-wrap:anywhere}.news__tags{padding-top:12px;border-top:1px solid #ddd;color:#8c2529;font:12px/1.4 system-ui,sans-serif}@media(max-width:560px){.news{padding:18px}.news__publication{font-size:22px}.news__edition{display:none}.news__title{font-size:27px}.news__media img,.news__placeholder{min-height:180px}}\n';
+  function safeUrl(value) {
+    if (!value) return;
+    try {
+      const url = new URL(value, location.href);
+      if (["http:", "https:"].includes(url.protocol)) return url.href;
+    } catch {
+      return;
+    }
+  }
+  const NewsRenderer = {
+    component: "article",
+    variant: "news",
+    styles: common + styles,
+    validate(value) {
+      const props = value;
+      return !!props && [props.publication, props.title, props.publishedAt].every((field) => typeof field === "string") && Array.isArray(props.paragraphs) && props.paragraphs.length > 0 && props.paragraphs.every((paragraph) => typeof paragraph === "string") && [props.category, props.subtitle, props.author, props.image, props.imageAlt, props.caption].every((field) => field === void 0 || typeof field === "string") && (props.tags === void 0 || Array.isArray(props.tags) && props.tags.every((tag) => typeof tag === "string"));
+    },
+    render(props) {
+      var _a;
+      const root = element("article", "novel-ui news");
+      const masthead = element("header", "news__masthead");
+      masthead.append(element("div", "news__publication", props.publication), element("div", "news__edition", "FICTIONAL NEWS · DIGITAL EDITION"));
+      root.append(masthead);
+      if (props.category) root.append(element("div", "news__category", props.category));
+      root.append(element("h1", "news__title", props.title));
+      if (props.subtitle) root.append(element("p", "news__subtitle", props.subtitle));
+      root.append(element("div", "news__byline", [props.author, props.publishedAt].filter(Boolean).join(" · ")));
+      const imageUrl = safeUrl(props.image);
+      if (imageUrl || props.imageAlt) {
+        const media = element("figure", "news__media");
+        if (imageUrl) {
+          const image = element("img");
+          image.src = imageUrl;
+          image.alt = props.imageAlt ?? "新闻配图";
+          image.loading = "lazy";
+          image.referrerPolicy = "no-referrer";
+          media.append(image);
+        } else media.append(element("div", "news__placeholder", props.imageAlt ?? "新闻配图"));
+        if (props.caption) media.append(element("figcaption", "", props.caption));
+        root.append(media);
+      }
+      const body = element("div", "news__body");
+      props.paragraphs.forEach((paragraph) => body.append(element("p", "", paragraph)));
+      root.append(body);
+      if ((_a = props.tags) == null ? void 0 : _a.length) root.append(element("div", "news__tags", props.tags.map((tag) => `#${tag}`).join("  ")));
+      return root;
+    }
+  };
   function resolveAdapter() {
     return [new ChatGPTAdapter(), new GeminiAdapter()].find((adapter) => adapter.match());
   }
@@ -1254,6 +1427,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     const registry = new RendererRegistry();
     registry.register(KakaoRenderer);
     registry.register(IMessageRenderer);
+    registry.register(LockscreenRenderer);
     registry.register(MedicalRenderer);
     registry.register(XPostRenderer);
     registry.register(XFeedRenderer);
@@ -1269,9 +1443,13 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     registry.register(FiveChRenderer);
     registry.register(WeiboRenderer);
     registry.register(InstagramRenderer);
+    registry.register(InstagramDmRenderer);
     registry.register(OnlyFansRenderer);
     registry.register(PornhubRenderer);
     registry.register(YouTubeRenderer);
+    registry.register(KoreaPoliceRenderer);
+    registry.register(JapanPoliceRenderer);
+    registry.register(NewsRenderer);
     new NovelUIRuntime(adapter, registry, localStorage.getItem("novel-ui-debug") === "true").start();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bootstrap, { once: true });

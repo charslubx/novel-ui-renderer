@@ -13,7 +13,7 @@
 6. JSON 必须严格合法：使用双引号、不得有注释、不得有尾随逗号、不得输出 `undefined`。
 7. 一个回答可以包含多个 Novel UI 区块，区块之间可以穿插小说正文。
 8. 必须等 JSON 完整后再输出结束标记。不要输出半截区块。
-9. 不要编造未支持的 `component:variant`。可选键只能使用本文列出的 20 种。
+9. 不要编造未支持的 `component:variant`。可选键只能使用本文列出的 25 种。
 10. 所有内容仅作为虚构小说道具。票号、证件号、机构和运营方优先使用虚构信息，避免复制真实品牌标识。
 11. 不要在字段中输出 HTML、CSS、JavaScript、事件属性或脚本。正文只填纯文本。
 12. 所有头像位置统一显示脚本内置的默认人物 SVG；即使旧 Schema 带有 `avatar` URL 也会忽略。帖子图片、媒体图片和视频缩略图仍可使用 `http`/`https` URL，没有可靠 URL 时省略并显示占位内容。
@@ -38,6 +38,7 @@
 |---|---|
 | Kakao 风格对话 | `chat:kakao` |
 | iPhone 短信风格对话 | `chat:imessage` |
+| 手机锁屏通知 | `phone:lockscreen` |
 | 医疗检查报告 | `document:medical` |
 | 单条 X 帖子 | `social:x-post` |
 | X 信息流 | `social:x-feed` |
@@ -45,8 +46,10 @@
 | X 趋势页 | `social:x-trends` |
 | theqoo 韩国论坛 | `article:theqoo` |
 | 日本匿名论坛 5ch | `article:5ch` |
+| 新闻报道 | `article:news` |
 | 微博帖子 | `social:weibo-post` |
 | Instagram 帖子 | `social:instagram-post` |
+| Instagram 私信 | `social:instagram-dm` |
 | OnlyFans 创作者帖子 | `social:onlyfans-post` |
 | YouTube 视频页 | `video:youtube` |
 | Pornhub 视频页 | `video:pornhub` |
@@ -56,6 +59,8 @@
 | 巴士票 | `ticket:bus` |
 | 虚构身份证 | `document:identity-card` |
 | 工作牌 | `document:work-card` |
+| 韩国警方文件 | `document:police-kr` |
+| 日本警方文件 | `document:police-jp` |
 
 ## 三、字段与示例
 
@@ -211,6 +216,46 @@
     {"schema":"novel-ui","version":"1.0","component":"document","variant":"work-card","props":{"organization":"Hanul Airways","department":"Flight Operations","fullName":"徐以炫","title":"Captain","employeeId":"HA-FO-0713","validUntil":"2028-12-31","accessLevel":"AIRCREW"}}
     [[/novel-ui]]
 
+### 21. 手机锁屏通知 `phone:lockscreen`
+
+必填：`time`、`date`、`notifications`。可选：`owner`、`battery`；`battery` 必须为 0–100。每条通知必填 `id`、`app`、`title`、`text`，可选 `time`。适合表现新短信、未接来电和应用提醒；不要把整段聊天记录塞进一条通知。
+
+    [[novel-ui]]
+    {"schema":"novel-ui","version":"1.0","component":"phone","variant":"lockscreen","props":{"time":"23:47","date":"9月15日 星期二","owner":"徐以炫","battery":62,"notifications":[{"id":"n1","app":"信息","title":"凑崎纱夏","text":"报告出来以后告诉我，我还没睡。","time":"现在"},{"id":"n2","app":"电话","title":"未接来电","text":"凑崎纱夏（2次）","time":"3分钟前"}]}}
+    [[/novel-ui]]
+
+### 22. Instagram 私信 `social:instagram-dm`
+
+必填：`title`、`messages`。可选：`handle`、`active`。每条消息必填 `id`、`sender`、`side`、`text`；`side` 只能为 `left` 或 `right`；可选 `time`、`status`。`status` 只在右侧消息下显示。头像由 Renderer 自动生成。
+
+    [[novel-ui]]
+    {"schema":"novel-ui","version":"1.0","component":"social","variant":"instagram-dm","props":{"title":"Sana","handle":"@sasha.m_","active":"刚刚在线","messages":[{"id":"d1","sender":"sana","side":"left","text":"照片不要发出去。","time":"23:41"},{"id":"d2","sender":"yihyun","side":"right","text":"知道了。已经只保存在本地。","time":"23:42","status":"已读"}]}}
+    [[/novel-ui]]
+
+### 23–24. 韩国/日本警方文件 `document:police-kr|police-jp`
+
+两者共用数据结构。必填：`agency`、`division`、`documentTitle`、`caseNumber`、`date`、`summary`。可选：`subject`、`officer`、`fields`、`notes`；`fields` 每项必须包含 `label`、`value`。必须使用虚构机关、虚构案号和虚构标识，不能复制真实警徽、公章、二维码或可用于冒充官方文件的认证元素。
+
+韩国警方文件：
+
+    [[novel-ui]]
+    {"schema":"novel-ui","version":"1.0","component":"document","variant":"police-kr","props":{"agency":"한울광역경찰청","division":"형사과 강력1팀","documentTitle":"사건 경위 보고서","caseNumber":"2026-형제-0915","date":"2026.09.15","subject":"서이현","officer":"경위 김도윤","fields":[{"label":"발생 장소","value":"서울시 한울구 중앙로 18"},{"label":"사건 구분","value":"참고인 조사"}],"summary":"2026년 9월 15일 22시 40분경 신고를 접수하였다. 현장 확인 결과 추가 위험 요소는 발견되지 않았다.","notes":"본 문서는 소설 속 가상 사건을 위한 기록이다."}}
+    [[/novel-ui]]
+
+日本警方文件：
+
+    [[novel-ui]]
+    {"schema":"novel-ui","version":"1.0","component":"document","variant":"police-jp","props":{"agency":"東都警視庁","division":"湾岸警察署 刑事課","documentTitle":"捜査報告書","caseNumber":"東湾刑第2026-0915号","date":"令和8年9月15日","subject":"湊崎紗夏","officer":"巡査部長 佐藤直樹","fields":[{"label":"発生場所","value":"東京都東都区海岸三丁目"},{"label":"取扱区分","value":"参考人聴取"}],"summary":"同日午後十時四十分頃、通報を受理した。現場確認の結果、緊急性のある危険物は認められなかった。","notes":"本書面は小説内で使用する架空の文書である。"}}
+    [[/novel-ui]]
+
+### 25. 新闻页面 `article:news`
+
+必填：`publication`、`title`、`publishedAt`、`paragraphs`；`paragraphs` 必须是至少包含一段正文的字符串数组。可选：`category`、`subtitle`、`author`、`image`、`imageAlt`、`caption`、`tags`。`image` 只允许 HTTP/HTTPS URL；没有可靠图片时使用 `imageAlt` 生成占位图片区。
+
+    [[novel-ui]]
+    {"schema":"novel-ui","version":"1.0","component":"article","variant":"news","props":{"publication":"The Hanul Daily","category":"社会","title":"深夜の病院前に報道陣、関係者は沈黙","subtitle":"目撃情報がSNSで拡散、病院側は患者情報の保護を要請","author":"社会部・李知恩","publishedAt":"2026-09-15 23:58","imageAlt":"雨の中の病院正面玄関","caption":"15日夜、報道陣が集まった病院前。","paragraphs":["15日午後、ソウル市内の病院前に複数の報道関係者が集まった。","病院側は個人情報に関わる質問への回答を控え、来院者の通行を妨げないよう呼びかけた。"],"tags":["社会","病院","SNS"]}}
+    [[/novel-ui]]
+
 ## 四、正文中混合多个组件
 
 正文与区块可以自然交错：
@@ -233,7 +278,7 @@
 - 是否没有 Markdown 代码围栏？
 - JSON 是否可以被 `JSON.parse`？
 - `schema`、`version`、`component`、`variant`、`props` 是否齐全？
-- `component:variant` 是否属于当前 20 种？
+- `component:variant` 是否属于当前 25 种？
 - 每个必填字段是否存在且类型正确？
 - 数字统计是否使用数字而非带逗号的字符串？
 - `side`、`type`、`theme`、`activeTab` 是否使用允许值？
