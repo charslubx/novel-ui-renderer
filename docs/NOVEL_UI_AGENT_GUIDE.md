@@ -13,7 +13,7 @@
 6. JSON 必须严格合法：使用双引号、不得有注释、不得有尾随逗号、不得输出 `undefined`。
 7. 一个回答可以包含多个 Novel UI 区块，区块之间可以穿插小说正文。
 8. 必须等 JSON 完整后再输出结束标记。不要输出半截区块。
-9. 不要编造未支持的 `component:variant`。可选键只能使用本文列出的 19 种。
+9. 不要编造未支持的 `component:variant`。可选键只能使用本文列出的 20 种。
 10. 所有内容仅作为虚构小说道具。票号、证件号、机构和运营方优先使用虚构信息，避免复制真实品牌标识。
 11. 不要在字段中输出 HTML、CSS、JavaScript、事件属性或脚本。正文只填纯文本。
 12. 所有头像位置统一显示脚本内置的默认人物 SVG；即使旧 Schema 带有 `avatar` URL 也会忽略。帖子图片、媒体图片和视频缩略图仍可使用 `http`/`https` URL，没有可靠 URL 时省略并显示占位内容。
@@ -37,6 +37,7 @@
 | 场景 | `component:variant` |
 |---|---|
 | Kakao 风格对话 | `chat:kakao` |
+| iPhone 短信风格对话 | `chat:imessage` |
 | 医疗检查报告 | `document:medical` |
 | 单条 X 帖子 | `social:x-post` |
 | X 信息流 | `social:x-feed` |
@@ -66,7 +67,15 @@
     {"schema":"novel-ui","version":"1.0","component":"chat","variant":"kakao","props":{"title":"凑崎纱夏","date":"2026-09-13","messages":[{"id":"m1","sender":"sana","name":"凑崎纱夏","side":"left","text":"你在哪里？","time":"23:41","read":null},{"id":"m2","sender":"yihyun","name":"徐以炫","side":"right","text":"医院。","time":"23:43","read":1}]}}
     [[/novel-ui]]
 
-### 2. 医疗报告 `document:medical`
+### 2. iPhone 短信风格对话 `chat:imessage`
+
+必填：`title`、`messages`。可选：`subtitle`、`date`。每条消息必填 `id`、`sender`、`side`、`text`；`side` 只能是 `left` 或 `right`。可选：`time`、`status`。`status`（例如“已送达”“已读”）只在右侧消息下显示。头像由 Renderer 自动生成，不需要提供头像 URL。
+
+    [[novel-ui]]
+    {"schema":"novel-ui","version":"1.0","component":"chat","variant":"imessage","props":{"title":"徐以炫","subtitle":"手机号码","date":"2026年9月15日 23:41","messages":[{"id":"m1","sender":"yihyun","side":"left","text":"到家了吗？","time":"23:41"},{"id":"m2","sender":"sana","side":"right","text":"刚到。你还在医院？","time":"23:42","status":"已送达"},{"id":"m3","sender":"yihyun","side":"left","text":"嗯，报告还没有出来。长消息也会在气泡里自动换行。","time":"23:44"},{"id":"m4","sender":"sana","side":"right","text":"我过去找你。","time":"23:45","status":"已读"}]}}
+    [[/novel-ui]]
+
+### 3. 医疗报告 `document:medical`
 
 必填：`hospital`、`department`、`patient`、`reportTitle`、`fields`、`findings`。`fields` 每项必须有 `label`、`value`，长字段可设置 `wide:true`。
 
@@ -74,7 +83,7 @@
     {"schema":"novel-ui","version":"1.0","component":"document","variant":"medical","props":{"hospital":"Seoul National University Hospital","department":"Thoracic Surgery","patient":"徐以炫","reportTitle":"CT Examination Report","fields":[{"label":"Date","value":"2026-09-13"},{"label":"Examination","value":"Chest CT Plain Scan"},{"label":"Clinical History","value":"Previous left thoracic trauma and surgery, chronic recurrent pain","wide":true}],"findings":"左肺下叶术后纤维性改变，未见明显活动性病变。"}}
     [[/novel-ui]]
 
-### 3. 单条 X 帖子 `social:x-post`
+### 4. 单条 X 帖子 `social:x-post`
 
 必填：`displayName`、`handle`、`text`、`timestamp`。可选：`id`、`avatar`、`verified`、`translatedFrom`、`translationLabel`、`media`、`replies`、`reposts`、`likes`、`views`。媒体 `type` 只能是 `image` 或 `link`。
 
@@ -82,7 +91,7 @@
     {"schema":"novel-ui","version":"1.0","component":"social","variant":"x-post","props":{"displayName":"Sasha M.","handle":"sasha_m","verified":true,"text":"舞滨的雨比预想中更冷。","timestamp":"39分","translatedFrom":"英语","media":[{"type":"image","alt":"雨中的排队现场"}],"replies":218,"reposts":906,"likes":4201,"views":128000}}
     [[/novel-ui]]
 
-### 4. X 信息流 `social:x-feed`
+### 5. X 信息流 `social:x-feed`
 
 必填：`posts`，其中每项遵循 `social:x-post` 的字段规则。可选：`title`、`activeTab`；`activeTab` 只能为 `for-you` 或 `following`。
 
@@ -90,7 +99,7 @@
     {"schema":"novel-ui","version":"1.0","component":"social","variant":"x-feed","props":{"title":"首页","activeTab":"for-you","posts":[{"id":"p1","displayName":"lmaood","handle":"wh0y0uf0ll0w","timestamp":"14小时","text":"今天感觉好累啊。","replies":8,"reposts":218,"likes":444,"views":5600},{"id":"p2","displayName":"눈제비","handle":"noonjebi0512","verified":true,"timestamp":"15小时","text":"机场照片看起来像是和好了。","likes":26,"views":817}]}}
     [[/novel-ui]]
 
-### 5. X 通知 `social:x-notifications`
+### 6. X 通知 `social:x-notifications`
 
 必填：`notifications`。每条通知必填 `id`、`displayName`、`timestamp`、`text`；可选 `type`、`handle`、`avatar`、`translatedFrom`。`type` 只能为 `post`、`mention` 或 `verified`。`activeTab` 可为 `all`、`mentions` 或 `verified`。
 
@@ -98,7 +107,7 @@
     {"schema":"novel-ui","version":"1.0","component":"social","variant":"x-notifications","props":{"activeTab":"all","notifications":[{"id":"n1","type":"mention","displayName":"F*","timestamp":"39分","translatedFrom":"英语","text":"那些剪刀石头布到底是怎么回事 😭"}]}}
     [[/novel-ui]]
 
-### 6. X 趋势 `social:x-trends`
+### 7. X 趋势 `social:x-trends`
 
 必填：`trends`。每项必填 `id`、`category`、`title`，可选非负数 `posts`。`activeTab` 可为 `explore`、`trending`、`news`、`sports`、`entertainment`。
 
@@ -106,7 +115,7 @@
     {"schema":"novel-ui","version":"1.0","component":"social","variant":"x-trends","props":{"searchPlaceholder":"搜索","activeTab":"explore","trends":[{"id":"t1","category":"韩国 的趋势","title":"舞滨限定商品","posts":12500},{"id":"t2","category":"娱乐 · 热门","title":"机场照片"}]}}
     [[/novel-ui]]
 
-### 7. theqoo 论坛 `article:theqoo`
+### 8. theqoo 论坛 `article:theqoo`
 
 必填：`title`、`date`、`content`。可选：`category`、`author`、`views`、`comments`。评论必填 `id`、`author`、`text`，可选 `time`、`likes`。
 
@@ -114,7 +123,7 @@
     {"schema":"novel-ui","version":"1.0","component":"article","variant":"theqoo","props":{"category":"스퀘어","title":"지금 실시간으로 난리 난 마이하마 한정판","date":"2026.09.13 06:10","views":18244,"content":"새벽부터 줄이 끝도 없이 이어지고 있음.","comments":[{"id":"1","author":"무명의 더쿠","text":"비까지 오는데 사람이 정말 많다","time":"06:12","likes":31}]}}
     [[/novel-ui]]
 
-### 8. 日本匿名论坛 5ch `article:5ch`
+### 9. 日本匿名论坛 5ch `article:5ch`
 
 必填：`title`、`posts`。可选：`board`、`threadId`。每条帖子必填正整数 `number`、`name`、`timestamp`、`text`，可选 `id`。匿名用户名通常使用“名無しさん”或具体板块的默认匿名名；回复引用直接在正文中写 `>>帖子编号`。
 
@@ -122,7 +131,7 @@
     {"schema":"novel-ui","version":"1.0","component":"article","variant":"5ch","props":{"board":"芸能・音楽・スポーツ ニュース速報+","title":"空港で目撃された二人について語るスレ","threadId":"1726204821","posts":[{"number":1,"name":"名無しさん＠恐縮です","timestamp":"2026/09/13(日) 18:42:11.03","id":"Ab3xYz9Q0","text":"さっき空港で見かけた。二人とも普通に話してた。"},{"number":2,"name":"名無しさん＠恐縮です","timestamp":"2026/09/13(日) 18:43:07.51","id":"Km8pL2vR0","text":">>1\n写真は？"},{"number":3,"name":"名無しさん＠恐縮です","timestamp":"2026/09/13(日) 18:44:29.88","id":"Ab3xYz9Q0","text":"遠すぎて撮れなかった。スタッフも一緒だった。"}]}}
     [[/novel-ui]]
 
-### 9. 微博帖子 `social:weibo-post`
+### 10. 微博帖子 `social:weibo-post`
 
 必填：`displayName`、`timestamp`、`text`。可选：`handle`、`verified`、`source`、`reposts`、`comments`、`likes`。`comments` 可为旧版非负评论总数，也可为评论数组；评论项必填 `id`、`displayName`、`text`，可选 `handle`、`timestamp`、`likes`。未提供或数组为空时不显示评论区。
 
@@ -130,7 +139,7 @@
     {"schema":"novel-ui","version":"1.0","component":"social","variant":"weibo-post","props":{"displayName":"首尔夜航","handle":"@seoul_night","verified":true,"timestamp":"2026-09-13 23:48","source":"iPhone客户端","text":"医院走廊的灯直到深夜仍然亮着。","reposts":126,"comments":308,"likes":2401}}
     [[/novel-ui]]
 
-### 10. Instagram 帖子 `social:instagram-post`
+### 11. Instagram 帖子 `social:instagram-post`
 
 必填：`username`、`text`、`timestamp`。可选：`displayName`、`avatar`、`verified`、`location`、`image`、`imageAlt`、`likes`、`comments`。
 
@@ -138,7 +147,7 @@
     {"schema":"novel-ui","version":"1.0","component":"social","variant":"instagram-post","props":{"username":"seoul_night","verified":true,"location":"Seoul","imageAlt":"深夜医院走廊","text":"凌晨以后，走廊终于安静下来。","timestamp":"2小时前","likes":2401,"comments":86}}
     [[/novel-ui]]
 
-### 11. OnlyFans 创作者帖子 `social:onlyfans-post`
+### 12. OnlyFans 创作者帖子 `social:onlyfans-post`
 
 必填：`creator`、`handle`、`timestamp`、`text`。可选：`verified`、`avatar`、`media`、`mediaAlt`、`likes`、`comments`、`subscribed`、`subscriptionPrice`。`comments` 可沿用旧版非负评论总数，或传入评论数组；数组中的每项必填 `id`、`displayName`、`text`，可选 `handle`、`timestamp`、`likes`。
 
@@ -146,7 +155,7 @@
     {"schema":"novel-ui","version":"1.0","component":"social","variant":"onlyfans-post","props":{"creator":"Sasha M.","handle":"@sasha_m","verified":true,"timestamp":"15分钟前","text":"新的一组后台花絮已经上传。","mediaAlt":"后台拍摄花絮","likes":1820,"comments":94,"subscribed":true}}
     [[/novel-ui]]
 
-### 12–13. 视频页 `video:youtube|pornhub`
+### 13–14. 视频页 `video:youtube|pornhub`
 
 两者共用字段。必填：`title`、`channel`、`duration`、`views`、`uploaded`。可选：`verified`、`thumbnail`、`thumbnailAlt`、`description`、`likes`、`subscribers`、`category`、`comments`。评论数组中的每项必填 `id`、`displayName`、`text`，可选 `handle`、`timestamp`、`likes`；没有评论时省略 `comments`，页面不会显示空评论区。
 
@@ -158,7 +167,7 @@
     {"schema":"novel-ui","version":"1.0","component":"video","variant":"pornhub","props":{"title":"Private studio behind-the-scenes interview","channel":"Studio Archive","verified":true,"thumbnailAlt":"摄影棚采访画面","duration":"18:32","views":"2.4M","uploaded":"2 days ago","likes":18400,"category":"Behind the Scenes","description":"Fictional video page used as a story prop."}}
     [[/novel-ui]]
 
-### 14–17. 交通票 `ticket:flight|ferry|rail|bus`
+### 15–18. 交通票 `ticket:flight|ferry|rail|bus`
 
 四类交通票共用字段。必填：`operator`、`ticketNumber`、`passenger`、`origin`、`destination`、`date`、`departure`、`serviceNumber`。`origin`/`destination` 必须有 `name`，可选 `code`。通用可选：`operatorCode`、`theme`、`arrival`、`seat`、`travelClass`、`boardingTime`、`terminal`、`duration`。`theme` 只能为 `blue`、`red`、`green`、`gold`。
 
@@ -186,7 +195,7 @@
     {"schema":"novel-ui","version":"1.0","component":"ticket","variant":"bus","props":{"operator":"Seoul–Sokcho Express","operatorCode":"SSE","theme":"green","ticketNumber":"SSE-130944","passenger":"凑崎纱夏","origin":{"code":"SEL","name":"Seoul Express Bus Terminal"},"destination":{"code":"SCH","name":"Sokcho Express Bus Terminal"},"date":"2026-09-13","departure":"09:40","arrival":"12:10","serviceNumber":"BUS 118","travelClass":"Premium","seat":"07","platform":"14","duration":"2h 30m"}}
     [[/novel-ui]]
 
-### 18. 虚构身份证 `document:identity-card`
+### 19. 虚构身份证 `document:identity-card`
 
 必填：`country`、`fullName`、`idNumber`、`birthDate`、`validUntil`。可选：`documentName`、`sex`、`nationality`、`validFrom`、`authority`。头像由 Renderer 自动生成，不需要提供头像 URL。
 
@@ -194,7 +203,7 @@
     {"schema":"novel-ui","version":"1.0","component":"document","variant":"identity-card","props":{"country":"Republic of Haneul","documentName":"NATIONAL IDENTITY CARD","fullName":"徐以炫","idNumber":"HY-990413-7•••••","birthDate":"1999-04-13","sex":"F","nationality":"HANEUL","validFrom":"2024-04-13","validUntil":"2034-04-12","authority":"Haneul Civil Registry"}}
     [[/novel-ui]]
 
-### 19. 工作牌 `document:work-card`
+### 20. 工作牌 `document:work-card`
 
 必填：`organization`、`fullName`、`title`、`employeeId`。可选：`department`、`validUntil`、`accessLevel`。头像由 Renderer 自动生成，不需要提供头像 URL。
 
@@ -224,7 +233,7 @@
 - 是否没有 Markdown 代码围栏？
 - JSON 是否可以被 `JSON.parse`？
 - `schema`、`version`、`component`、`variant`、`props` 是否齐全？
-- `component:variant` 是否属于当前 19 种？
+- `component:variant` 是否属于当前 20 种？
 - 每个必填字段是否存在且类型正确？
 - 数字统计是否使用数字而非带逗号的字符串？
 - `side`、`type`、`theme`、`activeTab` 是否使用允许值？

@@ -4,6 +4,7 @@ import type { SiteAdapter } from "./adapters/site-adapter";
 import { NovelUIRuntime } from "./core/observer";
 import { RendererRegistry } from "./core/renderer-registry";
 import { KakaoRenderer } from "./renderers/chat/kakao";
+import { IMessageRenderer } from "./renderers/chat/imessage";
 import { MedicalRenderer } from "./renderers/document/medical";
 import { TheqooRenderer } from "./renderers/article/theqoo";
 import { FiveChRenderer } from "./renderers/article/fivech";
@@ -28,6 +29,7 @@ function bootstrap() {
   const adapter=resolveAdapter(); if(!adapter) return;
   const registry=new RendererRegistry();
   registry.register(KakaoRenderer);
+  registry.register(IMessageRenderer);
   registry.register(MedicalRenderer);
   registry.register(XPostRenderer);
   registry.register(XFeedRenderer);

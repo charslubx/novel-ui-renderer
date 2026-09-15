@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Novel UI Renderer
 // @namespace    novel-ui
-// @version      0.4.5
+// @version      0.5.0
 // @description  Render structured Novel UI blocks inside AI chat websites
 // @match        https://chatgpt.com/*
 // @match        https://gemini.google.com/*
@@ -255,15 +255,15 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     return node;
   }
   const common = ':host {\n  --novel-font-size: 14px;\n  --novel-radius: 12px;\n  --novel-spacing: 8px;\n  color: #202124;\n  font:\n    var(--novel-font-size)/1.45 system-ui,\n    -apple-system,\n    "Segoe UI",\n    sans-serif;\n}\n*,\n*::before,\n*::after {\n  box-sizing: border-box;\n}\n.novel-ui {\n  margin: 16px 0;\n  overflow: hidden;\n}\n.novel-default-avatar{display:grid;place-items:center;overflow:hidden;color:#737373}.novel-default-avatar svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}\n.fallback {\n  padding: 12px;\n  border: 1px dashed #d97706;\n  border-radius: var(--novel-radius);\n  color: #92400e;\n  background: #fffbeb;\n}\n.source-toggle {\n  margin: 8px 0 0;\n  border: 0;\n  background: transparent;\n  color: #64748b;\n  cursor: pointer;\n  font: inherit;\n  font-size: 12px;\n}\n.source {\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n  padding: 10px;\n  background: #111827;\n  color: #e5e7eb;\n  border-radius: 8px;\n  font:\n    12px/1.45 ui-monospace,\n    monospace;\n}\n';
-  const styles$a = ".kakao { max-width: 430px; border-radius: 18px; background: #b9ced9; box-shadow: 0 10px 30px #0f172a20; }\n.kakao__header { padding: 14px 18px; background: #ffffffde; font-weight: 700; text-align: center; }\n.kakao__date { width: max-content; margin: 12px auto; padding: 4px 10px; border-radius: 999px; color: #fff; background: #607d8b99; font-size: 11px; }\n.kakao__messages { display: grid; gap: 10px; padding: 4px 14px 18px; }\n.message { display: flex; flex-direction: column; max-width: 78%; }\n.message--right { justify-self: end; align-items: end; }\n.message--left { justify-self: start; align-items: start; }\n.message__name { margin: 0 4px 3px; font-size: 11px; color: #475569; }\n.message__line { display: flex; align-items: end; gap: 5px; }\n.message--right .message__line { flex-direction: row-reverse; }\n.message__bubble { padding: 9px 12px; border-radius: 13px; background: #fff; white-space: pre-wrap; overflow-wrap: anywhere; }\n.message--right .message__bubble { background: #fee500; }\n.message__meta { display: grid; justify-items: end; color: #475569; font-size: 10px; white-space: nowrap; }\n.message__read { color: #8a6d00; }\n";
-  const isMessage = (x) => !!x && typeof x === "object" && typeof x.id === "string" && typeof x.sender === "string" && ["left", "right"].includes(x.side) && typeof x.text === "string";
+  const styles$b = ".kakao { max-width: 430px; border-radius: 18px; background: #b9ced9; box-shadow: 0 10px 30px #0f172a20; }\n.kakao__header { padding: 14px 18px; background: #ffffffde; font-weight: 700; text-align: center; }\n.kakao__date { width: max-content; margin: 12px auto; padding: 4px 10px; border-radius: 999px; color: #fff; background: #607d8b99; font-size: 11px; }\n.kakao__messages { display: grid; gap: 10px; padding: 4px 14px 18px; }\n.message { display: flex; flex-direction: column; max-width: 78%; }\n.message--right { justify-self: end; align-items: end; }\n.message--left { justify-self: start; align-items: start; }\n.message__name { margin: 0 4px 3px; font-size: 11px; color: #475569; }\n.message__line { display: flex; align-items: end; gap: 5px; }\n.message--right .message__line { flex-direction: row-reverse; }\n.message__bubble { padding: 9px 12px; border-radius: 13px; background: #fff; white-space: pre-wrap; overflow-wrap: anywhere; }\n.message--right .message__bubble { background: #fee500; }\n.message__meta { display: grid; justify-items: end; color: #475569; font-size: 10px; white-space: nowrap; }\n.message__read { color: #8a6d00; }\n";
+  const isMessage$1 = (x) => !!x && typeof x === "object" && typeof x.id === "string" && typeof x.sender === "string" && ["left", "right"].includes(x.side) && typeof x.text === "string";
   const KakaoRenderer = {
     component: "chat",
     variant: "kakao",
-    styles: common + styles$a,
+    styles: common + styles$b,
     validate(value) {
       const p = value;
-      return !!p && typeof p.title === "string" && Array.isArray(p.messages) && p.messages.every(isMessage);
+      return !!p && typeof p.title === "string" && Array.isArray(p.messages) && p.messages.every(isMessage$1);
     },
     render(props) {
       const root = element("section", "novel-ui kakao");
@@ -283,6 +283,67 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
         messages.append(row);
       }
       root.append(messages);
+      return root;
+    }
+  };
+  function renderDefaultAvatar(className = "default-avatar", label = "默认头像") {
+    const avatar2 = element("div", `${className} novel-default-avatar`);
+    avatar2.setAttribute("role", "img");
+    avatar2.setAttribute("aria-label", label);
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 64 64");
+    svg.setAttribute("aria-hidden", "true");
+    const head = document.createElementNS(svg.namespaceURI, "circle");
+    head.setAttribute("cx", "32");
+    head.setAttribute("cy", "23");
+    head.setAttribute("r", "10");
+    const shoulders = document.createElementNS(svg.namespaceURI, "path");
+    shoulders.setAttribute("d", "M14 51c2-11 9-17 18-17s16 6 18 17");
+    svg.append(head, shoulders);
+    avatar2.append(svg);
+    return avatar2;
+  }
+  function renderDefaultPersonAvatar(className = "person-avatar") {
+    return renderDefaultAvatar(className, "默认人物头像");
+  }
+  const styles$a = ':host{--sms-blue:#0a84ff;--sms-left:#e9e9eb;--sms-text:#111;--sms-muted:#8e8e93}.imessage{width:min(100%,430px);overflow:hidden;border:1px solid #d7d7dc;border-radius:22px;background:#fff;color:var(--sms-text);box-shadow:0 8px 24px #00000014;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif}.imessage__header{display:grid;grid-template-columns:34px 1fr 34px;align-items:center;padding:8px 10px 6px;border-bottom:1px solid #e5e5ea;background:#f8f8facc}.imessage__back{color:var(--sms-blue);font-size:36px;font-weight:300;line-height:1}.imessage__contact{display:grid;justify-items:center}.imessage__avatar{width:38px;height:38px;border-radius:50%;background:#d1d1d6;color:#707078}.imessage__title{margin-top:2px;font-size:12px;font-weight:600}.imessage__subtitle{color:var(--sms-muted);font-size:9px}.imessage__chevron{align-self:end;color:#aaa;font-size:21px;text-align:center}.imessage__date{padding:12px 12px 2px;color:var(--sms-muted);font-size:10px;font-weight:600;text-align:center}.imessage__thread{display:flex;min-height:220px;flex-direction:column;gap:4px;padding:10px 12px 14px}.imessage__row{display:flex;max-width:82%;flex-direction:column}.imessage__row--left{align-self:flex-start;align-items:flex-start}.imessage__row--right{align-self:flex-end;align-items:flex-end}.imessage__bubble{padding:8px 12px;border-radius:18px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.35}.imessage__row--left .imessage__bubble{border-bottom-left-radius:5px;background:var(--sms-left)}.imessage__row--right .imessage__bubble{border-bottom-right-radius:5px;background:var(--sms-blue);color:#fff}.imessage__time{align-self:center;margin:8px 5px 4px;color:var(--sms-muted);font-size:9px}.imessage__status{margin:2px 5px 3px;color:var(--sms-muted);font-size:9px}.imessage__composer{display:grid;grid-template-columns:30px 1fr 26px;align-items:center;gap:7px;padding:8px 10px 12px;border-top:1px solid #f0f0f2}.imessage__plus{display:grid;width:28px;height:28px;place-items:center;border-radius:50%;background:#d1d1d6;color:#fff;font-size:20px}.imessage__input{padding:6px 10px;border:1px solid #c7c7cc;border-radius:17px;color:#a0a0a6;font-size:13px}.imessage__mic{color:#777;text-align:center}@media(max-width:480px){.imessage{border-radius:16px}.imessage__thread{min-height:180px}}\n';
+  const isMessage = (value) => {
+    const message = value;
+    return !!message && typeof message.id === "string" && typeof message.sender === "string" && ["left", "right"].includes(message.side) && typeof message.text === "string" && (message.time === void 0 || typeof message.time === "string") && (message.status === void 0 || typeof message.status === "string");
+  };
+  const IMessageRenderer = {
+    component: "chat",
+    variant: "imessage",
+    styles: common + styles$a,
+    validate(value) {
+      const props = value;
+      return !!props && typeof props.title === "string" && Array.isArray(props.messages) && props.messages.every(isMessage) && (props.subtitle === void 0 || typeof props.subtitle === "string") && (props.date === void 0 || typeof props.date === "string");
+    },
+    render(props) {
+      const root = element("section", "novel-ui imessage");
+      const header = element("header", "imessage__header");
+      header.append(element("span", "imessage__back", "‹"));
+      const contact = element("div", "imessage__contact");
+      contact.append(renderDefaultAvatar("imessage__avatar"), element("div", "imessage__title", props.title));
+      if (props.subtitle) contact.append(element("div", "imessage__subtitle", props.subtitle));
+      header.append(contact, element("span", "imessage__chevron", "›"));
+      root.append(header);
+      if (props.date) root.append(element("div", "imessage__date", props.date));
+      const thread = element("div", "imessage__thread");
+      for (const message of props.messages) {
+        const row = element("div", `imessage__row imessage__row--${message.side}`);
+        if (message.time) row.append(element("time", "imessage__time", message.time));
+        row.append(element("div", "imessage__bubble", message.text));
+        if (message.status && message.side === "right") row.append(element("div", "imessage__status", message.status));
+        thread.append(row);
+      }
+      const composer = element("footer", "imessage__composer");
+      composer.append(
+        element("span", "imessage__plus", "＋"),
+        element("span", "imessage__input", "短信"),
+        element("span", "imessage__mic", "◉")
+      );
+      root.append(thread, composer);
       return root;
     }
   };
@@ -385,26 +446,6 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       return root;
     }
   };
-  function renderDefaultAvatar(className = "default-avatar", label = "默认头像") {
-    const avatar2 = element("div", `${className} novel-default-avatar`);
-    avatar2.setAttribute("role", "img");
-    avatar2.setAttribute("aria-label", label);
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("viewBox", "0 0 64 64");
-    svg.setAttribute("aria-hidden", "true");
-    const head = document.createElementNS(svg.namespaceURI, "circle");
-    head.setAttribute("cx", "32");
-    head.setAttribute("cy", "23");
-    head.setAttribute("r", "10");
-    const shoulders = document.createElementNS(svg.namespaceURI, "path");
-    shoulders.setAttribute("d", "M14 51c2-11 9-17 18-17s16 6 18 17");
-    svg.append(head, shoulders);
-    avatar2.append(svg);
-    return avatar2;
-  }
-  function renderDefaultPersonAvatar(className = "person-avatar") {
-    return renderDefaultAvatar(className, "默认人物头像");
-  }
   function isPlatformComment(value) {
     const c = value;
     return !!c && typeof c.id === "string" && typeof c.displayName === "string" && typeof c.text === "string" && (c.handle === void 0 || typeof c.handle === "string") && (c.timestamp === void 0 || typeof c.timestamp === "string") && (c.likes === void 0 || typeof c.likes === "number" && c.likes >= 0);
@@ -1212,6 +1253,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     if (!adapter) return;
     const registry = new RendererRegistry();
     registry.register(KakaoRenderer);
+    registry.register(IMessageRenderer);
     registry.register(MedicalRenderer);
     registry.register(XPostRenderer);
     registry.register(XFeedRenderer);
