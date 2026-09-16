@@ -1,0 +1,97 @@
+name: Deploy MCP
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-mcp-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_HOST: 47.108.214.203
+      DEPLOY_USER: novel-deploy
+      APP_DIR: /opt/novel-runtime
+      IMAGE_NAME: novel-runtime-mcp
+      CONTAINER_NAME: novel-runtime-mcp
+      HOST_FINGERPRINT: SHA256:oVvpvK3VLgruPWQqMfdR75yhli+ZoiJ3Xbw09OKXK7k
+    steps:
+      - name: Resolve commit
+        id: ref
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            echo "sha=${{ github.event.workflow_run.head_sha }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "sha=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.ref.outputs.sha }}
+
+      - name: Build MCP image
+        run: |
+          docker build \
+            -f mcp-server/Dockerfile \
+            -t "$IMAGE_NAME:${{ steps.ref.outputs.sha }}" \
+            .
+          docker save "$IMAGE_NAME:${{ steps.ref.outputs.sha }}" | gzip -1 > /tmp/novel-runtime-mcp.tar.gz
+
+      - name: Configure SSH
+        shell: bash
+        run: |
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "${{ secrets.NOVEL_DEPLOY_SSH_KEY }}" > "$HOME/.ssh/id_ed25519"
+          chmod 600 "$HOME/.ssh/id_ed25519"
+          scan="$(ssh-keyscan -t ed25519 "$DEPLOY_HOST" 2>/dev/null)"
+          actual="$(printf '%s\n' "$scan" | ssh-keygen -lf - -E sha256 | awk '{print $2}')"
+          test "$actual" = "$HOST_FINGERPRINT"
+          printf '%s\n' "$scan" >> "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+
+      - name: Upload image
+        run: |
+          scp /tmp/novel-runtime-mcp.tar.gz \
+            "$DEPLOY_USER@$DEPLOY_HOST:$APP_DIR/novel-runtime-mcp.tar.gz"
+
+      - name: Activate container
+        shell: bash
+        run: |
+          ssh "$DEPLOY_USER@$DEPLOY_HOST" \
+            "APP_DIR='$APP_DIR' IMAGE_NAME='$IMAGE_NAME' IMAGE_TAG='${{ steps.ref.outputs.sha }}' CONTAINER_NAME='$CONTAINER_NAME' bash -s" <<'REMOTE'
+          set -euo pipefail
+          gzip -dc "$APP_DIR/novel-runtime-mcp.tar.gz" | docker load
+          docker rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
+          docker run -d \
+            --name "$CONTAINER_NAME" \
+            --restart unless-stopped \
+            -p 127.0.0.1:8787:8787 \
+            "$IMAGE_NAME:$IMAGE_TAG"
+
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8787/health >/dev/null; then
+              rm -f "$APP_DIR/novel-runtime-mcp.tar.gz"
+              docker image prune -f >/dev/null 2>&1 || true
+              echo "MCP health check passed"
+              exit 0
+            fi
+            sleep 2
+          done
+
+          docker logs --tail 100 "$CONTAINER_NAME" || true
+          exit 1
+          REMOTE
+
+      - name: Verify public health endpoint
+        run: curl -fsS https://mcp.charslub-zqy.site/health
