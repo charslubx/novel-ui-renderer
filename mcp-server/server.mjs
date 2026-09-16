@@ -3,8 +3,12 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
 
-const DEFAULT_PROTOCOL_VERSION = "2025-06-18";
-const SERVER_INFO = { name: "novel-runtime-mcp", version: "0.1.0" };
+const MODERN_PROTOCOL_VERSION = "2026-07-28";
+const LEGACY_PROTOCOL_VERSIONS = ["2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05"];
+const DEFAULT_LEGACY_PROTOCOL_VERSION = "2025-11-25";
+const SERVER_INFO = { name: "novel-runtime-mcp", title: "Novel Runtime MCP", version: "0.2.0" };
+const SERVER_CAPABILITIES = { tools: { listChanged: false } };
+const SERVER_INSTRUCTIONS = "Read-only novel writing context tools for story state, character knowledge boundaries, unresolved plot hooks, repetition checks, and Novel UI validation.";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_PROJECT_PATH = path.join(__dirname, "data", "default-project.json");
 
@@ -167,14 +171,31 @@ export async function callTool(name, args = {}, projectPath) {
   }
 }
 
-function toolResult(data) {
+function serverMeta() {
+  return { "io.modelcontextprotocol/serverInfo": SERVER_INFO };
+}
+
+function toolResult(data, modern = false) {
   return {
+    ...(modern ? { resultType: "complete" } : {}),
     content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
-    structuredContent: data
+    structuredContent: data,
+    isError: false,
+    ...(modern ? { _meta: serverMeta() } : {})
   };
 }
 
-export async function handleRpc(message, projectPath) {
+function selectLegacyProtocolVersion(requested) {
+  return LEGACY_PROTOCOL_VERSIONS.includes(requested) ? requested : DEFAULT_LEGACY_PROTOCOL_VERSION;
+}
+
+function isModernRequest(message, transportProtocolVersion) {
+  return transportProtocolVersion === MODERN_PROTOCOL_VERSION ||
+    message?.params?._meta?.["io.modelcontextprotocol/protocolVersion"] === MODERN_PROTOCOL_VERSION ||
+    message?.method === "server/discover";
+}
+
+export async function handleRpc(message, projectPath, options = {}) {
   if (!message || message.jsonrpc !== "2.0") {
     return { jsonrpc: "2.0", id: message?.id ?? null, error: { code: -32600, message: "Invalid Request" } };
   }
@@ -182,23 +203,52 @@ export async function handleRpc(message, projectPath) {
   const { id, method, params = {} } = message;
   if (method === "notifications/initialized") return null;
 
+  const modern = isModernRequest(message, options.protocolVersion);
+
   try {
-    if (method === "initialize") {
+    if (method === "server/discover") {
       return {
         jsonrpc: "2.0",
         id,
         result: {
-          protocolVersion: typeof params.protocolVersion === "string" ? params.protocolVersion : DEFAULT_PROTOCOL_VERSION,
-          capabilities: { tools: { listChanged: false } },
-          serverInfo: SERVER_INFO
+          resultType: "complete",
+          supportedVersions: [MODERN_PROTOCOL_VERSION],
+          capabilities: SERVER_CAPABILITIES,
+          instructions: SERVER_INSTRUCTIONS,
+          ttlMs: 300000,
+          cacheScope: "public",
+          _meta: serverMeta()
+        }
+      };
+    }
+    if (method === "initialize") {
+      const protocolVersion = selectLegacyProtocolVersion(params.protocolVersion);
+      return {
+        jsonrpc: "2.0",
+        id,
+        result: {
+          protocolVersion,
+          capabilities: SERVER_CAPABILITIES,
+          serverInfo: SERVER_INFO,
+          instructions: SERVER_INSTRUCTIONS
         }
       };
     }
     if (method === "ping") return { jsonrpc: "2.0", id, result: {} };
-    if (method === "tools/list") return { jsonrpc: "2.0", id, result: { tools: listTools() } };
+    if (method === "tools/list") {
+      return {
+        jsonrpc: "2.0",
+        id,
+        result: {
+          ...(modern ? { resultType: "complete" } : {}),
+          tools: listTools(),
+          ...(modern ? { ttlMs: 300000, cacheScope: "public", _meta: serverMeta() } : {})
+        }
+      };
+    }
     if (method === "tools/call") {
       const data = await callTool(params.name, params.arguments || {}, projectPath);
-      return { jsonrpc: "2.0", id, result: toolResult(data) };
+      return { jsonrpc: "2.0", id, result: toolResult(data, modern) };
     }
     return { jsonrpc: "2.0", id, error: { code: -32601, message: `Method not found: ${method}` } };
   } catch (error) {
@@ -218,43 +268,71 @@ async function readJson(req) {
   return JSON.parse(raw);
 }
 
+function writeJson(res, status, body, extraHeaders = {}) {
+  res.writeHead(status, { "content-type": "application/json; charset=utf-8", ...extraHeaders });
+  res.end(body === undefined ? undefined : JSON.stringify(body));
+}
+
 export function createServer(options = {}) {
   const projectPath = options.projectPath || process.env.NOVEL_PROJECT_FILE;
   return http.createServer(async (req, res) => {
+    const requestUrl = new URL(req.url || "/", "http://localhost");
+    const pathname = requestUrl.pathname;
+
     res.setHeader("Access-Control-Allow-Origin", process.env.MCP_ALLOW_ORIGIN || "*");
-    res.setHeader("Access-Control-Allow-Headers", "content-type, mcp-session-id");
-    res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "authorization, content-type, accept, mcp-session-id, mcp-protocol-version, mcp-method, mcp-name"
+    );
+    res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,POST,DELETE,OPTIONS");
+    res.setHeader("Access-Control-Expose-Headers", "mcp-session-id, mcp-protocol-version");
+    res.setHeader("Cache-Control", "no-store");
 
     if (req.method === "OPTIONS") {
       res.writeHead(204).end();
       return;
     }
-    if (req.method === "GET" && req.url === "/health") {
-      res.writeHead(200, { "content-type": "application/json" });
-      res.end(JSON.stringify({ ok: true, service: SERVER_INFO.name, version: SERVER_INFO.version }));
+    if (req.method === "GET" && pathname === "/health") {
+      writeJson(res, 200, { ok: true, service: SERVER_INFO.name, version: SERVER_INFO.version });
       return;
     }
-    if (req.method !== "POST" || req.url !== "/mcp") {
-      res.writeHead(404, { "content-type": "application/json" });
-      res.end(JSON.stringify({ error: "not found" }));
+    if (req.method === "HEAD" && pathname === "/mcp") {
+      res.writeHead(200, { "content-type": "application/json; charset=utf-8", Allow: "POST, GET, HEAD, OPTIONS" }).end();
+      return;
+    }
+    if (req.method === "GET" && pathname === "/mcp") {
+      writeJson(
+        res,
+        405,
+        { error: "SSE stream not enabled; use POST for MCP requests" },
+        { Allow: "POST, HEAD, OPTIONS" }
+      );
+      return;
+    }
+    if (req.method === "DELETE" && pathname === "/mcp") {
+      writeJson(res, 405, { error: "session deletion is not supported by this stateless server" }, { Allow: "POST, HEAD, OPTIONS" });
+      return;
+    }
+    if (req.method !== "POST" || pathname !== "/mcp") {
+      writeJson(res, 404, { error: "not found" });
       return;
     }
 
     try {
       const payload = await readJson(req);
+      const protocolVersion = req.headers["mcp-protocol-version"];
+      const rpcOptions = { protocolVersion: Array.isArray(protocolVersion) ? protocolVersion[0] : protocolVersion };
       const response = Array.isArray(payload)
-        ? (await Promise.all(payload.map((message) => handleRpc(message, projectPath)))).filter(Boolean)
-        : await handleRpc(payload, projectPath);
+        ? (await Promise.all(payload.map((message) => handleRpc(message, projectPath, rpcOptions)))).filter(Boolean)
+        : await handleRpc(payload, projectPath, rpcOptions);
 
       if (response === null || (Array.isArray(response) && response.length === 0)) {
         res.writeHead(202).end();
         return;
       }
-      res.writeHead(200, { "content-type": "application/json" });
-      res.end(JSON.stringify(response));
+      writeJson(res, 200, response);
     } catch (error) {
-      res.writeHead(400, { "content-type": "application/json" });
-      res.end(JSON.stringify({ jsonrpc: "2.0", id: null, error: { code: -32700, message: "Parse error" } }));
+      writeJson(res, 400, { jsonrpc: "2.0", id: null, error: { code: -32700, message: "Parse error" } });
     }
   });
 }
