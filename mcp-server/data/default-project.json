@@ -1,0 +1,61 @@
+{
+  "id": "demo-novel",
+  "title": "Demo Novel",
+  "hardRules": [
+    "Narrative truth does not automatically become character knowledge.",
+    "Characters may act only on known, suspected, or believed information available to them.",
+    "User-provided plot points are anchors, not the complete chapter plan.",
+    "Advance at least one unresolved conflict, relationship state, discovery, or consequence per chapter."
+  ],
+  "currentState": {
+    "chapter": 1,
+    "pov": "sana",
+    "scene": "A rainy evening in Seoul after a missed call.",
+    "relevantFacts": [
+      "Yi-hyun returned later than expected.",
+      "Sana has noticed the unusual schedule but has no proof of why."
+    ]
+  },
+  "characters": [
+    {
+      "id": "sana",
+      "name": "凑崎纱夏",
+      "role": "main",
+      "traits": ["direct", "emotionally perceptive", "persistent"],
+      "knowledge": {
+        "known": ["徐以炫昨晚没有按约定时间回家"],
+        "suspected": ["徐以炫可能在隐瞒一件工作相关的事"],
+        "unknown": ["徐以炫昨晚与金旼炡见面", "两人的具体谈话内容"],
+        "falseBeliefs": []
+      }
+    },
+    {
+      "id": "yihyun",
+      "name": "徐以炫",
+      "role": "main",
+      "traits": ["restrained", "gentle", "responsible"],
+      "knowledge": {
+        "known": ["自己昨晚与金旼炡见面", "会面谈话的全部内容"],
+        "suspected": ["纱夏已经察觉到自己有所隐瞒"],
+        "unknown": [],
+        "falseBeliefs": []
+      }
+    }
+  ],
+  "openLoops": [
+    "纱夏为何开始怀疑徐以炫的行程",
+    "昨晚会面的后果尚未显现"
+  ],
+  "recentPatterns": [
+    "医院走廊争执",
+    "雨夜失联",
+    "争吵后转身离开"
+  ],
+  "style": {
+    "avoidPhrases": [
+      "呼吸一滞",
+      "指尖微微蜷缩",
+      "眼底闪过一丝"
+    ]
+  }
+}
